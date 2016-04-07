@@ -1,4 +1,4 @@
-package javahttpserver;
+package javahttpserver.main;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,9 +18,11 @@ public class Server {
 
     public boolean userConnect() throws IOException{
         try {
-            socket = serverSocket.accept();
-            output = new PrintWriter(socket.getOutputStream(), true);
-            return true;
+            while (true) {
+                socket = serverSocket.accept();
+                output = new PrintWriter(socket.getOutputStream(), true);
+                return true;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

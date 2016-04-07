@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import javahttpserver.User;
+import javahttpserver.main.User;
 
 import java.net.ServerSocket;
 

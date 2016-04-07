@@ -1,6 +1,6 @@
 package javahttpserver.tests;
 
-import javahttpserver.CommandParser;
+import javahttpserver.main.CommandParser;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

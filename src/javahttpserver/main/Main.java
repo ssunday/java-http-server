@@ -1,12 +1,10 @@
-package javahttpserver;
-
-import org.apache.commons.cli.ParseException;
+package javahttpserver.main;
 
 import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
 
         int port;
         String directory;
@@ -27,13 +25,10 @@ public class Main {
         {
             directory = "/";
         }
-
         String host_name = "localhost";
         Server server = new Server(port);
         User user = new User(host_name, port);
         user.beginConnection();
         server.userConnect();
-        server.serve();
-
     }
 }

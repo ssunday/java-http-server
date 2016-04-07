@@ -1,4 +1,4 @@
-package javahttpserver;
+package javahttpserver.main;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -1,16 +1,17 @@
 package javahttpserver.tests;
 
+import javahttpserver.main.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
-import javahttpserver.Server;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ServerTest {
     private Server server;
