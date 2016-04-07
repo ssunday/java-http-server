@@ -4,7 +4,8 @@ import java.io.File;
 
 public class DirectoryListing {
 
-    public String[] getListing(File directory){
+    public String[] getListing(String path){
+        File directory = new File(path);
         String[] filesInDirectory = directory.list();
         return filesInDirectory;
     }
