@@ -15,15 +15,14 @@ public class Server {
         serverSocket = new ServerSocket(port);
     }
 
-    public boolean acceptConnection() throws IOException{
+    public boolean acceptConnection() {
         try {
             socket = serverSocket.accept();
             output = new DataOutputStream(socket.getOutputStream());
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     private String responseHeader(int contentLength){
@@ -40,26 +39,23 @@ public class Server {
         HTMLDirectoryDisplay directoryDisplay = new HTMLDirectoryDisplay();
         String html = directoryDisplay.displayListing(listing);
         int contentLength = html.length();
-        output.writeBytes(responseHeader(contentLength));
+        String header = responseHeader(contentLength);
+        output.writeBytes(header);
         output.writeBytes(html);
         output.flush();
     }
 
-    public boolean disconnectServer() {
+    public boolean disconnectServer(){
         try {
             serverSocket.close();
-            if (socket != null) {
-                disconnectUser();
+            if (socket != null){
+                socket.close();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            return true;
+        } catch (IOException eio) {
             return false;
         }
-        return true;
     }
 
-    private void disconnectUser() throws IOException {
-        socket.close();
-    }
 }
 

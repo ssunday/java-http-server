@@ -21,7 +21,7 @@ public class DirectoryListingTest {
         }
     }
 
-    private void clearPath(String path) throws Exception{
+    private void clearPath(String path) throws Exception {
         File file = new File(path);
         file.delete();
     }
@@ -62,7 +62,7 @@ public class DirectoryListingTest {
         String singleDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/single";
         makePath(singleDirectory);
         String[] listing = directoryListing.getListing(doubleDirectory);
-        assertEquals("returns array of length one when single file exists", 2, listing.length);
+        assertEquals("returns array of length two when both file and directory exist", 2, listing.length);
         clearPath(doubleDirectory);
         clearPath(singleFile);
         clearPath(singleDirectory);

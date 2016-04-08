@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ServerTest {
@@ -20,30 +21,38 @@ public class ServerTest {
     @Before
     public void initialize() throws Exception{
         server = new Server(TEST_PORT);
+        testSocket = new Socket("localhost", TEST_PORT);
     }
 
     @Test
     public void testAcceptConnection() throws Exception {
-        testSocket = new Socket("localhost", TEST_PORT);
         assertTrue("Server can accept connection", server.acceptConnection());
-        testSocket.close();
     }
 
     @Test
     public void testServeListingHas200Code() throws Exception {
-        testSocket = new Socket("localhost", TEST_PORT);
         server.acceptConnection();
         String[] listing = new String[0];
         server.serveListing(listing);
         BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
         String response = input.readLine();
         assertTrue("Socket serves listing with HTTP/1.1 200 code", response.contains("HTTP/1.1 200"));
-        testSocket.close();
     }
-    
+
+    @Test
+    public void testDisconnectServerEndsConnection() throws Exception {
+        int dummyPort = 5001;
+        Server server_end = new Server(dummyPort);
+        Socket dummySocket = new Socket("localhost", dummyPort);
+        server_end.disconnectServer();
+        assertFalse("When server ends connection cannot accept connections", server_end.acceptConnection());
+        dummySocket.close();
+    }
+
 
     @After
     public void end() throws Exception{
+        testSocket.close();
         server.disconnectServer();
     }
 

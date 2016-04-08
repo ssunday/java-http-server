@@ -5,10 +5,11 @@ import java.io.IOException;
 public class Main {
 
 
-    public static void main(String[] args) throws IOException {
+    private static int port = 5000;
 
-        int port = 5000;
-        String directory = "/Users/sarahsunday/Documents/cob_spec/public/";
+    private static String directory = "/Users/sarahsunday/Documents/cob_spec/public/";;
+
+    private static void configuration(String[] args) {
         CommandParser parser = new CommandParser(args);
 
         if (parser.hasPort()){
@@ -19,7 +20,10 @@ public class Main {
         {
             directory = parser.getDirectory();
         }
+    }
 
+    public static void main(String[] args) throws IOException {
+        configuration(args);
         Server server = new Server(port);
         DirectoryListing directoryListing = new DirectoryListing();
         try {
