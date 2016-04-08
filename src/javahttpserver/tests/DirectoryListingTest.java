@@ -14,14 +14,16 @@ public class DirectoryListingTest {
 
     private DirectoryListing directoryListing;
 
-    private void makePath(File path){
-        if(!path.exists()){
-            path.mkdirs();
+    private void makePath(String path) throws Exception{
+        File file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
         }
     }
 
-    private void clearPath(File path) throws Exception{
-        path.delete();
+    private void clearPath(String path) throws Exception {
+        File file = new File(path);
+        file.delete();
     }
 
     @Before
@@ -31,7 +33,7 @@ public class DirectoryListingTest {
 
     @Test
     public void testGetListingReturnsNullWhenEmpty() throws Exception {
-        File emptyDirectory = new File("/Users/sarahsunday/Documents/Github/java-http-server/test-files/nothing");
+        String emptyDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/nothing";
         makePath(emptyDirectory);
         assertArrayEquals("returns empty string array when directory is empty", new String[0], directoryListing.getListing(emptyDirectory));
         clearPath(emptyDirectory);
@@ -40,9 +42,9 @@ public class DirectoryListingTest {
 
     @Test
     public void testGetListingReturnsArrayWithSingleFileInDirectory() throws Exception {
-        File singleFileDirectory = new File("/Users/sarahsunday/Documents/Github/java-http-server/test-files");
+        String singleFileDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files";
         makePath(singleFileDirectory);
-        File singleFile = new File("/Users/sarahsunday/Documents/Github/java-http-server/test-files/single.txt");
+        String singleFile = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/single.txt";
         makePath(singleFile);
         String[] listing = directoryListing.getListing(singleFileDirectory);
         assertEquals("returns array of length one when single file exists", 1, listing.length);
@@ -53,14 +55,14 @@ public class DirectoryListingTest {
 
     @Test
     public void testGetListingReturnsArrayofTwoWhenFileAndDirectoryExist() throws Exception {
-        File doubleDirectory = new File("/Users/sarahsunday/Documents/Github/java-http-server/test-files");
+        String doubleDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files";
         makePath(doubleDirectory);
-        File singleFile = new File("/Users/sarahsunday/Documents/Github/java-http-server/test-files/single.txt");
+        String singleFile = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/single.txt";
         makePath(singleFile);
-        File singleDirectory = new File("/Users/sarahsunday/Documents/Github/java-http-server/test-files/single");
+        String singleDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/single";
         makePath(singleDirectory);
         String[] listing = directoryListing.getListing(doubleDirectory);
-        assertEquals("returns array of length one when single file exists", 2, listing.length);
+        assertEquals("returns array of length two when both file and directory exist", 2, listing.length);
         clearPath(doubleDirectory);
         clearPath(singleFile);
         clearPath(singleDirectory);
@@ -68,8 +70,8 @@ public class DirectoryListingTest {
 
     @After
     public void clearTestFiles() throws Exception {
-        File directory = new File("/Users/sarahsunday/Documents/Github/java-http-server/test-files");
-        clearPath(directory);
+        String test_file_directory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files";
+        clearPath(test_file_directory);
     }
 
 }

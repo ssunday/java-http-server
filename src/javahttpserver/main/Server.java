@@ -1,7 +1,7 @@
 package javahttpserver.main;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -9,45 +9,53 @@ public class Server {
 
     private ServerSocket serverSocket;
     private Socket socket;
-    private PrintWriter output;
+    private DataOutputStream output;
 
     public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);
-        serverSocket.setSoTimeout(100);
     }
 
-    public boolean userConnect() throws IOException{
+    public boolean acceptConnection() {
         try {
-            while (true) {
-                socket = serverSocket.accept();
-                output = new PrintWriter(socket.getOutputStream(), true);
-                return true;
-            }
+            socket = serverSocket.accept();
+            output = new DataOutputStream(socket.getOutputStream());
+            return true;
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public void serve() throws IOException {
-        output.println("Hello World");
-    }
-
-    public boolean disconnectServer() {
-        try {
-            serverSocket.close();
-            if (socket != null) {
-                disconnectUser();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
-        return true;
     }
 
-    private void disconnectUser() throws IOException {
-        socket.close();
+    private String responseHeader(int contentLength){
+        String header = "";
+        header += "HTTP/1.1 200 OK" + "\r\n";
+        header += "Server: Java HTTP Server" + "\r\n";
+        header += "Content-Type: text/html" + "\r\n";
+        header += "Content-Length: " + contentLength + "\r\n";
+        header += "\r\n";
+        return header;
     }
+
+    public void serveListing(String[] listing) throws IOException {
+        HTMLDirectoryDisplay directoryDisplay = new HTMLDirectoryDisplay();
+        String html = directoryDisplay.displayListing(listing);
+        int contentLength = html.length();
+        String header = responseHeader(contentLength);
+        output.writeBytes(header);
+        output.writeBytes(html);
+        output.flush();
+    }
+
+    public boolean disconnectServer(){
+        try {
+            serverSocket.close();
+            if (socket != null){
+                socket.close();
+            }
+            return true;
+        } catch (IOException eio) {
+            return false;
+        }
+    }
+
 }
 

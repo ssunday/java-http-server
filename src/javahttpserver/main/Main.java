@@ -4,31 +4,36 @@ import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
 
-        int port;
-        String directory;
+    private static int port = 5000;
+
+    private static String directory = "/Users/sarahsunday/Documents/cob_spec/public/";;
+
+    private static void configuration(String[] args) {
         CommandParser parser = new CommandParser(args);
 
         if (parser.hasPort()){
             port = parser.getPort();
         }
-        else
-        {
-            port = 5000;
-        }
+
         if (parser.hasDirectory())
         {
             directory = parser.getDirectory();
         }
-        else
-        {
-            directory = "/";
-        }
-        String host_name = "localhost";
+    }
+
+    public static void main(String[] args) throws IOException {
+        configuration(args);
         Server server = new Server(port);
-        User user = new User(host_name, port);
-        user.beginConnection();
-        server.userConnect();
+        DirectoryListing directoryListing = new DirectoryListing();
+        try {
+            while (true) {
+                server.acceptConnection();
+                server.serveListing(directoryListing.getListing(directory));
+            }
+        } finally {
+            server.disconnectServer();
+        }
+
     }
 }
