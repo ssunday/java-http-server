@@ -22,18 +22,32 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         configuration(args);
-        Server server = new Server(port);
-        DirectoryListing directoryListing = new DirectoryListing();
+        Server server  = new Server(port);
         try {
             while (true) {
+                FilePaths filePaths = new FilePaths(directory);
+                DirectoryListing directoryListing = new DirectoryListing();
+                String previousPath = directory;
+                String pathToServe = directory;
+                String request;
                 server.acceptConnection();
-                server.serveListing(directoryListing.getListing(directory));
+                request = server.getRequest();
+                pathToServe = filePaths.getPathToServeFromRequest(request);
+                if (filePaths.isFolder(pathToServe)) {
+                    String previousPathUp = filePaths.getPathOneLevelUp(pathToServe);
+                    previousPath = filePaths.getPathToLink(previousPathUp);
+                    String[] listing = directoryListing.getListing(pathToServe);
+                    try{
+                        server.serveListing(previousPath, listing);
+                    } catch (IOException eio){
+                        eio.printStackTrace();
+                    }
+                }
             }
         } finally {
             server.disconnectServer();
         }
-
     }
 }

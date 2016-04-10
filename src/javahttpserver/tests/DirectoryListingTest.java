@@ -68,6 +68,7 @@ public class DirectoryListingTest {
         clearPath(singleDirectory);
     }
 
+
     @After
     public void clearTestFiles() throws Exception {
         String test_file_directory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files";

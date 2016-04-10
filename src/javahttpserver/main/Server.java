@@ -1,7 +1,9 @@
 package javahttpserver.main;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,6 +12,7 @@ public class Server {
     private ServerSocket serverSocket;
     private Socket socket;
     private DataOutputStream output;
+    private BufferedReader reader;
 
     public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);
@@ -19,10 +22,15 @@ public class Server {
         try {
             socket = serverSocket.accept();
             output = new DataOutputStream(socket.getOutputStream());
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             return true;
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public String getRequest() throws Exception {
+        return reader.readLine();
     }
 
     private String responseHeader(int contentLength){
@@ -35,14 +43,23 @@ public class Server {
         return header;
     }
 
-    public void serveListing(String[] listing) throws IOException {
+    public void serveListing(String previousDirectory, String[] listing) throws IOException {
         HTMLDirectoryDisplay directoryDisplay = new HTMLDirectoryDisplay();
         String html = directoryDisplay.displayListing(listing);
-        int contentLength = html.length();
+        String backNavigation = "";
+        if (previousDirectory != null) {
+            backNavigation = directoryDisplay.displayDirectoryBackNavigation(previousDirectory);
+        }
+        int contentLength = html.length() + backNavigation.length();
         String header = responseHeader(contentLength);
-        output.writeBytes(header);
-        output.writeBytes(html);
-        output.flush();
+        try {
+            output.writeBytes(header);
+            output.writeBytes(backNavigation);
+            output.writeBytes(html);
+            output.flush();
+        } catch (Exception e){
+            System.out.println("FAIL");
+        }
     }
 
     public boolean disconnectServer(){
