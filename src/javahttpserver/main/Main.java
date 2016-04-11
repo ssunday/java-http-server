@@ -1,39 +1,34 @@
 package javahttpserver.main;
 
-import java.io.IOException;
-
 public class Main {
 
 
-    private static int port = 5000;
+    private static int port;
 
-    private static String directory = "/Users/sarahsunday/Documents/cob_spec/public/";;
+    private static String directory;;
 
     private static void configuration(String[] args) {
         CommandParser parser = new CommandParser(args);
-
-        if (parser.hasPort()){
-            port = parser.getPort();
-        }
-
-        if (parser.hasDirectory())
-        {
-            directory = parser.getDirectory();
-        }
+        port = parser.getPort();
+        directory = parser.getDirectory();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         configuration(args);
-        Server server = new Server(port);
-        DirectoryListing directoryListing = new DirectoryListing();
+        Server server  = new Server(port);
+        FilePaths filePaths = new FilePaths(directory);
+        String request, pathToServe, previousPath, pathFromBase;
         try {
             while (true) {
                 server.acceptConnection();
-                server.serveListing(directoryListing.getListing(directory));
+                request = server.getRequest();
+                pathToServe = filePaths.getPathToServeFromRequest(request);
+                previousPath = filePaths.getPreviousPathToLink(pathToServe);
+                pathFromBase = filePaths.getPathToLink(pathToServe);
+                    server.serveListing(pathToServe, previousPath, pathFromBase);
             }
         } finally {
             server.disconnectServer();
         }
-
     }
 }

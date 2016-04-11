@@ -9,15 +9,28 @@ import java.io.File;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DirectoryListingTest {
 
     private DirectoryListing directoryListing;
 
+    private String directory = System.getProperty("user.dir");
+
+    private String testDirectory;
+
     private void makePath(String path) throws Exception{
         File file = new File(path);
         if(!file.exists()){
             file.mkdirs();
+        }
+    }
+
+    private void makeFile(String path) throws Exception{
+        File file = new File(path);
+        if(!file.exists()){
+            file.createNewFile();
         }
     }
 
@@ -27,13 +40,17 @@ public class DirectoryListingTest {
     }
 
     @Before
-    public void initialize(){
+    public void initialize() throws Exception{
+
         directoryListing = new DirectoryListing();
+        testDirectory = directory + "/test-files/";
+        makePath(testDirectory);
+
     }
 
     @Test
     public void testGetListingReturnsNullWhenEmpty() throws Exception {
-        String emptyDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/nothing";
+        String emptyDirectory = testDirectory + "nothing/";
         makePath(emptyDirectory);
         assertArrayEquals("returns empty string array when directory is empty", new String[0], directoryListing.getListing(emptyDirectory));
         clearPath(emptyDirectory);
@@ -42,36 +59,57 @@ public class DirectoryListingTest {
 
     @Test
     public void testGetListingReturnsArrayWithSingleFileInDirectory() throws Exception {
-        String singleFileDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files";
-        makePath(singleFileDirectory);
-        String singleFile = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/single.txt";
-        makePath(singleFile);
-        String[] listing = directoryListing.getListing(singleFileDirectory);
+        String singleFile = testDirectory + "single.txt";
+        makeFile(singleFile);
+        String[] listing = directoryListing.getListing(testDirectory);
         assertEquals("returns array of length one when single file exists", 1, listing.length);
-        clearPath(singleFileDirectory);
         clearPath(singleFile);
     }
 
 
     @Test
     public void testGetListingReturnsArrayofTwoWhenFileAndDirectoryExist() throws Exception {
-        String doubleDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files";
-        makePath(doubleDirectory);
-        String singleFile = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/single.txt";
-        makePath(singleFile);
-        String singleDirectory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files/single";
+        String singleFile = testDirectory + "single.txt";
+        makeFile(singleFile);
+        String singleDirectory = testDirectory + "single/";
         makePath(singleDirectory);
-        String[] listing = directoryListing.getListing(doubleDirectory);
+        String[] listing = directoryListing.getListing(testDirectory);
         assertEquals("returns array of length two when both file and directory exist", 2, listing.length);
-        clearPath(doubleDirectory);
         clearPath(singleFile);
         clearPath(singleDirectory);
     }
 
+    @Test
+
+    public void testIsFolderReturnsTrueForFolder() throws Exception{
+        boolean isFolder = directoryListing.isFolder(testDirectory);
+        assertTrue("Returns true when path is a folder", isFolder);
+    }
+
+    @Test
+
+    public void testIsFolderReturnsFalseForFile() throws Exception{
+        String pathFile = testDirectory + "file.txt";
+        makeFile(pathFile);
+        boolean isFolder = directoryListing.isFolder(pathFile);
+        assertFalse("Returns false when path is a file", isFolder);
+        clearPath(pathFile);
+    }
+
+    @Test
+
+    public void testIsFolderReturnsFalseForFileWithoutExtension() throws Exception{
+        String pathFile = testDirectory + "file";
+        makeFile(pathFile);
+        boolean isFolder = directoryListing.isFolder(pathFile);
+        assertFalse("Returns false when path is a file without extension", isFolder);
+        clearPath(pathFile);
+    }
+
+
     @After
     public void clearTestFiles() throws Exception {
-        String test_file_directory = "/Users/sarahsunday/Documents/Github/java-http-server/test-files";
-        clearPath(test_file_directory);
+        clearPath(testDirectory);
     }
 
 }
