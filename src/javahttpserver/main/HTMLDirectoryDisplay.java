@@ -17,22 +17,22 @@ public class HTMLDirectoryDisplay {
         return backNavigation;
     }
 
-    public String displayListing(String[] listing) {
+    public String displayListing(String[] listing, String pathFromBase) {
         String html = HTML_START;
         for (String item: listing){
-            html += displayItem(item);
+            html += displayItem(item, pathFromBase);
         }
         html += HTML_END;
         return html;
     }
 
-    private String displayItem(String item) {
-        String linkedItem = linkItem(item);
+    private String displayItem(String item, String pathFromBase) {
+        String linkedItem = linkItem(item, pathFromBase);
         return "<p>" + linkedItem + "</p>";
     }
 
-    private String linkItem(String item) {
-        return "<a href=" + "'/" + item + "'>" + item + "</a>";
+    private String linkItem(String item, String pathFromBase) {
+        return "<a href='" + pathFromBase + item + "'>" + item + "</a>";
     }
 
 }

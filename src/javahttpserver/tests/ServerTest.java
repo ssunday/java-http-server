@@ -48,9 +48,8 @@ public class ServerTest {
     @Test
     public void testServeListingHas200Code() throws Exception {
         server.acceptConnection();
-        String[] listing = new String[0];
-        String previousDirectoryLink = "/thing";
-        server.serveListing(previousDirectoryLink, listing);
+        String directory = System.getProperty("user.dir");
+        server.serveListing(directory, "/", "/");
         BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
         String response = input.readLine();
         assertTrue("Socket serves listing with HTTP/1.1 200 code", response.contains("HTTP/1.1 200"));
@@ -65,7 +64,6 @@ public class ServerTest {
         assertFalse("When server ends connection cannot accept connections", server_end.acceptConnection());
         dummySocket.close();
     }
-
 
     @After
     public void end() throws Exception{

@@ -5,8 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class FilePathsTest {
 
@@ -22,29 +20,29 @@ public class FilePathsTest {
 
     @Test
 
-    public void testGetPathOnlyReturnsWithFileGivenHTTPRequest(){
-        String request = "GET /file.txt HTTP/1.1";
-        String path = filePaths.getPath(request);
-        String expectedPath = "/file.txt";
-        assertEquals("Returns simple path of file given HTTP request", expectedPath, path);
-    }
-
-    @Test
-
-    public void testGetPathOnlyReturnsWithFolderGivenHTTPRequest(){
-        String request = "GET /folder/ HTTP/1.1";
-        String path = filePaths.getPath(request);
-        String expectedPath = "/folder/";
-        assertEquals("Returns simple path of folder given HTTP request", expectedPath, path);
-    }
-
-    @Test
-
     public void testGetPathToServeFromRequestReturnsFullDirectoryPathGivenHTTPRequest(){
         String request = "GET /folder/ HTTP/1.1";
         String directory = filePaths.getPathToServeFromRequest(request);
         String fullpath = baseDirectory + "folder/";
         assertEquals("Returns full path given HTTP request", fullpath, directory);
+    }
+
+    @Test
+
+    public void testGetPathToServeFromRequestReturnsFullNestedDirectoryPathGivenHTTPRequest(){
+        String request = "GET /folder/something/ HTTP/1.1";
+        String directory = filePaths.getPathToServeFromRequest(request);
+        String fullpath = baseDirectory + "folder/something/";
+        assertEquals("Returns full path of nested folders given HTTP request", fullpath, directory);
+    }
+
+    @Test
+
+    public void testGetPathToServeFromRequestWithFoldersWithSpaceReturnsFullPathGivenHTTPRequest(){
+        String request = "GET /folder%20something/ HTTP/1.1";
+        String directory = filePaths.getPathToServeFromRequest(request);
+        String fullpath = baseDirectory + "folder something/";
+        assertEquals("Returns path of folders with html space given HTTP request", fullpath, directory);
     }
 
     @Test
@@ -58,43 +56,51 @@ public class FilePathsTest {
 
     @Test
 
-    public void testGetPathOneUpReturnsPathOneLevelUp(){
-        String fullPath = "/public/folder/something/";
-        String path = filePaths.getPathOneLevelUp(fullPath);
-        String expectedPath = "/public/folder/";
-        assertEquals("Returns path one level up", expectedPath, path);
-    }
-
-    @Test
-
-    public void testGetPathOneUpReturnsBasePathIfOnBasePath(){
-        String path = filePaths.getPathOneLevelUp(baseDirectory);
-        assertEquals("Returns blank slash if path is base path", "/", path);
+    public void testGetPathToServeFromRequestReturnsFullNestedDirectoryWithFileGivenHTTPRequest(){
+        String request = "GET /something/file.txt HTTP/1.1";
+        String directory = filePaths.getPathToServeFromRequest(request);
+        String fullpath = baseDirectory + "something/file.txt";
+        assertEquals("Returns full path of nested file given HTTP request", fullpath, directory);
     }
 
     @Test
 
     public void testGetPathToLinkReturnsPathWithoutBaseDirectory(){
-        String fullpath = "/public/folder/";
+        String fullpath = baseDirectory + "folder/";
         String path = filePaths.getPathToLink(fullpath);
         assertEquals("Returns path without base directory included", "/folder/", path);
     }
 
     @Test
 
-    public void testIsFolderReturnsTrueForFolder(){
-        String path = "/public/folder/";
-        boolean isFolder = filePaths.isFolder(path);
-        assertTrue("Returns true when path is a folder", isFolder);
+    public void testGetPathToLinkReturnsNestedPathWithoutBaseDirectory(){
+        String fullpath = baseDirectory + "folder/something/";
+        String path = filePaths.getPathToLink(fullpath);
+        assertEquals("Returns nested folder path without base directory included", "/folder/something/", path);
     }
 
     @Test
 
-    public void testIsFolderReturnsFalseForFile(){
-        String path = "/public/file.txt";
-        boolean isFolder = filePaths.isFolder(path);
-        assertFalse("Returns true when path is a folder", isFolder);
+    public void testGetPreviousPathToLinkReturnsBaseDirectorIfPathIsTheBaseDirectory(){
+        String fullpath = baseDirectory;
+        String path = filePaths.getPreviousPathToLink(fullpath);
+        assertEquals("Returns / if path is the base directory", "/", path);
     }
 
+    @Test
+
+    public void testGetPreviousPathToLinkReturnsPathOneLevelUpWithoutBaseDirectory(){
+        String fullpath = baseDirectory + "folder/something/things/";
+        String path = filePaths.getPreviousPathToLink(fullpath);
+        assertEquals("Returns path one level up without base directory included of a nested folder system", "/folder/something/", path);
+    }
+
+    @Test
+
+    public void testGetPreviousPathToLinkReturnsBaseDirectoryWhenFolderIsOneLevelDown(){
+        String fullpath = baseDirectory + "folder/";
+        String path = filePaths.getPreviousPathToLink(fullpath);
+        assertEquals("Returns slash if one level up in path is the base directory", "/", path);
+    }
 
 }
