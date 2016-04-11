@@ -9,12 +9,11 @@ import static org.junit.Assert.assertEquals;
 public class FilePathsTest {
 
     private FilePaths filePaths;
-    private String baseDirectory;
+    private String baseDirectory = FileTestingUtilities.testDirectory;
 
     @Before
 
     public void initialize(){
-        baseDirectory = "/public/";
         filePaths = new FilePaths(baseDirectory);
     }
 

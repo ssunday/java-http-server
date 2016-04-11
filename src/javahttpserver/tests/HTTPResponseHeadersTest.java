@@ -9,26 +9,51 @@ public class HTTPResponseHeadersTest {
 
     @Test
 
-    public void testGetDirectoryListingHeaderIncludes200Code(){
+    public void testGetTextAndHtmlHeaderIncludes200Code(){
         int contentLength = 30;
-        String header = HTTPResponseHeaders.getDirectoryListingHeader(contentLength);
+        String header = HTTPResponseHeaders.getTextAndHTMLHeader(contentLength);
         assertTrue("Directory Listing header includes 200 code", header.contains("200"));
     }
 
     @Test
 
-    public void testGetDirectoryListingHeaderIncludesContentLength(){
+    public void testGetTextAndHtmlHeaderIncludesContentLength(){
         int contentLength = 30;
-        String header = HTTPResponseHeaders.getDirectoryListingHeader(contentLength);
-        assertTrue("Directory Listing header includes content length", header.contains(Integer.toString(contentLength)));
+        String header = HTTPResponseHeaders.getTextAndHTMLHeader(contentLength);
+        assertTrue("Text/Html header includes content length", header.contains(Integer.toString(contentLength)));
     }
 
     @Test
 
-    public void testGetDirectoryListingHeaderIncludesTexthtmlContentType(){
+    public void testGetTextAndHtmlHeaderIncludesTexthtmlContentType(){
         int contentLength = 30;
-        String header = HTTPResponseHeaders.getDirectoryListingHeader(contentLength);
-        assertTrue("Directory Listing header includes text/html content type", header.contains("text/html"));
+        String header = HTTPResponseHeaders.getTextAndHTMLHeader(contentLength);
+        assertTrue("Text/Html header includes text/html content type", header.contains("text/html"));
+    }
+
+    @Test
+
+    public void testGetImageHeaderIncludes200Code(){
+        int contentLength = 50;
+        String header = HTTPResponseHeaders.getImageHeader(contentLength);
+        assertTrue("Image header includes image content type", header.contains("200"));
+    }
+
+    @Test
+
+    public void testGetImageHeaderIncludesContentLength(){
+        int contentLength = 200;
+        String header = HTTPResponseHeaders.getImageHeader(contentLength);
+        assertTrue("Image header includes image content type", header.contains(Integer.toString(contentLength)));
+    }
+
+
+    @Test
+
+    public void testGetImageHeaderIncludesImageContentType(){
+        int contentLength = 30;
+        String header = HTTPResponseHeaders.getImageHeader(contentLength);
+        assertTrue("Image header includes image content type", header.contains("image"));
     }
 
     @Test

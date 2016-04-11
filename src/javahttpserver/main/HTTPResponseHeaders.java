@@ -4,10 +4,18 @@ public class HTTPResponseHeaders {
 
     private static final String SERVER_NAME = "Java HTTP Server";
 
-    public static String getDirectoryListingHeader(int contentLength){
+    public static String getTextAndHTMLHeader(int contentLength){
         String header = getHTTPCodeHeader(200);
         header += getServerName();
-        header += getHTTPContentTypeAndLength(contentLength);
+        header += getHTTPContentTypeAndLength("text/html", contentLength);
+        header += "\r\n";
+        return header;
+    }
+
+    public static String getImageHeader(int contentLength){
+        String header = getHTTPCodeHeader(200);
+        header += getServerName();
+        header += getHTTPContentTypeAndLength("image" , contentLength);
         header += "\r\n";
         return header;
     }
@@ -15,7 +23,7 @@ public class HTTPResponseHeaders {
     public static String get404Header(int contentLength){
         String header = getHTTPCodeHeader(404);
         header += getServerName();
-        header += getHTTPContentTypeAndLength(contentLength);
+        header += getHTTPContentTypeAndLength("text/html", contentLength);
         header += "\r\n";
         return header;
     }
@@ -41,9 +49,9 @@ public class HTTPResponseHeaders {
         return serverNameLine;
     }
 
-    private static String getHTTPContentTypeAndLength(int contentLength){
+    private static String getHTTPContentTypeAndLength(String contentType, int contentLength){
         String contentTypeAndLength = "";
-        contentTypeAndLength += "Content-Type: text/html" + "\r\n";
+        contentTypeAndLength += "Content-Type: " + contentType + "\r\n";
         contentTypeAndLength += "Content-Length: " + contentLength + "\r\n";
         return contentTypeAndLength;
     }
