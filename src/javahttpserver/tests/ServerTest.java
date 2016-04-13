@@ -75,7 +75,7 @@ public class ServerTest {
     public void testServeHas200Code() throws Exception {
         server.acceptConnection();
         String directory = System.getProperty("user.dir");
-        server.serve(directory, "/", "/");
+        server.serve(directory, "/");
         BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
         String response = input.readLine();
         assertTrue("Socket serves listing with HTTP/1.1 200 code", response.contains("HTTP/1.1 200"));
@@ -85,7 +85,7 @@ public class ServerTest {
     public void testServeHas404CodeWithNonExistentDirectory() throws Exception {
         server.acceptConnection();
         String directory = System.getProperty("user.dir") + "/foobar";
-        server.serve(directory, "/", "/");
+        server.serve(directory, "/");
         BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
         String response = input.readLine();
         assertTrue("Socket serves non-existent directory listing with 404 code", response.contains("404"));

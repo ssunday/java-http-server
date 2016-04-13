@@ -23,27 +23,29 @@ public class FileServingTest {
 
     @Before
     public void initialize() throws Exception{
-        fileServing = new FileServing();
+        fileServing = new FileServing(testDirectory);
         FileTestingUtilities.makePath(testDirectory);
     }
 
     @Test
 
     public void testGetContentTypeReturnsTextPlainForFile() throws Exception{
-        String file = testDirectory + "single.txt";
+        String fileName = "/single.txt";
+        String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
-        assertEquals("Returns text/plain for file", "text/plain", fileServing.getContentType(file));
+        assertEquals("Returns text/plain for file", "text/plain", fileServing.getContentType(fileName));
         FileTestingUtilities.clearPath(file);
     }
 
     @Test
 
     public void testGetContentTypeReturnsImageForImage() throws Exception{
-        String imagePath = testDirectory + "image.jpg";
+        String imageName = "/image.jpg";
+        String imagePath = testDirectory + imageName.substring(1);
         File imageOutputFile = new File(imagePath);
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         ImageIO.write(image, "jpg", imageOutputFile);
-        assertEquals("Returns image for image", "image", fileServing.getContentType(imagePath));
+        assertEquals("Returns image for image", "image", fileServing.getContentType(imageName));
         FileTestingUtilities.clearPath(imagePath);
     }
 
@@ -54,35 +56,38 @@ public class FileServingTest {
 
     @Test
     public void testgetBytesReturnsEmptyArrayOfBytesWhenFileIsEmpty() throws Exception{
-        String file = testDirectory + "emptytextfile";
+        String fileName = "/emptytextfile";
+        String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
-        assertArrayEquals("Returns empty array of filebytes when file is empty ", new byte[0], fileServing.getBytes(file, "/", "/"));
+        assertArrayEquals("Returns empty array of filebytes when file is empty ", new byte[0], fileServing.getBytes(fileName));
         FileTestingUtilities.clearPath(file);
     }
 
     @Test
     public void testgetBytesReturnsNonEmptyWhenFileHasContent() throws Exception{
-        String file = testDirectory + "notemptyfile.txt";
+        String fileName = "/notemptyfile.txt";
+        String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
         String stringWritten = "a";
         byte[] byteCount;
         byteCount = stringWritten.getBytes();
         Path filePath = Paths.get(file);
         Files.write(filePath, byteCount);
-        assertArrayEquals("Returns array of bytes when file has content", byteCount, fileServing.getBytes(file, "/", "/"));
+        assertArrayEquals("Returns array of bytes when file has content", byteCount, fileServing.getBytes(fileName));
         FileTestingUtilities.clearPath(file);
     }
 
     @Test
     public void testgetBytesReturnsJPGImageBytes() throws Exception{
-        String imagePath = testDirectory + "image.jpg";
+        String imageName = "/image.jpg";
+        String imagePath = testDirectory + imageName.substring(1);
         File imageOutputFile = new File(imagePath);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         ImageIO.write(image, "jpg", baos);
         ImageIO.write(image, "jpg", imageOutputFile);
         byte[] imageBytes = baos.toByteArray();
-        assertArrayEquals("GetImageBytes returns jpg image's bytes", imageBytes, fileServing.getBytes(imagePath, "/", "/"));
+        assertArrayEquals("GetImageBytes returns jpg image's bytes", imageBytes, fileServing.getBytes(imageName));
         FileTestingUtilities.clearPath(imagePath);
     }
 

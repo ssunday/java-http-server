@@ -18,7 +18,7 @@ public class ServingFactoryTest {
     public void testGetServerReturnsDirectoryServing() throws Exception {
         String path = FileTestingUtilities.testDirectory + "single/";
         FileTestingUtilities.makePath(path);
-        ServingBase server = ServingFactory.getServer(path);
+        ServingBase server = ServingFactory.getServer(path, "/");
         assertTrue("Returns Directory object when passed in a directory", server instanceof DirectoryServing);
         FileTestingUtilities.clearPath(path);
     }
@@ -27,15 +27,22 @@ public class ServingFactoryTest {
     public void testGetServerReturnsFileServing() throws Exception {
         String singleFile = FileTestingUtilities.testDirectory + "single.txt";
         FileTestingUtilities.makeFile(singleFile);
-        ServingBase server = ServingFactory.getServer(singleFile);
+        ServingBase server = ServingFactory.getServer(singleFile, "/");
         assertTrue("Returns File serving object when file passed in", server instanceof FileServing);
         FileTestingUtilities.clearPath(singleFile);
     }
 
     @Test
+    public void testGetServerReturnsParameterServing() throws Exception {
+        String parametersPath = FileTestingUtilities.testDirectory + "parameters?stuff=blarg";
+        ServingBase server = ServingFactory.getServer(parametersPath, "/");
+        assertTrue("Returns Parameter serving object when path with parameters passed in", server instanceof ParameterServing);
+    }
+
+    @Test
     public void testGetServerReturnsNotFoundServing() throws Exception {
         String notFound = FileTestingUtilities.testDirectory + "not here.txt";
-        ServingBase server = ServingFactory.getServer(notFound);
+        ServingBase server = ServingFactory.getServer(notFound, "/");
         assertTrue("Returns not found server when non-existent file is passed in", server instanceof NotFoundServing);
     }
 

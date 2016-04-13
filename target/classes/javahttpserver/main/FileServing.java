@@ -8,26 +8,34 @@ import java.nio.file.Files;
 
 public class FileServing extends ServingBase {
 
-    public byte[] getBytes(String filePath, String previousDirectory, String pathFromBase) {
+    private FilePaths filePaths;
+
+    public FileServing(String baseDirectory){
+        this.filePaths = new FilePaths(baseDirectory);
+    }
+
+    public byte[] getBytes(String path) {
+        String filePath = filePaths.getPathToServe(path);
         File file = new File(filePath);
         byte[] fileBytes;
         try {
             fileBytes = Files.readAllBytes(file.toPath());
         } catch (IOException eio){
-            fileBytes = super.getBytes(filePath, previousDirectory, pathFromBase);
+            fileBytes = super.getBytes(filePath);
         }
         return fileBytes;
     }
 
-    public String getContentType(String filePath){
+    public String getContentType(String path){
         String contentType = "text/plain";
-        if (isImage(filePath)){
+        if (isImage(path)){
             contentType = "image";
         }
         return contentType;
     }
 
-    private boolean isImage(String filePath){
+    private boolean isImage(String path){
+        String filePath = filePaths.getPathToServe(path);
         File file = new File(filePath);
         boolean isImage = false;
         try {

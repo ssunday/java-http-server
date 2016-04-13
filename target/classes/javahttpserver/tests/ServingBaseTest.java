@@ -18,7 +18,7 @@ public class ServingBaseTest {
     }
     @Test
     public void testGetBytes() throws Exception {
-        assertArrayEquals("Returns new byte of size 0", new byte[0], serving.getBytes("/","/","/"));
+        assertArrayEquals("Returns new byte of size 0", new byte[0], serving.getBytes("/"));
     }
 
     @Test

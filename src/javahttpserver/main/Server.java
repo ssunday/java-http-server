@@ -30,12 +30,12 @@ public class Server {
         return reader.readLine();
     }
 
-    public void serve(String pathToServe, String previousDirectory, String pathFromBase) throws Exception {
+    public void serve(String pathToServe, String baseDirectory) throws Exception {
         String header, contentType;
         int HTTPCode;
         byte[] bytesToWrite;
-        ServingBase serving = ServingFactory.getServer(pathToServe);
-        bytesToWrite = serving.getBytes(pathToServe, previousDirectory, pathFromBase);
+        ServingBase serving = ServingFactory.getServer(pathToServe, baseDirectory);
+        bytesToWrite = serving.getBytes(pathToServe);
         HTTPCode = serving.getHTTPCode();
         contentType = serving.getContentType(pathToServe);
         header = HTTPResponseHeaders.getHTTPHeader(HTTPCode, contentType, bytesToWrite.length);

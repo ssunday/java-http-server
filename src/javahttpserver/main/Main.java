@@ -16,16 +16,13 @@ public class Main {
     public static void main(String[] args) throws Exception {
         configuration(args);
         Server server  = new Server(port);
-        FilePaths filePaths = new FilePaths(directory);
-        String request, pathToServe, previousPath, pathFromBase;
+        String request, requestPath;
         try {
             while (true) {
                 server.acceptConnection();
                 request = server.getRequest();
-                pathToServe = filePaths.getPathToServeFromRequest(request);
-                previousPath = filePaths.getPreviousPathToLink(pathToServe);
-                pathFromBase = filePaths.getPathToLink(pathToServe);
-                server.serve(pathToServe, previousPath, pathFromBase);
+                requestPath = HTTPRequestParser.getPath(request);
+                server.serve(requestPath, directory);
             }
         } finally {
             server.disconnectServer();

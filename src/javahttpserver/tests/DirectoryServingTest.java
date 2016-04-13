@@ -7,7 +7,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class DirectoryServingTest {
 
@@ -16,8 +17,8 @@ public class DirectoryServingTest {
     private String testDirectory = FileTestingUtilities.testDirectory;
 
     @Before
-    public void initialize() throws Exception{
-        directoryServing = new DirectoryServing();
+    public void initialize() throws Exception {
+        directoryServing = new DirectoryServing(testDirectory);
         FileTestingUtilities.makePath(testDirectory);
     }
 
@@ -25,10 +26,10 @@ public class DirectoryServingTest {
     public void testGetBytesReturnsByteArrayOfHeaderAndHTMLBytes() throws Exception {
         HTMLDirectoryDisplay directoryDisplay = new HTMLDirectoryDisplay();
         DirectoryListing directoryListing = new DirectoryListing();
-        String html = directoryDisplay.displayListing(directoryListing.getListing(testDirectory), testDirectory);
-        String content = directoryDisplay.displayDirectoryBackNavigation(testDirectory) + html;
+        String html = directoryDisplay.displayListing(directoryListing.getListing(testDirectory), "/");
+        String content = directoryDisplay.displayDirectoryBackNavigation("/") + html;
         byte[] bytes = content.getBytes();
-        assertArrayEquals("Get Bytes returns bytes of HTML and back navigation for test directory", bytes, directoryServing.getBytes(testDirectory, testDirectory, testDirectory));
+        assertArrayEquals("Get Bytes returns bytes of HTML and back navigation for test directory", bytes, directoryServing.getBytes(testDirectory));
     }
 
     @Test
