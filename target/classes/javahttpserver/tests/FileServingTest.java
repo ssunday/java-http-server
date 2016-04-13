@@ -1,3 +1,6 @@
+package javahttpserver.tests;
+
+import javahttpserver.main.FileServing;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class FileServingTest {
 
@@ -21,12 +23,7 @@ public class FileServingTest {
 
     @Before
     public void initialize() throws Exception{
-<<<<<<< HEAD:src/test/java/FileServingTest.java
-        FilePaths filePaths = new FilePaths(testDirectory);
-        fileServing = new FileServing(filePaths);
-=======
         fileServing = new FileServing(testDirectory);
->>>>>>> origin/parameter-decoding:src/javahttpserver/tests/FileServingTest.java
         FileTestingUtilities.makePath(testDirectory);
     }
 

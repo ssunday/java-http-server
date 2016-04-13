@@ -1,3 +1,8 @@
+package javahttpserver.tests;
+
+import javahttpserver.main.DirectoryListing;
+import javahttpserver.main.DirectoryServing;
+import javahttpserver.main.HTMLDirectoryDisplay;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +18,7 @@ public class DirectoryServingTest {
 
     @Before
     public void initialize() throws Exception {
-<<<<<<< HEAD:src/test/java/DirectoryServingTest.java
-        FilePaths filePaths = new FilePaths(testDirectory);
-        directoryServing = new DirectoryServing(filePaths);
-=======
         directoryServing = new DirectoryServing(testDirectory);
->>>>>>> origin/parameter-decoding:src/javahttpserver/tests/DirectoryServingTest.java
         FileTestingUtilities.makePath(testDirectory);
     }
 

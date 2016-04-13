@@ -1,3 +1,5 @@
+package javahttpserver.main;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
@@ -8,13 +10,8 @@ public class FileServing extends ServingBase {
 
     private FilePaths filePaths;
 
-<<<<<<< HEAD:src/main/java/FileServing.java
-    public FileServing(FilePaths filePaths){
-        this.filePaths = filePaths;
-=======
     public FileServing(String baseDirectory){
         this.filePaths = new FilePaths(baseDirectory);
->>>>>>> origin/parameter-decoding:src/javahttpserver/main/FileServing.java
     }
 
     public byte[] getBytes(String path) {
