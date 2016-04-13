@@ -21,12 +21,8 @@ public class FileServingTest {
 
     @Before
     public void initialize() throws Exception{
-<<<<<<< HEAD:src/test/java/FileServingTest.java
         FilePaths filePaths = new FilePaths(testDirectory);
         fileServing = new FileServing(filePaths);
-=======
-        fileServing = new FileServing(testDirectory);
->>>>>>> origin/parameter-decoding:src/javahttpserver/tests/FileServingTest.java
         FileTestingUtilities.makePath(testDirectory);
     }
 

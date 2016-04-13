@@ -4,17 +4,10 @@ public class DirectoryServing extends ServingBase {
     private HTMLDirectoryDisplay directoryDisplay;
     private FilePaths filePaths;
 
-<<<<<<< HEAD:src/main/java/DirectoryServing.java
     public DirectoryServing(FilePaths filePaths) {
         directoryListing = new DirectoryListing();
         directoryDisplay = new HTMLDirectoryDisplay();
         this.filePaths = filePaths;
-=======
-    public DirectoryServing(String baseDirectory) {
-        directoryListing = new DirectoryListing();
-        directoryDisplay = new HTMLDirectoryDisplay();
-        this.filePaths = new FilePaths(baseDirectory);
->>>>>>> origin/parameter-decoding:src/javahttpserver/main/DirectoryServing.java
     }
 
     public byte[] getBytes(String path) {
