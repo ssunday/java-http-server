@@ -19,47 +19,29 @@ public class FilePathsTest {
 
     @Test
 
-    public void testGetPathToServeFromRequestReturnsFullDirectoryPathGivenHTTPRequest(){
-        String request = "GET /folder/ HTTP/1.1";
-        String directory = filePaths.getPathToServeFromRequest(request);
-        String fullpath = baseDirectory + "folder/";
-        assertEquals("Returns full path given HTTP request", fullpath, directory);
+    public void testGetPathToServeReturnsFullDirectoryPath(){
+        String path = "/folder/";
+        String directory = filePaths.getPathToServe(path);
+        String fullpath = baseDirectory + path.substring(1);
+        assertEquals("Returns full path of folder given folder", fullpath, directory);
     }
 
     @Test
 
-    public void testGetPathToServeFromRequestReturnsFullNestedDirectoryPathGivenHTTPRequest(){
-        String request = "GET /folder/something/ HTTP/1.1";
-        String directory = filePaths.getPathToServeFromRequest(request);
-        String fullpath = baseDirectory + "folder/something/";
-        assertEquals("Returns full path of nested folders given HTTP request", fullpath, directory);
+    public void testGetPathToServeReturnsFullDirectoryOfFile(){
+        String path = "/file.txt";
+        String directory = filePaths.getPathToServe(path);
+        String fullpath = baseDirectory + path.substring(1);
+        assertEquals("Returns full path of file given file", fullpath, directory);
     }
 
     @Test
 
-    public void testGetPathToServeFromRequestWithFoldersWithSpaceReturnsFullPathGivenHTTPRequest(){
-        String request = "GET /folder%20something/ HTTP/1.1";
-        String directory = filePaths.getPathToServeFromRequest(request);
-        String fullpath = baseDirectory + "folder something/";
-        assertEquals("Returns path of folders with html space given HTTP request", fullpath, directory);
-    }
-
-    @Test
-
-    public void testGetPathToServeFromRequestReturnsFullDirectoryWithFileGivenHTTPRequest(){
-        String request = "GET /file.txt HTTP/1.1";
-        String directory = filePaths.getPathToServeFromRequest(request);
-        String fullpath = baseDirectory + "file.txt";
-        assertEquals("Returns full path of file given HTTP request", fullpath, directory);
-    }
-
-    @Test
-
-    public void testGetPathToServeFromRequestReturnsFullNestedDirectoryWithFileGivenHTTPRequest(){
-        String request = "GET /something/file.txt HTTP/1.1";
-        String directory = filePaths.getPathToServeFromRequest(request);
-        String fullPath = baseDirectory + "something/file.txt";
-        assertEquals("Returns full path of nested file given HTTP request", fullPath, directory);
+    public void testGetPathToServeReturnsFullNestedDirectory(){
+        String path = "/folder/something/";
+        String directory = filePaths.getPathToServe(path);
+        String fullpath = baseDirectory + path.substring(1);
+        assertEquals("Returns full path of nested folder directory", fullpath, directory);
     }
 
     @Test

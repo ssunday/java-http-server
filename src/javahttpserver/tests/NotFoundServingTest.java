@@ -6,9 +6,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by sarahsunday on 4/12/16.
- */
 public class NotFoundServingTest {
 
     private NotFoundServing notFoundServing;
@@ -21,7 +18,7 @@ public class NotFoundServingTest {
 
     @Test
     public void testGetBytes() throws Exception {
-        assertNotEquals("Returns not null bytes", new byte[0], notFoundServing.getBytes("/", "/", "/"));
+        assertNotEquals("Returns not null bytes", new byte[0], notFoundServing.getBytes("/"));
     }
 
     @Test

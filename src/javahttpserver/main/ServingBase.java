@@ -2,7 +2,7 @@ package javahttpserver.main;
 
 public class ServingBase {
 
-    public byte[] getBytes(String pathToServe, String previousDirectory, String pathFromBase)
+    public byte[] getBytes(String pathToServe)
     {
         return new byte[0];
     }

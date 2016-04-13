@@ -9,30 +9,18 @@ public class FilePaths {
         this.baseDirectory = baseDirectory;
     }
 
-    public String getPathToServeFromRequest(String request) {
-        String path = getPath(request);
+    public String getPathToServe(String path) {
+        String pathToServe = path;
         if (baseDirectory != path) {
-            path = baseDirectory + path.substring(1);
+            pathToServe = baseDirectory + path.substring(1);
         }
-        return path;
+        return pathToServe;
     }
 
     public String getPreviousPathToLink(String path) {
         String pathOneUp = getPathOneLevelUp(path);
         String pathToLink = getPathToLink(pathOneUp);
         return pathToLink;
-    }
-
-    private String getPath(String request) {
-        int firstSpaceBreak = request.indexOf(" ");
-        int lastSpaceBreak = request.lastIndexOf(" ");
-        String directory = request.substring(firstSpaceBreak+1, lastSpaceBreak);
-        directory = parseHTMLString(directory);
-        return directory; }
-
-    private String parseHTMLString(String htmlString){
-        String parsedString = htmlString.replace("%20", " ");
-        return parsedString;
     }
 
     public String getPathToLink(String path) {

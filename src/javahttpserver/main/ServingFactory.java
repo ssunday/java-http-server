@@ -4,24 +4,35 @@ import java.io.File;
 
 public class ServingFactory {
 
-    public static ServingBase getServer(String path){
-        if (isDirectory(path)){
-            return new DirectoryServing();
+    private static String parameterPath = "/parameters?";
+
+    public static ServingBase getServer(String path, String baseDirectory) {
+        FilePaths filePaths = new FilePaths(baseDirectory);
+        String fullPath = filePaths.getPathToServe(path);
+        if (isDirectory(fullPath)){
+            return new DirectoryServing(baseDirectory);
         }
-        else if (isFile(path)){
-            return new FileServing();
+        else if (isFile(fullPath)){
+            return new FileServing(baseDirectory);
+        }
+        else if (isParametersDirectory(path)){
+            return new ParameterServing();
         }
         else{
             return new NotFoundServing();
         }
     }
 
-    public static boolean isDirectory(String path){
+    private static boolean isParametersDirectory(String path){
+        return path.contains(parameterPath);
+    }
+
+    private static boolean isDirectory(String path){
         File file = new File(path);
         return file.isDirectory();
     }
 
-    public static boolean isFile(String path){
+    private static boolean isFile(String path){
         File file = new File(path);
         return file.isFile();
     }
