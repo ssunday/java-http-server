@@ -12,9 +12,9 @@ public class DirectoryServingTest {
     private String testDirectory = FileTestingUtilities.testDirectory;
 
     @Before
-    public void initialize() throws Exception {
+    public void setUp() throws Exception {
         FilePaths filePaths = new FilePaths(testDirectory);
-        directoryServing = new DirectoryServing(filePaths);
+        directoryServing = new DirectoryServing(testDirectory,filePaths);
         FileTestingUtilities.makePath(testDirectory);
     }
 
@@ -25,7 +25,7 @@ public class DirectoryServingTest {
         String html = directoryDisplay.displayListing(directoryListing.getListing(testDirectory), "/");
         String content = directoryDisplay.displayDirectoryBackNavigation("/") + html;
         byte[] bytes = content.getBytes();
-        assertArrayEquals("Get Bytes returns bytes of HTML and back navigation for test directory", bytes, directoryServing.getBytes(testDirectory));
+        assertArrayEquals("Get Bytes returns bytes of HTML and back navigation for test directory", bytes, directoryServing.getBytes());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class DirectoryServingTest {
     @Test
 
     public void testGetContentTypeReturnsTextHTML(){
-        assertEquals("Returns text/html", "text/html", directoryServing.getContentType(null));
+        assertEquals("Returns text/html", "text/html", directoryServing.getContentType());
     }
 
     @After

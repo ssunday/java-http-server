@@ -19,7 +19,7 @@ public class ServerTest {
     private static final int TEST_PORT = 6000;
 
     @Before
-    public void initialize() throws Exception{
+    public void setUp() throws Exception{
         server = new Server(TEST_PORT);
         testSocket = new Socket("localhost", TEST_PORT);
     }
@@ -39,40 +39,34 @@ public class ServerTest {
                 "Connection: close\r\n\r\n";
         output.writeBytes(request);
         output.flush();
-        assertEquals("Server can get socket request get/post/put line", get, server.getRequest());
+        assertEquals("Server can get entire socket request", request.trim(), server.getRequest());
     }
 
     @Test
-    public void testGetRequestDirectory() throws Exception {
+    public void testGetRequestWithParams() throws Exception {
         server.acceptConnection();
         DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET /something HTTP/1.1";
+        String get = "POST / HTTP/1.1";
         String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
+                "Host: " + "http://localhost:" + "\r\n" + "\r\n" +
+                "var1=foo";
         output.writeBytes(request);
         output.flush();
-        assertEquals("Server can get socket request of get directory line", get, server.getRequest());
-    }
-
-    @Test
-    public void testGetRequestFile() throws Exception {
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET /something.html HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        assertEquals("Server can get socket request of get file line", get, server.getRequest());
+        assertEquals("Server can get entire socket request with params", request.trim(), server.getRequest());
     }
 
     @Test
     public void testServeHas200Code() throws Exception {
         server.acceptConnection();
         String directory = System.getProperty("user.dir");
-        server.serve(directory, "/");
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET / HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve(directory);
         BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
         String response = input.readLine();
         assertTrue("Socket serves listing with HTTP/1.1 200 code", response.contains("HTTP/1.1 200"));
@@ -81,8 +75,15 @@ public class ServerTest {
     @Test
     public void testServeHas404CodeWithNonExistentDirectory() throws Exception {
         server.acceptConnection();
-        String directory = System.getProperty("user.dir") + "/foobar";
-        server.serve(directory, "/");
+        String directory = System.getProperty("user.dir");
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET /foobar HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve(directory);
         BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
         String response = input.readLine();
         assertTrue("Socket serves non-existent directory listing with 404 code", response.contains("404"));
@@ -97,6 +98,7 @@ public class ServerTest {
         assertFalse("When server ends connection cannot accept connections", server_end.acceptConnection());
         dummySocket.close();
     }
+
 
     @After
     public void end() throws Exception{

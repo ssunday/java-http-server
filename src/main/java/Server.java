@@ -7,7 +7,7 @@ public class Server {
     private ServerSocket serverSocket;
     private Socket socket;
     private DataOutputStream output;
-    private BufferedReader reader;
+    private InputStream stream;
 
     public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);
@@ -17,7 +17,7 @@ public class Server {
         try {
             socket = serverSocket.accept();
             output = new DataOutputStream(socket.getOutputStream());
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            stream = socket.getInputStream();
             return true;
         } catch (IOException e) {
             return false;
@@ -25,22 +25,29 @@ public class Server {
     }
 
     public String getRequest() throws Exception {
-        return reader.readLine();
+        byte[] data = new byte[16384];
+        stream.read(data);
+        String request = new String(data).trim();
+        return request;
     }
 
-    public void serve(String pathToServe, String baseDirectory) throws Exception {
+    public void serve(String baseDirectory) throws Exception {
         String header, contentType;
         int HTTPCode;
         byte[] bytesToWrite;
-        ServingBase serving = ServingFactory.getServer(pathToServe, baseDirectory);
-        bytesToWrite = serving.getBytes(pathToServe);
+        String request = getRequest();
+        String pathToServe = HTTPRequestParser.getPath(request);
+        String requestType = HTTPRequestParser.getRequestType(request);
+        String params = HTTPRequestParser.getParams(request);
+        ServingBase serving = ServingFactory.getServer(pathToServe, requestType, params, baseDirectory);
+        bytesToWrite = serving.getBytes();
         HTTPCode = serving.getHTTPCode();
-        contentType = serving.getContentType(pathToServe);
+        contentType = serving.getContentType();
         header = HTTPResponseHeaders.getHTTPHeader(HTTPCode, contentType, bytesToWrite.length);
         output.writeBytes(header);
         output.write(bytesToWrite);
         output.flush();
-    }
+     }
 
     public boolean disconnectServer(){
         try {

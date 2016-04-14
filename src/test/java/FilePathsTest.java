@@ -11,7 +11,7 @@ public class FilePathsTest {
 
     @Before
 
-    public void initialize(){
+    public void setUp(){
         filePaths = new FilePaths(baseDirectory);
     }
 
