@@ -1,12 +1,12 @@
 public class HTMLParameterDisplay {
 
-    private static final String HTML_START = "<HTML>"
+    private final String HTML_START = "<HTML>"
             + "<HEAD><title>Parameters</title></HEAD>"
             + "<body>";
 
-    private static final String HTML_END = "</body>" + "</HTML>";
+    private final String HTML_END = "</body>" + "</HTML>";
 
-    public static String htmlWrap(String[] params){
+    public String htmlWrap(String[] params){
         String html = "";
         html += HTML_START;
         for (String param: params){
@@ -16,7 +16,7 @@ public class HTMLParameterDisplay {
         return html;
     }
 
-    private static String addParam(String param){
+    private String addParam(String param){
         return "<p>" + param + "</p>";
     }
 }

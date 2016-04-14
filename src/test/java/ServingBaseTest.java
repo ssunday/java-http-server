@@ -10,12 +10,12 @@ public class ServingBaseTest {
     private ServingBase serving;
 
     @Before
-    public void initialize(){
+    public void setUp(){
         serving = new ServingBase();
     }
     @Test
     public void testGetBytes() throws Exception {
-        assertArrayEquals("Returns new byte of size 0", new byte[0], serving.getBytes("/"));
+        assertArrayEquals("Returns new byte of size 0", new byte[0], serving.getBytes());
     }
 
     @Test
@@ -25,6 +25,6 @@ public class ServingBaseTest {
 
     @Test
     public void testGetContentType() throws Exception {
-        assertNull("Returns null", serving.getContentType(null));
+        assertNull("Returns null", serving.getContentType());
     }
 }

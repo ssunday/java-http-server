@@ -3,17 +3,14 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class HTMLDirectoryDisplayTest {
-
+public class HTMLDirectoryDisplayTest
+{
     private HTMLDirectoryDisplay display;
-
+    
     @Before
-
-    public void initialize() {
-
+    public void setUp(){
         display = new HTMLDirectoryDisplay();
     }
-
     @Test
     public void testDisplayListingReturnsEmptyBodyWhenGivenNothing(){
         String[] contents = new String[0];

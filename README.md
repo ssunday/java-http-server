@@ -1,6 +1,18 @@
 #Java HTTP Server
 
-HTTP Server written in Java. It displays the contents of a particular directory.
+HTTP Server written in Java.
+
+##Features
+
+* Can view files in a particular directory
+
+* Serve images and basic text files
+
+* Navigate folder system
+
+* Decode parameters in /parameters
+
+* Form submitting/persisting in /form
 
 
 ##Running

@@ -14,13 +14,11 @@ public class Main {
     public static void main(String[] args) throws Exception {
         configuration(args);
         Server server  = new Server(port);
-        String request, requestPath;
+        String request;
         try {
             while (true) {
                 server.acceptConnection();
-                request = server.getRequest();
-                requestPath = HTTPRequestParser.getPath(request);
-                server.serve(requestPath, directory);
+                server.serve(directory);
             }
         } finally {
             server.disconnectServer();

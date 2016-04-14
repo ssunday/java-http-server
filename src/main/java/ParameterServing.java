@@ -1,17 +1,25 @@
 import java.net.URLDecoder;
 
 public class ParameterServing extends ServingBase {
+    private String pathToServe;
 
-    public byte[] getBytes(String pathToServe){
+    public ParameterServing(String path){
+        pathToServe = path;
+    }
+
+    @Override
+    public byte[] getBytes(){
         byte[] bytesToWrite;
+        HTMLParameterDisplay display = new HTMLParameterDisplay();
         String[] parameters = getParameters(pathToServe);
         String[] parsedParameters = getParsedParameters(parameters);
-        String wrappedParameters = HTMLParameterDisplay.htmlWrap(parsedParameters);
+        String wrappedParameters = display.htmlWrap(parsedParameters);
         bytesToWrite = wrappedParameters.getBytes();
         return bytesToWrite;
     }
 
-    public String getContentType(String filePath){
+    @Override
+    public String getContentType(){
         return "text/html";
     }
 

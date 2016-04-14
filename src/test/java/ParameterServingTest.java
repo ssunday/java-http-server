@@ -8,47 +8,51 @@ import static org.junit.Assert.assertEquals;
 
 public class ParameterServingTest {
 
-    private ParameterServing parametersServing;
+    private HTMLParameterDisplay htmlParameterDisplay;
 
     @Before
-    public void initialize(){
-        parametersServing = new ParameterServing();
+    public void setUp(){
+        htmlParameterDisplay = new HTMLParameterDisplay();
     }
 
     @Test
     public void testGetBytesReturnsBytesOfSimpleParameters() throws Exception {
         String[] param = new String[]{"variable_2=stuff"};
         String[] parsedParam = new String[]{"variable_2 = stuff"};
-        String wrappedParam = HTMLParameterDisplay.htmlWrap(parsedParam);
+        String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
-        assertArrayEquals("Byte arrays of simple string with padding equal each other", bytes, parametersServing.getBytes(path));
+        ParameterServing parametersServing = new ParameterServing(path);
+        assertArrayEquals("Byte arrays of simple string with padding equal each other", bytes, parametersServing.getBytes());
     }
 
     @Test
     public void testGetBytesReturnsByteOfComplexEncodedParameters() throws Exception {
         String[] param = new String[]{"variable_1=Operators <%2C"};
         String[] parsedParam = new String[]{"variable_1 = Operators <,"};
-        String wrappedParam = HTMLParameterDisplay.htmlWrap(parsedParam);
+        String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
-        assertArrayEquals("Byte arrays of single complex decoded string equals padded decoded version", bytes, parametersServing.getBytes(path));
+        ParameterServing parametersServing = new ParameterServing(path);
+        assertArrayEquals("Byte arrays of single complex decoded string equals padded decoded version", bytes, parametersServing.getBytes());
     }
 
     @Test
     public void testGetBytesReturnsBytesOfMultipleParametersWrappedInHTML() throws Exception {
         String[] params = new String[]{"variable_1=Operators <%2C", "variable_2=stuff"};
         String[] parsedParam = new String[]{"variable_1 = Operators <,", "variable_2 = stuff"};
-        String wrappedParams = HTMLParameterDisplay.htmlWrap(parsedParam);
+        String wrappedParams = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParams.getBytes();
         String path = "/somePath?" + params[0] + "&" + params[1];
-        assertArrayEquals("Returns HTML wrapped and padded two decoded parameters", bytes, parametersServing.getBytes(path));
+        ParameterServing parametersServing = new ParameterServing(path);
+        assertArrayEquals("Returns HTML wrapped and padded two decoded parameters", bytes, parametersServing.getBytes());
     }
 
 
     @Test
     public void testGetContentTypeReturnsTextHTML() throws Exception {
-        assertEquals("Content type is text/html", "text/html", parametersServing.getContentType(null));
+        ParameterServing parametersServing = new ParameterServing(null);
+        assertEquals("Content type is text/html", "text/html", parametersServing.getContentType());
     }
 
 

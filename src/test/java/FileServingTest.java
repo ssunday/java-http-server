@@ -15,14 +15,11 @@ import static org.junit.Assert.assertEquals;
 
 public class FileServingTest {
 
-    private FileServing fileServing;
 
     private String testDirectory = FileTestingUtilities.testDirectory;
 
     @Before
-    public void initialize() throws Exception{
-        FilePaths filePaths = new FilePaths(testDirectory);
-        fileServing = new FileServing(filePaths);
+    public void setUp() throws Exception{
         FileTestingUtilities.makePath(testDirectory);
     }
 
@@ -32,7 +29,8 @@ public class FileServingTest {
         String fileName = "/single.txt";
         String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
-        assertEquals("Returns text/plain for file", "text/plain", fileServing.getContentType(fileName));
+        FileServing fileServing = new FileServing(file);
+        assertEquals("Returns text/plain for file", "text/plain", fileServing.getContentType());
         FileTestingUtilities.clearPath(file);
     }
 
@@ -44,12 +42,14 @@ public class FileServingTest {
         File imageOutputFile = new File(imagePath);
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         ImageIO.write(image, "jpg", imageOutputFile);
-        assertEquals("Returns image for image", "image", fileServing.getContentType(imageName));
+        FileServing fileServing = new FileServing(imagePath);
+        assertEquals("Returns image for image", "image", fileServing.getContentType());
         FileTestingUtilities.clearPath(imagePath);
     }
 
     @Test
     public void testGetHTTPCode() {
+        FileServing fileServing = new FileServing("somefile.txt");
         assertEquals("Returns 200", 200, fileServing.getHTTPCode());
     }
 
@@ -58,7 +58,8 @@ public class FileServingTest {
         String fileName = "/emptytextfile";
         String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
-        assertArrayEquals("Returns empty array of filebytes when file is empty ", new byte[0], fileServing.getBytes(fileName));
+        FileServing fileServing = new FileServing(file);
+        assertArrayEquals("Returns empty array of filebytes when file is empty ", new byte[0], fileServing.getBytes());
         FileTestingUtilities.clearPath(file);
     }
 
@@ -72,7 +73,8 @@ public class FileServingTest {
         byteCount = stringWritten.getBytes();
         Path filePath = Paths.get(file);
         Files.write(filePath, byteCount);
-        assertArrayEquals("Returns array of bytes when file has content", byteCount, fileServing.getBytes(fileName));
+        FileServing fileServing = new FileServing(file);
+        assertArrayEquals("Returns array of bytes when file has content", byteCount, fileServing.getBytes());
         FileTestingUtilities.clearPath(file);
     }
 
@@ -86,7 +88,8 @@ public class FileServingTest {
         ImageIO.write(image, "jpg", baos);
         ImageIO.write(image, "jpg", imageOutputFile);
         byte[] imageBytes = baos.toByteArray();
-        assertArrayEquals("GetImageBytes returns jpg image's bytes", imageBytes, fileServing.getBytes(imageName));
+        FileServing fileServing = new FileServing(imagePath);
+        assertArrayEquals("GetImageBytes returns jpg image's bytes", imageBytes, fileServing.getBytes());
         FileTestingUtilities.clearPath(imagePath);
     }
 
