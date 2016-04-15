@@ -4,13 +4,10 @@ import java.util.List;
 public class CommandParser {
 
     private final String PORT_KEYWORD = "-p";
-
     private final String DIRECTORY_KEYWORD = "-d";
 
     private List<String> options;
-
     private int defaultPort;
-
     private String defaultDirectory;
 
     public CommandParser(String[] args) {

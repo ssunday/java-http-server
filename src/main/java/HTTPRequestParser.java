@@ -1,4 +1,4 @@
-
+import java.util.Base64;
 
 public class HTTPRequestParser {
 
@@ -31,12 +31,51 @@ public class HTTPRequestParser {
         return params;
     }
 
-    private static boolean isPostOrPut(String requestLine){
-        return requestLine.contains(POST) || requestLine.contains(PUT);
+    public static String getAuthenticationUsername(String request){
+        String[] credentials = getAuthenticationCredentials(request);
+        return credentials[0];
+    }
+
+    public static String getAuthenticationPassword(String request){
+        String[] credentials = getAuthenticationCredentials(request);
+        return credentials[1];
+    }
+
+    private static String[] getAuthenticationCredentials(String request){
+        String[] credentials = new String[]{"",""};
+        String[] requestHeaders = getRequestLines(request);
+        String authorizationLine = findRequestLine("Authorization", requestHeaders);
+        if (authorizationLine != null){
+            credentials = parseAuthenticationInformation(authorizationLine);
+        }
+        return credentials;
     }
 
     private static String[] getRequestLines(String request){
         return request.split("\\r?\\n");
+    }
+
+    private static String findRequestLine(String requestOption, String[] requestHeaders){
+        String requestLine = null;
+        for (int i = 0; i < requestHeaders.length; i++){
+            String line = requestHeaders[i];
+            if (line.contains(requestOption)){
+                requestLine = line;
+            }
+        }
+        return requestLine;
+    }
+
+    private static String[] parseAuthenticationInformation(String authenticationLine){
+        String[] authenticationParts = authenticationLine.split(" ");
+        String encodedCredentials = authenticationParts[authenticationParts.length-1];
+        byte[] decodedCredentialsBytes = Base64.getDecoder().decode(encodedCredentials);
+        String decodedCredentials = new String(decodedCredentialsBytes);
+        return decodedCredentials.split(":");
+    }
+
+    private static boolean isPostOrPut(String requestLine) {
+        return requestLine.contains(POST) || requestLine.contains(PUT);
     }
 
     private static String parseEncodingIfFolder(String path){

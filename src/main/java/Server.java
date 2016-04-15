@@ -4,6 +4,7 @@ import java.net.Socket;
 
 public class Server {
 
+    private RequestLogger logger;
     private ServerSocket serverSocket;
     private Socket socket;
     private DataOutputStream output;
@@ -11,9 +12,10 @@ public class Server {
 
     public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);
+        logger = new RequestLogger();
     }
 
-    public boolean acceptConnection() {
+    public boolean acceptConnection(){
         try {
             socket = serverSocket.accept();
             output = new DataOutputStream(socket.getOutputStream());
@@ -24,22 +26,20 @@ public class Server {
         }
     }
 
-    public String getRequest() throws Exception {
-        byte[] data = new byte[16384];
+    public String getRequest() throws Exception{
+        byte[] data = new byte[18000];
         stream.read(data);
         String request = new String(data).trim();
         return request;
     }
 
-    public void serve(String baseDirectory) throws Exception {
+    public void serve(String baseDirectory) throws Exception{
         String header, contentType;
         int HTTPCode;
         byte[] bytesToWrite;
         String request = getRequest();
-        String pathToServe = HTTPRequestParser.getPath(request);
-        String requestType = HTTPRequestParser.getRequestType(request);
-        String params = HTTPRequestParser.getParams(request);
-        ServingBase serving = ServingFactory.getServer(pathToServe, requestType, params, baseDirectory);
+        logger.logRequest(request);
+        ServingBase serving = ServingFactory.getServer(request, baseDirectory);
         bytesToWrite = serving.getBytes();
         HTTPCode = serving.getHTTPCode();
         contentType = serving.getContentType();

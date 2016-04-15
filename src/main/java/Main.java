@@ -1,6 +1,5 @@
 public class Main {
 
-
     private static int port;
 
     private static String directory;;
@@ -14,7 +13,6 @@ public class Main {
     public static void main(String[] args) throws Exception {
         configuration(args);
         Server server  = new Server(port);
-        String request;
         try {
             while (true) {
                 server.acceptConnection();

@@ -12,7 +12,6 @@ public class FormServing extends ServingBase {
     private String requestType;
     private String params;
 
-
     public FormServing(String requestType, String params){
         formData = new FormData();
         htmlFormDisplay = new HTMLFormDisplay();
@@ -26,7 +25,6 @@ public class FormServing extends ServingBase {
         String paramsToDisplay = null;
         String html;
         if (isGet()){
-            String data = formData.getData();
             paramsToDisplay = formData.getData();
         }
         else if (isPost() || isPut()){
@@ -40,7 +38,6 @@ public class FormServing extends ServingBase {
         bytesToWrite = html.getBytes();
         return bytesToWrite;
     }
-
 
     @Override
     public String getContentType() {

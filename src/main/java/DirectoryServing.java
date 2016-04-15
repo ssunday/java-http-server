@@ -5,7 +5,6 @@ public class DirectoryServing extends ServingBase {
     private FilePaths filePaths;
     private String path;
 
-
     public DirectoryServing(String path, FilePaths filePaths) {
         this.path = path;
         this.filePaths = filePaths;
@@ -26,7 +25,6 @@ public class DirectoryServing extends ServingBase {
         return "text/html";
     }
 
-
     private String getContentToServe(){
         String pathToServe = filePaths.getPathToServe(path);
         String backNavigation = getBackNavigation(pathToServe);
@@ -35,17 +33,14 @@ public class DirectoryServing extends ServingBase {
         return content;
     }
 
-
     private String getDirectoryListing(String pathToServe){
         String pathFromBase = filePaths.getPathToLink(pathToServe);
         String[] listing = directoryListing.getListing(pathToServe);
-        String html = display.displayListing(listing, pathFromBase);
-        return html;
+        return display.displayListing(listing, pathFromBase);
     }
 
     private String getBackNavigation(String pathToServe){
         String previousDirectory = filePaths.getPreviousPathToLink(pathToServe);
-        String backNavigation = display.displayDirectoryBackNavigation(previousDirectory);
-        return backNavigation;
+        return display.displayDirectoryBackNavigation(previousDirectory);
     }
 }

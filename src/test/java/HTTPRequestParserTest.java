@@ -117,4 +117,40 @@ public class HTTPRequestParserTest {
                 + params;
         assertEquals("Returns put params", params, HTTPRequestParser.getParams(request));
     }
+
+    @Test
+    public void testGetAuthenticationPasswordReturnsEmptyStringWhenNoAuthentication(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get authentication password returns empty string if no authentication line", "", HTTPRequestParser.getAuthenticationPassword(request));
+    }
+
+    @Test
+    public void testGetAuthenticationPasswordReturnsPassword(){
+        String[] information = new String[]{"someone", "password"};
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Authorization: Basic c29tZW9uZTpwYXNzd29yZA==\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get authentication password returns decoded password", "password", HTTPRequestParser.getAuthenticationPassword(request));
+    }
+
+    @Test
+    public void testGetAuthenticationUsernameReturnsUsername(){
+        String[] information = new String[]{"someone", "password"};
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Authorization: Basic c29tZW9uZTpwYXNzd29yZA==\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get authentication username returns decoded username", "someone", HTTPRequestParser.getAuthenticationUsername(request));
+    }
+
+    @Test
+    public void testGetAuthenticationUsernameReturnsEmptyStringWhenNoAuthentication(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get authentication username returns decoded username", "", HTTPRequestParser.getAuthenticationUsername(request));
+    }
 }

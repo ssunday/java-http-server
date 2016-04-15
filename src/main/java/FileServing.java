@@ -13,9 +13,14 @@ public class FileServing extends ServingBase {
     }
 
     @Override
-    public byte[] getBytes() {
-        byte[] bytes = getFileBytes();
-        return bytes;
+    public byte[] getBytes(){
+        byte[] fileBytes;
+        try {
+            fileBytes = Files.readAllBytes(file.toPath());
+        } catch (IOException eio){
+            fileBytes = super.getBytes();
+        }
+        return fileBytes;
     }
 
     @Override
@@ -27,23 +32,11 @@ public class FileServing extends ServingBase {
         return contentType;
     }
 
-    private byte[] getFileBytes(){
-        byte[] fileBytes;
-        try {
-            fileBytes = Files.readAllBytes(file.toPath());
-        } catch (IOException eio){
-            fileBytes = super.getBytes();
-        }
-        return fileBytes;
-    }
-
     private boolean isImage(){
-        boolean isImage = false;
+        boolean isImage;
         try {
             Image image = ImageIO.read(file);
-            if (image != null) {
-                isImage = true;
-            }
+            isImage = (image != null);
         } catch(IOException ex) {
             isImage = false;
         }
