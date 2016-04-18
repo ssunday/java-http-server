@@ -18,8 +18,7 @@ public class FilePaths {
 
     public String getPreviousPathToLink(String path) {
         String pathOneUp = getPathOneLevelUp(path);
-        String pathToLink = getPathToLink(pathOneUp);
-        return pathToLink;
+        return getPathToLink(pathOneUp);
     }
 
     public String getPathToLink(String path) {
@@ -35,11 +34,10 @@ public class FilePaths {
         String pathUp = path;
         String pathWithoutLastSlash = path.substring(0,path.length()-2);
         if (!(path.equals(baseDirectory))){
-            int secondtoLastSlash = pathWithoutLastSlash.lastIndexOf("/");
-            pathUp = path.substring(0, secondtoLastSlash+1);
+            int secondToLastSlash = pathWithoutLastSlash.lastIndexOf("/");
+            pathUp = path.substring(0, secondToLastSlash+1);
         }
         return pathUp;
     }
-
 
 }

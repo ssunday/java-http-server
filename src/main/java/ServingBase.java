@@ -1,6 +1,6 @@
 public class ServingBase {
 
-    public byte[] getBytes(String pathToServe)
+    public byte[] getBytes()
     {
         return new byte[0];
     }
@@ -9,7 +9,7 @@ public class ServingBase {
         return 200;
     }
 
-    public String getContentType(String filePath) {
+    public String getContentType() {
         return null;
     }
 

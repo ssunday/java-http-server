@@ -12,7 +12,7 @@ public class DirectoryListingTest {
     private String testDirectory = FileTestingUtilities.testDirectory;
 
     @Before
-    public void initialize() throws Exception{
+    public void setUp() throws Exception{
         directoryListing = new DirectoryListing();
         FileTestingUtilities.makePath(testDirectory);
     }

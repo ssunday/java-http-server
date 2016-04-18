@@ -24,6 +24,10 @@ public class HTTPResponseHeaders {
             case 206:
                 HTTPCodeHeader = "HTTP/1.1 206 Partial Content" + "\r\n";
                 break;
+            case 401:
+                HTTPCodeHeader = "HTTP/1.1 401 Unauthorized" + "\r\n";
+                HTTPCodeHeader += "WWW-Authenticate: Basic realm='logs'";
+                break;
             case 404:
                 HTTPCodeHeader = "HTTP/1.1 404 Not Found" + "\r\n";
                 break;

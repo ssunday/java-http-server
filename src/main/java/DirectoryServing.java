@@ -1,29 +1,46 @@
 public class DirectoryServing extends ServingBase {
 
+    private HTMLDirectoryDisplay display;
     private DirectoryListing directoryListing;
-    private HTMLDirectoryDisplay directoryDisplay;
     private FilePaths filePaths;
+    private String path;
 
-    public DirectoryServing(FilePaths filePaths) {
-        directoryListing = new DirectoryListing();
-        directoryDisplay = new HTMLDirectoryDisplay();
+    public DirectoryServing(String path, FilePaths filePaths) {
+        this.path = path;
         this.filePaths = filePaths;
+        display = new HTMLDirectoryDisplay();
+        directoryListing = new DirectoryListing();
     }
 
-    public byte[] getBytes(String path) {
+    @Override
+    public byte[] getBytes() {
         byte[] bytesToWrite;
-        String pathToServe = filePaths.getPathToServe(path);
-        String previousDirectory = filePaths.getPreviousPathToLink(pathToServe);
-        String pathFromBase = filePaths.getPathToLink(pathToServe);
-        String[] listing = directoryListing.getListing(pathToServe);
-        String backNavigation = directoryDisplay.displayDirectoryBackNavigation(previousDirectory);
-        String html = directoryDisplay.displayListing(listing, pathFromBase);
-        String content = backNavigation + html;
-        bytesToWrite = content.getBytes();
+        String contentToServe = getContentToServe();
+        bytesToWrite = contentToServe.getBytes();
         return bytesToWrite;
     }
 
-    public String getContentType(String filePath){
+    @Override
+    public String getContentType(){
         return "text/html";
+    }
+
+    private String getContentToServe(){
+        String pathToServe = filePaths.getPathToServe(path);
+        String backNavigation = getBackNavigation(pathToServe);
+        String directoryListingDisplay = getDirectoryListing(pathToServe);
+        String content = backNavigation + directoryListingDisplay;
+        return content;
+    }
+
+    private String getDirectoryListing(String pathToServe){
+        String pathFromBase = filePaths.getPathToLink(pathToServe);
+        String[] listing = directoryListing.getListing(pathToServe);
+        return display.displayListing(listing, pathFromBase);
+    }
+
+    private String getBackNavigation(String pathToServe){
+        String previousDirectory = filePaths.getPreviousPathToLink(pathToServe);
+        return display.displayDirectoryBackNavigation(previousDirectory);
     }
 }

@@ -11,13 +11,13 @@ public class NotFoundServingTest {
 
     @Before
 
-    public void initialize(){
+    public void setUp(){
         notFoundServing = new NotFoundServing();
     }
 
     @Test
     public void testGetBytes() throws Exception {
-        assertNotEquals("Returns not null bytes", new byte[0], notFoundServing.getBytes("/"));
+        assertNotEquals("Returns not null bytes", new byte[0], notFoundServing.getBytes());
     }
 
     @Test
@@ -27,6 +27,6 @@ public class NotFoundServingTest {
 
     @Test
     public void testGetContentTypeReturnsTextPlain() throws Exception {
-        assertEquals("Returns text plain", "text/plain", notFoundServing.getContentType(null));
+        assertEquals("Returns text plain", "text/plain", notFoundServing.getContentType());
     }
 }

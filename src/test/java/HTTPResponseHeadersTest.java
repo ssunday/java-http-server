@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 public class HTTPResponseHeadersTest {
 
     @Test
-
     public void testGetHeaderIncludes200CodePassedIn(){
         int contentLength = 30;
         String header = HTTPResponseHeaders.getHTTPHeader(200, "text/html", contentLength);
@@ -15,7 +14,6 @@ public class HTTPResponseHeadersTest {
     }
 
     @Test
-
     public void testGetHeaderIncludes206CodePassedIn(){
         int contentLength = 30;
         String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", contentLength);
@@ -23,7 +21,6 @@ public class HTTPResponseHeadersTest {
     }
 
     @Test
-
     public void testGetHeaderIncludes404CodePassedIn(){
         int contentLength = 30;
         String header = HTTPResponseHeaders.getHTTPHeader(404, "text/html", contentLength);
@@ -31,7 +28,19 @@ public class HTTPResponseHeadersTest {
     }
 
     @Test
+    public void testGetHeaderIncludes401CodePassedIn(){
+        int contentLength = 30;
+        String header = HTTPResponseHeaders.getHTTPHeader(401, "text/plain", contentLength);
+        assertTrue("Header includes 401 code passed in", header.contains("401"));
+    }
 
+    @Test
+    public void testGetHeaderIncludesAuthenticationHeaderIf401CodepassedIn(){
+        int contentLength = 30;
+        String header = HTTPResponseHeaders.getHTTPHeader(401, "text/plain", contentLength);
+        assertTrue("Header includes authentication request header if 401 code passed in", header.contains("WWW-Authenticate"));
+    }
+    @Test
     public void testGetHeaderIncludesTextHtmlContentType(){
         int contentLength = 30;
         String type = "text/html";
@@ -40,7 +49,6 @@ public class HTTPResponseHeadersTest {
     }
 
     @Test
-
     public void testGetHeaderIncludesImageContentType(){
         int contentLength = 30;
         String type = "image";
@@ -50,7 +58,6 @@ public class HTTPResponseHeadersTest {
 
 
     @Test
-
     public void testGetHeaderIncludesContentLength(){
         int contentLength = 30;
         String type = "text/html";
