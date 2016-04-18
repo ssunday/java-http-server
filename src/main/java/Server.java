@@ -13,7 +13,6 @@ public class Server {
     private InputStream stream;
     private RequestLogger logger;
 
-
     public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);
         logger = new RequestLogger();
@@ -66,7 +65,7 @@ public class Server {
         output.writeBytes(header);
         output.write(bytesToWrite);
         output.flush();
-    }
+     }
 
     public boolean disconnectServer(){
         try {
