@@ -123,8 +123,9 @@ public class ServerTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String info = new String(data).trim();
-        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory));
-        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length);
+        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory), "GET");
+        String[] methodOptions = new String[]{"GET"};
+        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length,methodOptions);
         String totalContent = header + new String(serving.getBytes());
         assertNotEquals("Socket serves partial content with entire range", info.getBytes(), totalContent.getBytes());
     }
@@ -146,8 +147,9 @@ public class ServerTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String info = new String(data).trim();
-        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory));
-        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length);
+        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory), "GET");
+        String[] methodOptions = new String[]{"GET"};
+        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length,methodOptions );
         String totalContent = header + new String(serving.getBytes());
         assertNotEquals("Socket serves partial content with only end range", info.getBytes(), totalContent.getBytes());
     }
@@ -169,8 +171,9 @@ public class ServerTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String info = new String(data).trim();
-        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory));
-        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length);
+        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory), "GET");
+        String[] methodOptions = new String[]{"GET"};
+        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length,methodOptions );
         String totalContent = header + new String(serving.getBytes());
         assertNotEquals("Socket serves partial content with only start range", info.getBytes(), totalContent.getBytes());
     }

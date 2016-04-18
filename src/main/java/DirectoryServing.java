@@ -4,20 +4,32 @@ public class DirectoryServing extends ServingBase {
     private DirectoryListing directoryListing;
     private FilePaths filePaths;
     private String path;
+    private String requestType;
 
-    public DirectoryServing(String path, FilePaths filePaths) {
+    public DirectoryServing(String path, FilePaths filePaths, String requestType){
         this.path = path;
         this.filePaths = filePaths;
+        this.requestType = requestType;
         display = new HTMLDirectoryDisplay();
         directoryListing = new DirectoryListing();
+        OPTIONS.add("GET");
     }
 
     @Override
-    public byte[] getBytes() {
+    public byte[] getBytes(){
         byte[] bytesToWrite;
         String contentToServe = getContentToServe();
         bytesToWrite = contentToServe.getBytes();
         return bytesToWrite;
+    }
+
+    @Override
+    public int getHTTPCode(){
+        int code = super.getHTTPCode();
+        if (!(OPTIONS.contains(requestType))){
+            code = 405;
+        }
+        return code;
     }
 
     @Override

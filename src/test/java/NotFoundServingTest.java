@@ -2,6 +2,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -12,7 +13,7 @@ public class NotFoundServingTest {
     @Before
 
     public void setUp(){
-        notFoundServing = new NotFoundServing();
+        notFoundServing = new NotFoundServing("GET");
     }
 
     @Test
@@ -23,6 +24,17 @@ public class NotFoundServingTest {
     @Test
     public void testGetHTTPCode() throws Exception {
         assertEquals("Returns 404", 404, notFoundServing.getHTTPCode());
+    }
+
+    @Test
+    public void testGetHTTPCodeReturns405WhenNotGet() throws Exception {
+        NotFoundServing notFoundServingNotGet = new NotFoundServing("POST");
+        assertEquals("Returns 405", 405, notFoundServingNotGet.getHTTPCode());
+    }
+
+    @Test
+    public void testGetMethodOptionsReturnsGet(){
+        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, notFoundServing.getMethodOptions());
     }
 
     @Test

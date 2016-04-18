@@ -1,4 +1,3 @@
-
 public class FormServing extends ServingBase {
 
     private final String GET = "GET";
@@ -12,11 +11,15 @@ public class FormServing extends ServingBase {
     private String requestType;
     private String params;
 
-    public FormServing(String requestType, String params){
+    public FormServing(String params, String requestType){
         formData = new FormData();
         htmlFormDisplay = new HTMLFormDisplay();
         this.requestType = requestType;
         this.params = params;
+        OPTIONS.add(GET);
+        OPTIONS.add(POST);
+        OPTIONS.add(PUT);
+        OPTIONS.add(DELETE);
     }
 
     @Override
@@ -37,6 +40,15 @@ public class FormServing extends ServingBase {
         html = htmlFormDisplay.displayFormPage(paramsToDisplay);
         bytesToWrite = html.getBytes();
         return bytesToWrite;
+    }
+
+    @Override
+    public int getHTTPCode(){
+        int httpCode = super.getHTTPCode();
+        if (!(OPTIONS.contains(requestType))){
+            httpCode = 405;
+        }
+        return httpCode;
     }
 
     @Override

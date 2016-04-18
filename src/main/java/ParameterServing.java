@@ -1,10 +1,14 @@
 import java.net.URLDecoder;
 
 public class ParameterServing extends ServingBase {
-    private String pathToServe;
 
-    public ParameterServing(String path){
+    private String pathToServe;
+    private String requestType;
+
+    public ParameterServing(String path, String requestType){
         pathToServe = path;
+        this.requestType = requestType;
+        OPTIONS.add("GET");
     }
 
     @Override
@@ -21,6 +25,15 @@ public class ParameterServing extends ServingBase {
     @Override
     public String getContentType(){
         return "text/html";
+    }
+
+    @Override
+    public int getHTTPCode(){
+        int httpCode = super.getHTTPCode();
+        if (!(OPTIONS.contains(requestType))){
+            httpCode = 405;
+        }
+        return httpCode;
     }
 
     private String[] getParameters(String path){

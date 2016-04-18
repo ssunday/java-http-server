@@ -82,6 +82,15 @@ public class ServingFactoryTest {
         assertTrue("Returns not found server when non-existent file is passed in", server instanceof NotFoundServing);
     }
 
+    @Test
+    public void testGetServerReturnsMethodOptionsServing() throws Exception{
+        String request = "GET /method_options HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        ServingBase server = ServingFactory.getServer(request,"/");
+        assertTrue("Returns method option serving when that route is passed in", server instanceof MethodOptionServing);
+    }
+
     @After
     public void tearDown() throws Exception{
         FileTestingUtilities.clearPath(FileTestingUtilities.testDirectory);

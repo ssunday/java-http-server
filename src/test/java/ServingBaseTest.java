@@ -28,4 +28,9 @@ public class ServingBaseTest {
     public void testGetContentType() throws Exception {
         assertNull("Returns null", serving.getContentType());
     }
+
+    @Test
+    public void testGetMethodOptionsReturnsEmptyStringArray(){
+        assertArrayEquals("Method options returns empty string array", new String[0], serving.getMethodOptions());
+    }
 }
