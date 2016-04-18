@@ -1,14 +1,16 @@
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
 
-    private RequestLogger logger;
     private ServerSocket serverSocket;
     private Socket socket;
     private DataOutputStream output;
     private InputStream stream;
+    private RequestLogger logger;
 
     public Server(int port) throws IOException{
         serverSocket = new ServerSocket(port);

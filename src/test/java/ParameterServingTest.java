@@ -48,12 +48,10 @@ public class ParameterServingTest {
         assertArrayEquals("Returns HTML wrapped and padded two decoded parameters", bytes, parametersServing.getBytes());
     }
 
-
     @Test
     public void testGetContentTypeReturnsTextHTML() throws Exception {
         ParameterServing parametersServing = new ParameterServing(null);
         assertEquals("Content type is text/html", "text/html", parametersServing.getContentType());
     }
-
 
 }

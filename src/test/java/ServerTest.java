@@ -1,11 +1,10 @@
-
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
@@ -90,6 +89,93 @@ public class ServerTest {
     }
 
     @Test
+    public void testServerHas206WhenContentRangeExists() throws Exception{
+        server.acceptConnection();
+        String directory = System.getProperty("user.dir");
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET / HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Range: bytes=0-40" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve(directory);
+        BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
+        String response = input.readLine();
+        assertTrue("Socket serves 206 code when partial content is provided", response.contains("206"));
+    }
+
+    @Test
+    public void testServerHasPartialContentWhenRangeIsProvided() throws Exception{
+        server.acceptConnection();
+        String directory = System.getProperty("user.dir");
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET / HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Range: bytes=0-20" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve(directory);
+        InputStream stream = testSocket.getInputStream();
+        byte[] data = new byte[18000];
+        stream.read(data);
+        String info = new String(data).trim();
+        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory));
+        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length);
+        String totalContent = header + new String(serving.getBytes());
+        assertNotEquals("Socket serves partial content with entire range", info.getBytes(), totalContent.getBytes());
+    }
+
+    @Test
+    public void testServerHasPartialContentWhenEndRangeIsProvided() throws Exception{
+        server.acceptConnection();
+        String directory = System.getProperty("user.dir");
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET / HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Range: bytes=-40" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve(directory);
+        InputStream stream = testSocket.getInputStream();
+        byte[] data = new byte[18000];
+        stream.read(data);
+        String info = new String(data).trim();
+        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory));
+        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length);
+        String totalContent = header + new String(serving.getBytes());
+        assertNotEquals("Socket serves partial content with only end range", info.getBytes(), totalContent.getBytes());
+    }
+
+    @Test
+    public void testServerHasPartialContentWhenStartRangeIsProvided() throws Exception{
+        server.acceptConnection();
+        String directory = System.getProperty("user.dir");
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET / HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Range: bytes=5-" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve(directory);
+        InputStream stream = testSocket.getInputStream();
+        byte[] data = new byte[18000];
+        stream.read(data);
+        String info = new String(data).trim();
+        DirectoryServing serving = new DirectoryServing(directory, new FilePaths(directory));
+        String header = HTTPResponseHeaders.getHTTPHeader(206, "text/html", serving.getBytes().length);
+        String totalContent = header + new String(serving.getBytes());
+        assertNotEquals("Socket serves partial content with only start range", info.getBytes(), totalContent.getBytes());
+    }
+
+    @Test
     public void testDisconnectServerEndsConnection() throws Exception {
         int dummyPort = 5001;
         Server server_end = new Server(dummyPort);
@@ -98,7 +184,6 @@ public class ServerTest {
         assertFalse("When server ends connection cannot accept connections", server_end.acceptConnection());
         dummySocket.close();
     }
-
 
     @After
     public void end() throws Exception{

@@ -56,7 +56,6 @@ public class HTTPResponseHeadersTest {
         assertTrue("Header includes image content type passed in", header.contains(type));
     }
 
-
     @Test
     public void testGetHeaderIncludesContentLength(){
         int contentLength = 30;
@@ -64,7 +63,4 @@ public class HTTPResponseHeadersTest {
         String header = HTTPResponseHeaders.getHTTPHeader(200, type, contentLength);
         assertTrue("Header includes content length passed in", header.contains(Integer.toString(contentLength)));
     }
-
-
-
 }

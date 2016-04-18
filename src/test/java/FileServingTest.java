@@ -24,7 +24,6 @@ public class FileServingTest {
     }
 
     @Test
-
     public void testGetContentTypeReturnsTextPlainForFile() throws Exception{
         String fileName = "/single.txt";
         String file = testDirectory + fileName.substring(1);
@@ -35,7 +34,6 @@ public class FileServingTest {
     }
 
     @Test
-
     public void testGetContentTypeReturnsImageForImage() throws Exception{
         String imageName = "/image.jpg";
         String imagePath = testDirectory + imageName.substring(1);
@@ -54,7 +52,7 @@ public class FileServingTest {
     }
 
     @Test
-    public void testgetBytesReturnsEmptyArrayOfBytesWhenFileIsEmpty() throws Exception{
+    public void testGetBytesReturnsEmptyArrayOfBytesWhenFileIsEmpty() throws Exception{
         String fileName = "/emptytextfile";
         String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
@@ -64,7 +62,7 @@ public class FileServingTest {
     }
 
     @Test
-    public void testgetBytesReturnsNonEmptyWhenFileHasContent() throws Exception{
+    public void testGetBytesReturnsNonEmptyWhenFileHasContent() throws Exception{
         String fileName = "/notemptyfile.txt";
         String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
@@ -79,7 +77,7 @@ public class FileServingTest {
     }
 
     @Test
-    public void testgetBytesReturnsJPGImageBytes() throws Exception{
+    public void testGetBytesReturnsJPGImageBytes() throws Exception{
         String imageName = "/image.jpg";
         String imagePath = testDirectory + imageName.substring(1);
         File imageOutputFile = new File(imagePath);
@@ -94,7 +92,6 @@ public class FileServingTest {
     }
 
     @After
-
     public void clearTestFiles() throws Exception{
         FileTestingUtilities.clearPath(testDirectory);
     }

@@ -41,6 +41,44 @@ public class HTTPRequestParser {
         return credentials[1];
     }
 
+    public static boolean hasContentRange(String request){
+        String[] requestHeaders = getRequestLines(request);
+        String rangeLine = findRequestLine("Range", requestHeaders);
+        return (rangeLine != null);
+    }
+
+    public static int getContentRangeEnd(String request){
+        return getContentRangeBeginningOrEnd(request, 1);
+    }
+
+    public static int getContentRangeStart(String request){
+        return getContentRangeBeginningOrEnd(request, 0);
+    }
+
+    private static int getContentRangeBeginningOrEnd(String request, int indexPosition){
+        int position = -1000;
+        String[] requestHeaders = getRequestLines(request);
+        String rangeLine = findRequestLine("Range", requestHeaders);
+        if (rangeLine != null){
+            String[] splitLine = rangeLine.split("=");
+            String range = splitLine[1];
+            int splitCharPosition = range.indexOf("-");
+            String[] rangeParts = range.split("-");
+            if (rangeParts.length == 2){
+                try {
+                    position = Integer.parseInt(rangeParts[indexPosition]);
+                }catch (Exception e){}
+            }
+            else{
+                if ((indexPosition == 0 && (splitCharPosition > range.indexOf(rangeParts[0]))) ||
+                    (indexPosition == 1 && (splitCharPosition < range.indexOf(rangeParts[0])))) {
+                    position = Integer.parseInt(rangeParts[0]);
+                }
+            }
+        }
+        return position;
+    }
+
     private static String[] getAuthenticationCredentials(String request){
         String[] credentials = new String[]{"",""};
         String[] requestHeaders = getRequestLines(request);

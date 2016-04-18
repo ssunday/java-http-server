@@ -1,6 +1,8 @@
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HTTPRequestParserTest {
 
@@ -152,5 +154,74 @@ public class HTTPRequestParserTest {
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
         assertEquals("Get authentication username returns decoded username", "", HTTPRequestParser.getAuthenticationUsername(request));
+    }
+
+    @Test
+    public void testGetContentRangeStartReturnsInvalidByteRaneIfNoRange(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get content Range Start returns -1000 if no range", -1000, HTTPRequestParser.getContentRangeStart(request));
+    }
+
+    @Test
+    public void testGetContentRangeStartReturnsStartRangeIfProvided(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Range: bytes=20-40\r\n"+
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get content Range Start returns start range if present", 20, HTTPRequestParser.getContentRangeStart(request));
+    }
+
+    @Test
+    public void testGetContentRangeEndReturnsInvalidByteRaneIfNoRange(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get content range end returns -1000 if no range", -1000, HTTPRequestParser.getContentRangeEnd(request));
+    }
+
+    @Test
+    public void testGetContentRangeEndReturnsEndRangeIfProvided(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Range: bytes=5-40\r\n"+
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get content Range end returns end range if range is present", 40, HTTPRequestParser.getContentRangeEnd(request));
+    }
+
+    @Test
+    public void testGetContentRangeEndReturnsInvalidByteRaneIfNoEndRangeSpecified(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Range: bytes=10-\r\n"+
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get content range end returns -1000 if range not specified", -1000, HTTPRequestParser.getContentRangeEnd(request));
+    }
+
+    @Test
+    public void testGetContentRangeStartReturnsInvalidByteRangeIfNoStartRangeSpecified(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Range: bytes=-50\r\n"+
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get content range start returns -1000 if range start not specified", -1000, HTTPRequestParser.getContentRangeStart(request));
+    }
+
+    @Test
+    public void testHasContentRangeReturnsTrueWhenRangeExists(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Range: bytes=0-\r\n"+
+                "Connection: Keep-Alive\r\n";
+        assertTrue("Has content range returns true when range exists", HTTPRequestParser.hasContentRange(request));
+    }
+
+    @Test
+    public void testHasContentRangeReturnsFalseWhenRangeDoesNotExist(){
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertFalse("Has content range returns false when range does not exists", HTTPRequestParser.hasContentRange(request));
     }
 }

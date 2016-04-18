@@ -11,6 +11,7 @@ public class HTMLDirectoryDisplayTest
     public void setUp(){
         display = new HTMLDirectoryDisplay();
     }
+
     @Test
     public void testDisplayListingReturnsEmptyBodyWhenGivenNothing(){
         String[] contents = new String[0];
