@@ -4,3 +4,4 @@ cob_spec/
 target/
 form.txt
 logs
+java-http-server.jar

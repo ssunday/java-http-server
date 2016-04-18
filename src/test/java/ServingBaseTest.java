@@ -13,6 +13,7 @@ public class ServingBaseTest {
     public void setUp(){
         serving = new ServingBase();
     }
+
     @Test
     public void testGetBytes() throws Exception {
         assertArrayEquals("Returns new byte of size 0", new byte[0], serving.getBytes());

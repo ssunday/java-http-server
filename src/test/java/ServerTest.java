@@ -185,7 +185,6 @@ public class ServerTest {
         dummySocket.close();
     }
 
-
     @After
     public void end() throws Exception{
         testSocket.close();

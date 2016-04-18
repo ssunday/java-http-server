@@ -24,7 +24,6 @@ public class FileServingTest {
     }
 
     @Test
-
     public void testGetContentTypeReturnsTextPlainForFile() throws Exception{
         String fileName = "/single.txt";
         String file = testDirectory + fileName.substring(1);
@@ -35,7 +34,6 @@ public class FileServingTest {
     }
 
     @Test
-
     public void testGetContentTypeReturnsImageForImage() throws Exception{
         String imageName = "/image.jpg";
         String imagePath = testDirectory + imageName.substring(1);

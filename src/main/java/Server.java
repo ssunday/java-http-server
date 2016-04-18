@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class Server {
 
@@ -46,21 +45,6 @@ public class Server {
         bytesToWrite = serving.getBytes();
         HTTPCode = serving.getHTTPCode();
         contentType = serving.getContentType();
-        if (HTTPRequestParser.hasContentRange(request)){
-            HTTPCode = 206;
-            int startPoint = HTTPRequestParser.getContentRangeStart(request);
-            int endPoint = HTTPRequestParser.getContentRangeEnd(request);
-            if (validByteRange(startPoint)){
-                endPoint = (validByteRange(endPoint)) ? endPoint + 1: bytesToWrite.length;
-            }
-            else{
-                if (validByteRange(endPoint)){
-                    startPoint = bytesToWrite.length - endPoint;
-                    endPoint = bytesToWrite.length;
-                }
-            }
-            bytesToWrite = Arrays.copyOfRange(bytesToWrite, startPoint, endPoint);
-        }
         header = HTTPResponseHeaders.getHTTPHeader(HTTPCode, contentType, bytesToWrite.length);
         output.writeBytes(header);
         output.write(bytesToWrite);
@@ -79,8 +63,5 @@ public class Server {
         }
     }
 
-    private boolean validByteRange(int bytePoint){
-       return (bytePoint >= -128 && bytePoint < 127);
-    }
 }
 

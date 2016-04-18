@@ -30,7 +30,6 @@ public class CommandParserTest {
     }
 
     @Test
-
     public void testGetPortReturnsSomeDefaultPortWhenNothingPassedIn() throws Exception {
         String[] args = new String[]{""};
         parser = new CommandParser(args);
@@ -39,7 +38,6 @@ public class CommandParserTest {
 
 
     @Test
-
     public void testHasDirectoryReturnsTrueWhenDirectoryIsPassedIn() throws Exception{
         String[] args = new String[]{"-d", "/somefolder"};
         parser = new CommandParser(args);
@@ -47,7 +45,6 @@ public class CommandParserTest {
     }
 
     @Test
-
     public void testHasDirectoryReturnsFalseWhenDirectoryIsNotPassedIn() throws Exception{
         String[] args = new String[]{""};
         parser = new CommandParser(args);
@@ -55,7 +52,6 @@ public class CommandParserTest {
     }
 
     @Test
-
     public void testGetDirectoryReturnsDirectoryPassedIn() throws Exception{
         String[] args = new String[]{"-d", "/somefolder"};
         parser = new CommandParser(args);
@@ -63,7 +59,6 @@ public class CommandParserTest {
     }
 
     @Test
-
     public void testGetDirectoryReturnsDefaultDirectoryWhenNothingPassedIn() throws Exception {
         String[] args = new String[]{""};
         parser = new CommandParser(args);

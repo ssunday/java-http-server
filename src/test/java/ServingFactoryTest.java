@@ -64,6 +64,16 @@ public class ServingFactoryTest {
     }
 
     @Test
+    public void testGetServerReturnsPartialContentServing() throws Exception{
+        String request = "GET /logs HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Range: bytes=0-20" + "\r\n" +
+                "Connection: Keep-Alive\r\n";
+        ServingBase server = ServingFactory.getServer(request, "/");
+        assertTrue("Returns partial content serving when range passed in", server instanceof PartialContentServing);
+    }
+
+    @Test
     public void testGetServerReturnsNotFoundServing() throws Exception {
         String request = "GET /notfound.txt HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
