@@ -1,4 +1,4 @@
-public class DirectoryServing extends ServingBase {
+public class DirectoryDeliverer extends DelivererBase {
 
     private HTMLDirectoryDisplay display;
     private DirectoryListing directoryListing;
@@ -6,7 +6,7 @@ public class DirectoryServing extends ServingBase {
     private String path;
     private String requestType;
 
-    public DirectoryServing(String path, FilePaths filePaths, String requestType){
+    public DirectoryDeliverer(String path, FilePaths filePaths, String requestType){
         this.path = path;
         this.filePaths = filePaths;
         this.requestType = requestType;

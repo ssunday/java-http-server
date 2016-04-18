@@ -1,11 +1,11 @@
 import java.net.URLDecoder;
 
-public class ParameterServing extends ServingBase {
+public class ParameterDeliverer extends DelivererBase {
 
     private String pathToServe;
     private String requestType;
 
-    public ParameterServing(String path, String requestType){
+    public ParameterDeliverer(String path, String requestType){
         pathToServe = path;
         this.requestType = requestType;
         OPTIONS.add("GET");

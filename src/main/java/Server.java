@@ -11,8 +11,12 @@ public class Server {
     private DataOutputStream output;
     private InputStream stream;
     private RequestLogger logger;
+    private int port;
+    private String baseDirectory;
 
-    public Server(int port) throws IOException{
+    public Server(int port, String directory) throws IOException{
+        this.port = port;
+        baseDirectory = directory;
         serverSocket = new ServerSocket(port);
         logger = new RequestLogger();
     }
@@ -35,22 +39,22 @@ public class Server {
         return request;
     }
 
-    public void serve(String baseDirectory) throws Exception{
+    public void serve() throws Exception{
         String header, contentType;
         int HTTPCode;
         byte[] bytesToWrite;
         String request = getRequest();
         logger.logRequest(request);
-        ServingBase serving = ServingFactory.getServer(request, baseDirectory);
-        bytesToWrite = serving.getBytes();
-        HTTPCode = serving.getHTTPCode();
-        contentType = serving.getContentType();
-        String[] methodOptions = serving.getMethodOptions();
-        header = HTTPResponseHeaders.getHTTPHeader(HTTPCode, contentType, bytesToWrite.length, methodOptions);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, baseDirectory);
+        bytesToWrite = deliverer.getBytes();
+        HTTPCode = deliverer.getHTTPCode();
+        contentType = deliverer.getContentType();
+        String[] methodOptions = deliverer.getMethodOptions();
+        header = HTTPResponseHeaders.getHTTPHeader(port, HTTPCode, contentType, bytesToWrite.length, methodOptions);
         output.writeBytes(header);
         output.write(bytesToWrite);
         output.flush();
-     }
+    }
 
     public boolean disconnectServer(){
         try {

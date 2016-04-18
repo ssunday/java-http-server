@@ -12,11 +12,11 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         configuration(args);
-        Server server  = new Server(port);
+        Server server  = new Server(port, directory);
         try {
             while (true) {
                 server.acceptConnection();
-                server.serve(directory);
+                server.serve();
             }
         } finally {
             server.disconnectServer();
