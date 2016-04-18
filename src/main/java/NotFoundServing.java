@@ -1,5 +1,11 @@
-
 public class NotFoundServing extends ServingBase {
+
+    private String requestType;
+
+    public NotFoundServing(String requestType){
+        this.requestType = requestType;
+        OPTIONS.add("GET");
+    }
 
     @Override
     public byte[] getBytes(){
@@ -10,7 +16,11 @@ public class NotFoundServing extends ServingBase {
 
     @Override
     public int getHTTPCode(){
-        return 404;
+        int httpCode = 404;
+        if (!(OPTIONS.contains(requestType))){
+            httpCode = 405;
+        }
+        return httpCode;
     }
 
     @Override

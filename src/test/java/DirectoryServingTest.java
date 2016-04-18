@@ -14,7 +14,7 @@ public class DirectoryServingTest {
     @Before
     public void setUp() throws Exception {
         FilePaths filePaths = new FilePaths(testDirectory);
-        directoryServing = new DirectoryServing(testDirectory,filePaths);
+        directoryServing = new DirectoryServing(testDirectory, filePaths, "GET");
         FileTestingUtilities.makePath(testDirectory);
     }
 
@@ -34,13 +34,22 @@ public class DirectoryServingTest {
     }
 
     @Test
+    public void testGetHTTPCodeReturns405IfNotGetPassedIn(){
+        DirectoryServing directoryServingPost = new DirectoryServing(testDirectory, new FilePaths(testDirectory), "POST");
+        assertEquals("Returns 405 when POST passed in", 405, directoryServingPost.getHTTPCode());
+    }
 
+    @Test
     public void testGetContentTypeReturnsTextHTML(){
         assertEquals("Returns text/html", "text/html", directoryServing.getContentType());
     }
 
-    @After
+    @Test
+    public void testGetMethodOptionsReturnsGET(){
+        assertArrayEquals("Method options return array with only get", new String[]{"GET"}, directoryServing.getMethodOptions());
+    }
 
+    @After
     public void clear() throws  Exception{
         FileTestingUtilities.clearPath(testDirectory);
     }

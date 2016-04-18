@@ -5,13 +5,16 @@ public class PartialContentServing extends ServingBase {
     private ServingBase server;
     private int rangeStart;
     private int rangeEnd;
+    private String requestType;
 
-    public PartialContentServing(ServingBase server, int startPoint, int endPoint){
+    public PartialContentServing(ServingBase server, int startPoint, int endPoint, String requestType){
         this.server = server;
         rangeStart = startPoint;
         rangeEnd = endPoint;
+        this.requestType = requestType;
     }
 
+    @Override
     public byte[] getBytes(){
         byte[] fullBytes = server.getBytes();
         int[] byteRange = getByteRange(fullBytes.length);
@@ -20,12 +23,23 @@ public class PartialContentServing extends ServingBase {
         return Arrays.copyOfRange(fullBytes, start, end);
     }
 
+    @Override
     public int getHTTPCode(){
-        return 206;
+        int httpCode = 206;
+        if (!(server.OPTIONS.contains(requestType))){
+            httpCode = 405;
+        }
+        return httpCode;
     }
 
+    @Override
     public String getContentType(){
         return server.getContentType();
+    }
+
+    @Override
+    public String[] getMethodOptions(){
+        return super.getMethodOptions();
     }
 
     private int[] getByteRange(int fullByteLength){

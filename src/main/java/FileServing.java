@@ -7,9 +7,12 @@ import java.nio.file.Files;
 public class FileServing extends ServingBase {
 
     private File file;
+    private String requestType;
 
-    public FileServing(String filePath) {
+    public FileServing(String filePath, String requestType) {
         file = new File(filePath);
+        this.requestType = requestType;
+        OPTIONS.add("GET");
     }
 
     @Override
@@ -21,6 +24,15 @@ public class FileServing extends ServingBase {
             fileBytes = super.getBytes();
         }
         return fileBytes;
+    }
+
+    @Override
+    public int getHTTPCode(){
+        int code = super.getHTTPCode();
+        if (!(OPTIONS.contains(requestType))){
+            code = 405;
+        }
+        return code;
     }
 
     @Override

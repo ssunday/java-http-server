@@ -1,4 +1,3 @@
-
 public class LogServing extends ServingBase {
 
     private final String ADMIN_USERNAME = "admin";
@@ -7,11 +6,14 @@ public class LogServing extends ServingBase {
 
     private String username;
     private String password;
+    private String requestType;
 
-    public LogServing(String username, String password){
+    public LogServing(String username, String password, String requestType){
         this.username = username;
         this.password = password;
         logger = new RequestLogger();
+        this.requestType = requestType;
+        OPTIONS.add("GET");
     }
 
     @Override
@@ -36,6 +38,9 @@ public class LogServing extends ServingBase {
     public int getHTTPCode(){
         int httpCode;
         httpCode = (isAuthorized()) ? 200: 401;
+        if (!(OPTIONS.contains(requestType))){
+            httpCode = 405;
+        }
         return httpCode;
     }
 

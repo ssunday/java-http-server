@@ -2,9 +2,10 @@ public class HTTPResponseHeaders {
 
     private static final String SERVER_NAME = "Java HTTP Server";
 
-    public static String getHTTPHeader(int code, String contentType, int contentLength){
+    public static String getHTTPHeader(int code, String contentType, int contentLength, String[] options){
         String header = getHTTPCodeHeader(code);
         header += getServerName();
+        header += getAllowField(options);
         header += getHTTPContentTypeAndLength(contentType, contentLength);
         header += getConnectionClose();
         header += "\r\n";
@@ -31,6 +32,9 @@ public class HTTPResponseHeaders {
             case 404:
                 HTTPCodeHeader = "HTTP/1.1 404 Not Found" + "\r\n";
                 break;
+            case 405:
+                HTTPCodeHeader = "HTTP/1.1 405 Method Not Allowed" + "\r\n";
+                break;
             default:
                 HTTPCodeHeader = "HTTP/1.1 200 OK" + "\r\n";
                 break;
@@ -41,6 +45,15 @@ public class HTTPResponseHeaders {
     private static String getServerName(){
         String serverNameLine = "Server: " + SERVER_NAME + "\r\n";
         return serverNameLine;
+    }
+
+    private static String getAllowField(String[] options){
+        String allowField = "Allow: ";
+        for(String option: options){
+            allowField += option + ",";
+        }
+        allowField = allowField.substring(0,allowField.length()-1);
+        return allowField + "\r\n";
     }
 
     private static String getHTTPContentTypeAndLength(String contentType, int contentLength){

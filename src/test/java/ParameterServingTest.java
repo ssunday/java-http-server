@@ -22,7 +22,7 @@ public class ParameterServingTest {
         String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
-        ParameterServing parametersServing = new ParameterServing(path);
+        ParameterServing parametersServing = new ParameterServing(path, "GET");
         assertArrayEquals("Byte arrays of simple string with padding equal each other", bytes, parametersServing.getBytes());
     }
 
@@ -33,7 +33,7 @@ public class ParameterServingTest {
         String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
-        ParameterServing parametersServing = new ParameterServing(path);
+        ParameterServing parametersServing = new ParameterServing(path, "GET");
         assertArrayEquals("Byte arrays of single complex decoded string equals padded decoded version", bytes, parametersServing.getBytes());
     }
 
@@ -44,13 +44,19 @@ public class ParameterServingTest {
         String wrappedParams = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParams.getBytes();
         String path = "/somePath?" + params[0] + "&" + params[1];
-        ParameterServing parametersServing = new ParameterServing(path);
+        ParameterServing parametersServing = new ParameterServing(path, "GET");
         assertArrayEquals("Returns HTML wrapped and padded two decoded parameters", bytes, parametersServing.getBytes());
     }
 
     @Test
+    public void testGetMethodOptionsReturnsGet(){
+        ParameterServing parametersServing = new ParameterServing("/parameters?stuff=1", "GET");
+        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, parametersServing.getMethodOptions());
+    }
+
+    @Test
     public void testGetContentTypeReturnsTextHTML() throws Exception {
-        ParameterServing parametersServing = new ParameterServing(null);
+        ParameterServing parametersServing = new ParameterServing(null, "GET");
         assertEquals("Content type is text/html", "text/html", parametersServing.getContentType());
     }
 

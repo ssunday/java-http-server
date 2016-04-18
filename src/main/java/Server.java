@@ -45,7 +45,8 @@ public class Server {
         bytesToWrite = serving.getBytes();
         HTTPCode = serving.getHTTPCode();
         contentType = serving.getContentType();
-        header = HTTPResponseHeaders.getHTTPHeader(HTTPCode, contentType, bytesToWrite.length);
+        String[] methodOptions = serving.getMethodOptions();
+        header = HTTPResponseHeaders.getHTTPHeader(HTTPCode, contentType, bytesToWrite.length, methodOptions);
         output.writeBytes(header);
         output.write(bytesToWrite);
         output.flush();
