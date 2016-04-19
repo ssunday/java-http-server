@@ -1,4 +1,4 @@
-public class LogServing extends ServingBase {
+public class LogDeliverer extends DelivererBase {
 
     private final String ADMIN_USERNAME = "admin";
     private final String ADMIN_PASSWORD = "hunter2";
@@ -6,9 +6,10 @@ public class LogServing extends ServingBase {
 
     private String username;
     private String password;
+
     private String requestType;
 
-    public LogServing(String username, String password, String requestType){
+    public LogDeliverer(String username, String password, String requestType){
         this.username = username;
         this.password = password;
         logger = new RequestLogger();

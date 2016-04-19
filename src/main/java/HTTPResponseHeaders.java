@@ -2,21 +2,20 @@ public class HTTPResponseHeaders {
 
     private static final String SERVER_NAME = "Java HTTP Server";
 
-    public static String getHTTPHeader(int code, String contentType, int contentLength, String[] options){
-        String header = getHTTPCodeHeader(code);
+    public static String getHTTPHeader(int port, int code, String contentType, int contentLength, String[] options){
+        String header = getHTTPCodeHeader(code, port);
         header += getServerName();
         header += getAllowField(options);
         header += getHTTPContentTypeAndLength(contentType, contentLength);
         header += getConnectionClose();
-        header += "\r\n";
         return header;
     }
 
     private static String getConnectionClose(){
-        return "Connection: close" + "\r\n";
+        return "Connection: close" + "\r\n\r\n";
     }
 
-    private static String getHTTPCodeHeader(int code){
+    private static String getHTTPCodeHeader(int code, int port){
         String HTTPCodeHeader;
         switch (code){
             case 200:
@@ -25,9 +24,13 @@ public class HTTPResponseHeaders {
             case 206:
                 HTTPCodeHeader = "HTTP/1.1 206 Partial Content" + "\r\n";
                 break;
+            case 302:
+                HTTPCodeHeader = "HTTP/1.1 302 Found" + "\r\n";
+                HTTPCodeHeader += "Location: http://localhost:" + port + "/\r\n";
+                break;
             case 401:
                 HTTPCodeHeader = "HTTP/1.1 401 Unauthorized" + "\r\n";
-                HTTPCodeHeader += "WWW-Authenticate: Basic realm='logs'";
+                HTTPCodeHeader += "WWW-Authenticate: Basic realm='logs'"+ "\r\n";
                 break;
             case 404:
                 HTTPCodeHeader = "HTTP/1.1 404 Not Found" + "\r\n";

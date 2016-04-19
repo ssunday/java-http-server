@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServingBase {
+public class DelivererBase {
 
     protected List<String> OPTIONS = new ArrayList<String>();
 

@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class FileServing extends ServingBase {
+public class FileDeliverer extends DelivererBase {
 
     private File file;
     private String requestType;
 
-    public FileServing(String filePath, String requestType) {
+    public FileDeliverer(String filePath, String requestType) {
         file = new File(filePath);
         this.requestType = requestType;
         OPTIONS.add("GET");
