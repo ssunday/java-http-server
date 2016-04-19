@@ -8,12 +8,11 @@ public class HTTPResponseHeaders {
         header += getAllowField(options);
         header += getHTTPContentTypeAndLength(contentType, contentLength);
         header += getConnectionClose();
-        header += "\r\n";
         return header;
     }
 
     private static String getConnectionClose(){
-        return "Connection: close" + "\r\n";
+        return "Connection: close" + "\r\n\r\n";
     }
 
     private static String getHTTPCodeHeader(int code, int port){
@@ -27,7 +26,7 @@ public class HTTPResponseHeaders {
                 break;
             case 302:
                 HTTPCodeHeader = "HTTP/1.1 302 Found" + "\r\n";
-                HTTPCodeHeader += "Location: http://localhost:" + port + "/\r\n";;
+                HTTPCodeHeader += "Location: http://localhost:" + port + "/\r\n";
                 break;
             case 401:
                 HTTPCodeHeader = "HTTP/1.1 401 Unauthorized" + "\r\n";

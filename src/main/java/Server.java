@@ -40,17 +40,18 @@ public class Server {
     }
 
     public void serve() throws Exception{
-        String header, contentType;
-        int HTTPCode;
+        String request, header, contentType;
+        int HTTPCode, contentLength;
         byte[] bytesToWrite;
-        String request = getRequest();
+        request = getRequest();
         logger.logRequest(request);
         DelivererBase deliverer = DelivererFactory.getDeliverer(request, baseDirectory);
         bytesToWrite = deliverer.getBytes();
         HTTPCode = deliverer.getHTTPCode();
         contentType = deliverer.getContentType();
+        contentLength = bytesToWrite.length;
         String[] methodOptions = deliverer.getMethodOptions();
-        header = HTTPResponseHeaders.getHTTPHeader(port, HTTPCode, contentType, bytesToWrite.length, methodOptions);
+        header = HTTPResponseHeaders.getHTTPHeader(port, HTTPCode, contentType, contentLength, methodOptions);
         output.writeBytes(header);
         output.write(bytesToWrite);
         output.flush();

@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -107,6 +108,7 @@ public class ServerTest {
     @Test
     public void testServerHasPartialContentWhenRangeIsProvided() throws Exception{
         server.acceptConnection();
+        String directory = System.getProperty("user.dir");
         DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
         String get = "GET / HTTP/1.1";
         String request =  get + "\r\n" +
@@ -120,11 +122,10 @@ public class ServerTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String info = new String(data).trim();
-        DirectoryDeliverer serving = new DirectoryDeliverer(System.getProperty("user.dir"), new FilePaths(System.getProperty("user.dir")), "GET");
-        String[] methodOptions = new String[]{"GET"};
-        String header = HTTPResponseHeaders.getHTTPHeader(TEST_PORT, 206, "text/html", serving.getBytes().length,methodOptions);
-        String totalContent = header + new String(serving.getBytes());
-        assertNotEquals("Socket serves partial content with entire range", info.getBytes(), totalContent.getBytes());
+        DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
+        byte[] contentBytes = deliver.getBytes();
+        byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 21);
+        assertTrue("Socket serves partial content of length with entire range provided", info.contains(Integer.toString(truncated.length)));
     }
 
     @Test
@@ -145,10 +146,9 @@ public class ServerTest {
         stream.read(data);
         String info = new String(data).trim();
         DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
-        String[] methodOptions = new String[]{"GET"};
-        String header = HTTPResponseHeaders.getHTTPHeader(TEST_PORT, 206, "text/html", deliver.getBytes().length,methodOptions );
-        String totalContent = header + new String(deliver.getBytes());
-        assertNotEquals("Socket serves partial content with only end range", info.getBytes(), totalContent.getBytes());
+        byte[] contentBytes = deliver.getBytes();
+        byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 40);
+        assertTrue("Socket serves partial content of length with only end range", info.contains(Integer.toString(truncated.length)));
     }
 
     @Test
@@ -169,10 +169,29 @@ public class ServerTest {
         stream.read(data);
         String info = new String(data).trim();
         DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
-        String[] methodOptions = new String[]{"GET"};
-        String header = HTTPResponseHeaders.getHTTPHeader(TEST_PORT, 206, "text/html", deliver.getBytes().length,methodOptions );
-        String totalContent = header + new String(deliver.getBytes());
-        assertNotEquals("Socket serves partial content with only start range", info.getBytes(), totalContent.getBytes());
+        byte[] contentBytes = deliver.getBytes();
+        byte[] truncated = Arrays.copyOfRange(contentBytes, 5, contentBytes.length);
+        assertTrue("Socket serves partial content of length with only start range", info.contains(Integer.toString(truncated.length)));
+    }
+
+    @Test
+    public void testServerRedirectHasLocationFound() throws Exception{
+        server.acceptConnection();
+        String directory = System.getProperty("user.dir");
+        DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET /redirect HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve();
+        InputStream stream = testSocket.getInputStream();
+        byte[] data = new byte[18000];
+        stream.read(data);
+        String info = new String(data).trim();
+        assertTrue("Redirect has header of location localhost test port", info.contains("Location: http://localhost:"+TEST_PORT+"/"));
     }
 
     @Test
@@ -190,6 +209,5 @@ public class ServerTest {
         testSocket.close();
         server.disconnectServer();
     }
-
 
 }

@@ -30,7 +30,7 @@ public class DelivererFactory {
             server = new MethodOptionDeliverer(requestType);
         }
         else if (isRoute(path, REDIRECT_PATH)){
-            server = new RedirectDeliverer();
+            server = new RedirectDeliverer(requestType);
         }
         else if (isDirectory(fullPath)){
             server = new DirectoryDeliverer(path, filePaths, requestType);
