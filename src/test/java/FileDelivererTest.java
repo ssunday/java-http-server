@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class FileServingTest {
+public class FileDelivererTest {
 
 
     private String testDirectory = FileTestingUtilities.testDirectory;
@@ -28,8 +28,8 @@ public class FileServingTest {
         String fileName = "/single.txt";
         String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
-        FileServing fileServing = new FileServing(file, "GET");
-        assertEquals("Returns text/plain for file", "text/plain", fileServing.getContentType());
+        FileDeliverer fileDeliverer = new FileDeliverer(file, "GET");
+        assertEquals("Returns text/plain for file", "text/plain", fileDeliverer.getContentType());
         FileTestingUtilities.clearPath(file);
     }
 
@@ -40,21 +40,21 @@ public class FileServingTest {
         File imageOutputFile = new File(imagePath);
         BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
         ImageIO.write(image, "jpg", imageOutputFile);
-        FileServing fileServing = new FileServing(imagePath, "GET");
-        assertEquals("Returns image for image", "image", fileServing.getContentType());
+        FileDeliverer fileDeliverer = new FileDeliverer(imagePath, "GET");
+        assertEquals("Returns image for image", "image", fileDeliverer.getContentType());
         FileTestingUtilities.clearPath(imagePath);
     }
 
     @Test
     public void testGetHTTPCode() {
-        FileServing fileServing = new FileServing("somefile.txt", "GET");
-        assertEquals("Returns 200", 200, fileServing.getHTTPCode());
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
+        assertEquals("Returns 200", 200, fileDeliverer.getHTTPCode());
     }
 
     @Test
     public void testGetHTTPCodeReturns405IfNotGetPassedIn(){
-        FileServing fileServing = new FileServing("somefile.txt", "POST");
-        assertEquals("Returns 405 when POST passed in", 405, fileServing.getHTTPCode());
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "POST");
+        assertEquals("Returns 405 when POST passed in", 405, fileDeliverer.getHTTPCode());
     }
 
     @Test
@@ -62,8 +62,8 @@ public class FileServingTest {
         String fileName = "/emptytextfile";
         String file = testDirectory + fileName.substring(1);
         FileTestingUtilities.makeFile(file);
-        FileServing fileServing = new FileServing(file, "GET");
-        assertArrayEquals("Returns empty array of filebytes when file is empty ", new byte[0], fileServing.getBytes());
+        FileDeliverer fileDeliverer = new FileDeliverer(file, "GET");
+        assertArrayEquals("Returns empty array of filebytes when file is empty ", new byte[0], fileDeliverer.getBytes());
         FileTestingUtilities.clearPath(file);
     }
 
@@ -77,8 +77,8 @@ public class FileServingTest {
         byteCount = stringWritten.getBytes();
         Path filePath = Paths.get(file);
         Files.write(filePath, byteCount);
-        FileServing fileServing = new FileServing(file, "GET");
-        assertArrayEquals("Returns array of bytes when file has content", byteCount, fileServing.getBytes());
+        FileDeliverer fileDeliverer = new FileDeliverer(file, "GET");
+        assertArrayEquals("Returns array of bytes when file has content", byteCount, fileDeliverer.getBytes());
         FileTestingUtilities.clearPath(file);
     }
 
@@ -92,15 +92,15 @@ public class FileServingTest {
         ImageIO.write(image, "jpg", baos);
         ImageIO.write(image, "jpg", imageOutputFile);
         byte[] imageBytes = baos.toByteArray();
-        FileServing fileServing = new FileServing(imagePath, "GET");
-        assertArrayEquals("GetImageBytes returns jpg image's bytes", imageBytes, fileServing.getBytes());
+        FileDeliverer fileDeliverer = new FileDeliverer(imagePath, "GET");
+        assertArrayEquals("GetImageBytes returns jpg image's bytes", imageBytes, fileDeliverer.getBytes());
         FileTestingUtilities.clearPath(imagePath);
     }
 
     @Test
     public void testGetMethodOptionsReturnsGET(){
-        FileServing fileServing = new FileServing("somefile.txt", "GET");
-        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, fileServing.getMethodOptions());
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
+        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, fileDeliverer.getMethodOptions());
     }
 
     @After

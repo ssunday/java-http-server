@@ -1,12 +1,10 @@
-
-
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class ParameterServingTest {
+public class ParameterDelivererTest {
 
     private HTMLParameterDisplay htmlParameterDisplay;
 
@@ -22,8 +20,8 @@ public class ParameterServingTest {
         String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
-        ParameterServing parametersServing = new ParameterServing(path, "GET");
-        assertArrayEquals("Byte arrays of simple string with padding equal each other", bytes, parametersServing.getBytes());
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer(path, "GET");
+        assertArrayEquals("Byte arrays of simple string with padding equal each other", bytes, parametersDeliverer.getBytes());
     }
 
     @Test
@@ -33,8 +31,8 @@ public class ParameterServingTest {
         String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
-        ParameterServing parametersServing = new ParameterServing(path, "GET");
-        assertArrayEquals("Byte arrays of single complex decoded string equals padded decoded version", bytes, parametersServing.getBytes());
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer(path, "GET");
+        assertArrayEquals("Byte arrays of single complex decoded string equals padded decoded version", bytes, parametersDeliverer.getBytes());
     }
 
     @Test
@@ -44,20 +42,32 @@ public class ParameterServingTest {
         String wrappedParams = htmlParameterDisplay.htmlWrap(parsedParam);
         byte[] bytes = wrappedParams.getBytes();
         String path = "/somePath?" + params[0] + "&" + params[1];
-        ParameterServing parametersServing = new ParameterServing(path, "GET");
-        assertArrayEquals("Returns HTML wrapped and padded two decoded parameters", bytes, parametersServing.getBytes());
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer(path, "GET");
+        assertArrayEquals("Returns HTML wrapped and padded two decoded parameters", bytes, parametersDeliverer.getBytes());
     }
 
     @Test
     public void testGetMethodOptionsReturnsGet(){
-        ParameterServing parametersServing = new ParameterServing("/parameters?stuff=1", "GET");
-        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, parametersServing.getMethodOptions());
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "GET");
+        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, parametersDeliverer.getMethodOptions());
+    }
+
+    @Test
+    public void testGetHTTPCodeReturns200(){
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "GET");
+        assertEquals("HTTP Code is 200 with get", 200, parametersDeliverer.getHTTPCode());
+    }
+
+    @Test
+    public void testGetHTTPCodeReturns405(){
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "POST");
+        assertEquals("HTTP Code is 405 with POST", 405, parametersDeliverer.getHTTPCode());
     }
 
     @Test
     public void testGetContentTypeReturnsTextHTML() throws Exception {
-        ParameterServing parametersServing = new ParameterServing(null, "GET");
-        assertEquals("Content type is text/html", "text/html", parametersServing.getContentType());
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer(null, "GET");
+        assertEquals("Content type is text/html", "text/html", parametersDeliverer.getContentType());
     }
 
 }

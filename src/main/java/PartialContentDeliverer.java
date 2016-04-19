@@ -1,13 +1,13 @@
 import java.util.Arrays;
 
-public class PartialContentServing extends ServingBase {
+public class PartialContentDeliverer extends DelivererBase {
 
-    private ServingBase server;
+    private DelivererBase server;
     private int rangeStart;
     private int rangeEnd;
     private String requestType;
 
-    public PartialContentServing(ServingBase server, int startPoint, int endPoint, String requestType){
+    public PartialContentDeliverer(DelivererBase server, int startPoint, int endPoint, String requestType){
         this.server = server;
         rangeStart = startPoint;
         rangeEnd = endPoint;

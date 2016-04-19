@@ -1,8 +1,8 @@
-public class NotFoundServing extends ServingBase {
+public class NotFoundDeliverer extends DelivererBase {
 
     private String requestType;
 
-    public NotFoundServing(String requestType){
+    public NotFoundDeliverer(String requestType){
         this.requestType = requestType;
         OPTIONS.add("GET");
     }

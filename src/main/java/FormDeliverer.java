@@ -1,4 +1,4 @@
-public class FormServing extends ServingBase {
+public class FormDeliverer extends DelivererBase {
 
     private final String GET = "GET";
     private final String POST = "POST";
@@ -11,7 +11,7 @@ public class FormServing extends ServingBase {
     private String requestType;
     private String params;
 
-    public FormServing(String params, String requestType){
+    public FormDeliverer(String params, String requestType){
         formData = new FormData();
         htmlFormDisplay = new HTMLFormDisplay();
         this.requestType = requestType;

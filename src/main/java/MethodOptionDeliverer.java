@@ -1,9 +1,9 @@
 
-public class MethodOptionServing extends ServingBase {
+public class MethodOptionDeliverer extends DelivererBase {
 
     private String requestType;
 
-    public MethodOptionServing(String requestType){
+    public MethodOptionDeliverer(String requestType){
         this.requestType = requestType;
         OPTIONS.add("GET");
         OPTIONS.add("POST");
