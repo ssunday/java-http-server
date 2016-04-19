@@ -7,14 +7,13 @@ public class LogDeliverer extends DelivererBase {
     private String username;
     private String password;
 
-    private String requestType;
-
     public LogDeliverer(String username, String password, String requestType){
         this.username = username;
         this.password = password;
         logger = new RequestLogger();
         this.requestType = requestType;
         OPTIONS.add("GET");
+        OPTIONS.add("OPTIONS");
     }
 
     @Override

@@ -1,8 +1,6 @@
 
 public class MethodOptionDeliverer extends DelivererBase {
 
-    private String requestType;
-
     public MethodOptionDeliverer(String requestType){
         this.requestType = requestType;
         OPTIONS.add("GET");

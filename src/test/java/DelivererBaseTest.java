@@ -11,7 +11,7 @@ public class DelivererBaseTest {
 
     @Before
     public void setUp(){
-        delivererBase = new DelivererBase();
+        delivererBase = new DelivererBase("GET");
     }
 
     @Test

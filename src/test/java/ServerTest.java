@@ -177,8 +177,6 @@ public class ServerTest {
     @Test
     public void testServerRedirectHasLocationFound() throws Exception{
         server.acceptConnection();
-        String directory = System.getProperty("user.dir");
-        DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
         DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
         String get = "GET /redirect HTTP/1.1";
         String request =  get + "\r\n" +
@@ -192,6 +190,42 @@ public class ServerTest {
         stream.read(data);
         String info = new String(data).trim();
         assertTrue("Redirect has header of location localhost test port", info.contains("Location: http://localhost:"+TEST_PORT+"/"));
+    }
+
+    @Test
+    public void testServerResponseDoesNotHaveAllowWhenRequestTypeIsNotOptions() throws Exception{
+        server.acceptConnection();
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "GET / HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve();
+        InputStream stream = testSocket.getInputStream();
+        byte[] data = new byte[18000];
+        stream.read(data);
+        String info = new String(data).trim();
+        assertFalse("Response does not have an allow field with get request", info.contains("Allow: "));
+    }
+
+    @Test
+    public void testServerResponseHasAllowLineWhenRequestTypeIsOptions() throws Exception{
+        server.acceptConnection();
+        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
+        String get = "OPTIONS / HTTP/1.1";
+        String request =  get + "\r\n" +
+                "Host: " + "http://localhost:" + "\r\n" +
+                "Connection: close\r\n\r\n";
+        output.writeBytes(request);
+        output.flush();
+        server.serve();
+        InputStream stream = testSocket.getInputStream();
+        byte[] data = new byte[18000];
+        stream.read(data);
+        String info = new String(data).trim();
+        assertTrue("Response does have an allow field with options request", info.contains("Allow: "));
     }
 
     @Test

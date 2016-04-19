@@ -47,9 +47,9 @@ public class ParameterDelivererTest {
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGet(){
-        ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "GET");
-        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, parametersDeliverer.getMethodOptions());
+    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "OPTIONS");
+        assertArrayEquals("Method options returns array with only get and options when options is passed in", new String[]{"GET", "OPTIONS"}, parametersDeliverer.getMethodOptions());
     }
 
     @Test

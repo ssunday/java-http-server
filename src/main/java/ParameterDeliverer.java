@@ -3,12 +3,12 @@ import java.net.URLDecoder;
 public class ParameterDeliverer extends DelivererBase {
 
     private String pathToServe;
-    private String requestType;
 
     public ParameterDeliverer(String path, String requestType){
         pathToServe = path;
         this.requestType = requestType;
         OPTIONS.add("GET");
+        OPTIONS.add("OPTIONS");
     }
 
     @Override
@@ -25,15 +25,6 @@ public class ParameterDeliverer extends DelivererBase {
     @Override
     public String getContentType(){
         return "text/html";
-    }
-
-    @Override
-    public int getHTTPCode(){
-        int httpCode = super.getHTTPCode();
-        if (!(OPTIONS.contains(requestType))){
-            httpCode = 405;
-        }
-        return httpCode;
     }
 
     private String[] getParameters(String path){

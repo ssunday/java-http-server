@@ -8,7 +8,6 @@ public class FormDeliverer extends DelivererBase {
     private FormData formData;
     private HTMLFormDisplay htmlFormDisplay;
 
-    private String requestType;
     private String params;
 
     public FormDeliverer(String params, String requestType){
@@ -20,6 +19,7 @@ public class FormDeliverer extends DelivererBase {
         OPTIONS.add(POST);
         OPTIONS.add(PUT);
         OPTIONS.add(DELETE);
+        OPTIONS.add("OPTIONS");
     }
 
     @Override
@@ -40,15 +40,6 @@ public class FormDeliverer extends DelivererBase {
         html = htmlFormDisplay.displayFormPage(paramsToDisplay);
         bytesToWrite = html.getBytes();
         return bytesToWrite;
-    }
-
-    @Override
-    public int getHTTPCode(){
-        int httpCode = super.getHTTPCode();
-        if (!(OPTIONS.contains(requestType))){
-            httpCode = 405;
-        }
-        return httpCode;
     }
 
     @Override

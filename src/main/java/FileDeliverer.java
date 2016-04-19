@@ -7,12 +7,12 @@ import java.nio.file.Files;
 public class FileDeliverer extends DelivererBase {
 
     private File file;
-    private String requestType;
 
     public FileDeliverer(String filePath, String requestType) {
         file = new File(filePath);
         this.requestType = requestType;
         OPTIONS.add("GET");
+        OPTIONS.add("OPTIONS");
     }
 
     @Override
@@ -24,15 +24,6 @@ public class FileDeliverer extends DelivererBase {
             fileBytes = super.getBytes();
         }
         return fileBytes;
-    }
-
-    @Override
-    public int getHTTPCode(){
-        int code = super.getHTTPCode();
-        if (!(OPTIONS.contains(requestType))){
-            code = 405;
-        }
-        return code;
     }
 
     @Override

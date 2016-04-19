@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class HTTPResponseHeadersTest {
@@ -102,6 +103,15 @@ public class HTTPResponseHeadersTest {
         String[] methodOptions = new String[]{"GET", "POST"};
         String header = HTTPResponseHeaders.getHTTPHeader(5000, 200, type, contentLength, methodOptions);
         assertTrue("Header includes options passed in", header.contains("Allow: GET,POST"));
+    }
+
+    @Test
+    public void testGetHeaderDoesNotHaveAllowFieldIfOptionsEmpty(){
+        int contentLength = 30;
+        String type = "text/html";
+        String[] methodOptions = new String[0];
+        String header = HTTPResponseHeaders.getHTTPHeader(5000, 200, type, contentLength, methodOptions);
+        assertFalse("Header does not include allow field when empty options array passed in", header.contains("Allow:"));
     }
 
 }

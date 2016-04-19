@@ -1,10 +1,9 @@
 public class NotFoundDeliverer extends DelivererBase {
 
-    private String requestType;
-
     public NotFoundDeliverer(String requestType){
         this.requestType = requestType;
         OPTIONS.add("GET");
+        OPTIONS.add("OPTIONS");
     }
 
     @Override

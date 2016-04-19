@@ -45,8 +45,9 @@ public class DirectoryDelivererTest {
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGET(){
-        assertArrayEquals("Method options return array with only get", new String[]{"GET"}, directoryDeliverer.getMethodOptions());
+    public void testGetMethodOptionsReturnsGETAndOptions(){
+        DirectoryDeliverer directoryServingOptions = new DirectoryDeliverer(testDirectory, new FilePaths(testDirectory), "OPTIONS");
+        assertArrayEquals("Method options return array with only get and options when options passed in", new String[]{"GET", "OPTIONS"}, directoryServingOptions.getMethodOptions());
     }
 
     @After

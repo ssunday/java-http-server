@@ -32,8 +32,9 @@ public class NotFoundDelivererTest {
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGet(){
-        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, notFoundDeliverer.getMethodOptions());
+    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+        NotFoundDeliverer notFoundDeliverer1 = new NotFoundDeliverer("OPTIONS");
+        assertArrayEquals("Method options returns array with only get and options when options is passed in", new String[]{"GET", "OPTIONS"}, notFoundDeliverer1.getMethodOptions());
     }
 
     @Test
