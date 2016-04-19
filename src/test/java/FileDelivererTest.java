@@ -98,9 +98,9 @@ public class FileDelivererTest {
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGET(){
-        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
-        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, fileDeliverer.getMethodOptions());
+    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "OPTIONS");
+        assertArrayEquals("Method options returns array with only get and options when options is passed in", new String[]{"GET", "OPTIONS"}, fileDeliverer.getMethodOptions());
     }
 
     @After

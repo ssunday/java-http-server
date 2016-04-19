@@ -1,10 +1,9 @@
 public class RedirectDeliverer extends DelivererBase {
 
-    private String requestType;
-
     public RedirectDeliverer(String requestType){
         this.requestType = requestType;
         OPTIONS.add("GET");
+        OPTIONS.add("OPTIONS");
     }
 
     @Override

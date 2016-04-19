@@ -42,9 +42,9 @@ public class LogDelivererTest {
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGet(){
-        LogDeliverer logDeliverer = new LogDeliverer(ADMIN_USERNAME, ADMIN_PASSWORD, "GET");
-        assertArrayEquals("Method options returns array with only get", new String[]{"GET"}, logDeliverer.getMethodOptions());
+    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+        LogDeliverer logDeliverer = new LogDeliverer(ADMIN_USERNAME, ADMIN_PASSWORD, "OPTIONS");
+        assertArrayEquals("Method options returns array with only get and options when options is passed in", new String[]{"GET", "OPTIONS"}, logDeliverer.getMethodOptions());
     }
 
     @Test

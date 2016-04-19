@@ -51,17 +51,31 @@ public class HTTPResponseHeaders {
     }
 
     private static String getAllowField(String[] options){
+        String allowField = "";
+        if (optionsIsNotEmpty(options)){
+            allowField = constructAllowLine(options);
+        }
+        return allowField;
+    }
+
+    private static boolean optionsIsNotEmpty(String[] options){
+        return options.length > 0;
+    }
+
+    private static String constructAllowLine(String[] options){
         String allowField = "Allow: ";
-        for(String option: options){
+        for (String option : options) {
             allowField += option + ",";
         }
-        allowField = allowField.substring(0,allowField.length()-1);
+        allowField = allowField.substring(0, allowField.length() - 1);
         return allowField + "\r\n";
     }
 
     private static String getHTTPContentTypeAndLength(String contentType, int contentLength){
         String contentTypeAndLength = "";
-        contentTypeAndLength += "Content-Type: " + contentType + "\r\n";
+        if (contentType != null){
+            contentTypeAndLength += "Content-Type: " + contentType + "\r\n";
+        }
         contentTypeAndLength += "Content-Length: " + contentLength + "\r\n";
         return contentTypeAndLength;
     }

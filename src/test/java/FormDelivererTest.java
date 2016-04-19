@@ -99,10 +99,10 @@ public class FormDelivererTest {
 
 
     @Test
-    public void testGetMethodOptionsReturnsGET(){
-        FormDeliverer formDeliverer = new FormDeliverer(null, "GET");
-        String[] options = new String[]{"GET", "POST", "PUT", "DELETE"};
-        assertArrayEquals("Method options returns array with get, post, put, delete", options, formDeliverer.getMethodOptions());
+    public void testGetMethodOptionsReturnsGETAndOtherOptions(){
+        FormDeliverer formDeliverer = new FormDeliverer(null, "OPTIONS");
+        String[] options = new String[]{"GET", "POST", "PUT", "DELETE", "OPTIONS"};
+        assertArrayEquals("Method options returns array with get, post, put, delete and options when options is request", options, formDeliverer.getMethodOptions());
     }
 
     @After

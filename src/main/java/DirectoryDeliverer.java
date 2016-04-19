@@ -4,7 +4,6 @@ public class DirectoryDeliverer extends DelivererBase {
     private DirectoryListing directoryListing;
     private FilePaths filePaths;
     private String path;
-    private String requestType;
 
     public DirectoryDeliverer(String path, FilePaths filePaths, String requestType){
         this.path = path;
@@ -13,6 +12,7 @@ public class DirectoryDeliverer extends DelivererBase {
         display = new HTMLDirectoryDisplay();
         directoryListing = new DirectoryListing();
         OPTIONS.add("GET");
+        OPTIONS.add("OPTIONS");
     }
 
     @Override
@@ -21,15 +21,6 @@ public class DirectoryDeliverer extends DelivererBase {
         String contentToServe = getContentToServe();
         bytesToWrite = contentToServe.getBytes();
         return bytesToWrite;
-    }
-
-    @Override
-    public int getHTTPCode(){
-        int code = super.getHTTPCode();
-        if (!(OPTIONS.contains(requestType))){
-            code = 405;
-        }
-        return code;
     }
 
     @Override
