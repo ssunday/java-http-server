@@ -11,11 +11,28 @@ public class MethodOptionDeliverer extends DelivererBase {
     }
 
     @Override
-    public int getHTTPCode(){
-        int httpCode = super.getHTTPCode();
+    public byte[] getBytes(){
+        return new byte[0];
+    }
+
+    @Override
+    public String getResponseHeader(){
+        response = new HTTPResponse();
+        response.setHTTPCode(getHTTPCode());
+        if (requestType.equals("OPTIONS")){
+            String[] options = new String[OPTIONS.size()];
+            response.setAllow(OPTIONS.toArray(options));
+        }
+        response.setContentLength(0);
+        return response.getHeader();
+    }
+
+    protected int getHTTPCode(){
+        int httpCode = 200;
         if (!(OPTIONS.contains(requestType))){
             httpCode = 405;
         }
         return httpCode;
     }
+
 }

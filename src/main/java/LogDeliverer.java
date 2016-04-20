@@ -14,6 +14,7 @@ public class LogDeliverer extends DelivererBase {
         this.requestType = requestType;
         OPTIONS.add("GET");
         OPTIONS.add("OPTIONS");
+        contentType = "text/plain";
     }
 
     @Override
@@ -24,18 +25,28 @@ public class LogDeliverer extends DelivererBase {
             bytes = content.getBytes();
         }
         else{
-            bytes = super.getBytes();
+            bytes = new byte[0];
         }
         return bytes;
     }
 
     @Override
-    public String getContentType(){
-        return "text/plain";
+    public String getResponseHeader(){
+        response = new HTTPResponse();
+        response.setHTTPCode(getHTTPCode());
+        response.setContentType(contentType);
+        if (!(isAuthorized())){
+            response.setAuthenticateRealm("logs");
+        }
+        if (requestType.equals("OPTIONS")){
+            String[] options = new String[OPTIONS.size()];
+            response.setAllow(OPTIONS.toArray(options));
+        }
+        response.setContentLength(getBytes().length);
+        return response.getHeader();
     }
 
-    @Override
-    public int getHTTPCode(){
+    protected int getHTTPCode(){
         int httpCode;
         httpCode = (isAuthorized()) ? 200: 401;
         if (!(OPTIONS.contains(requestType))){

@@ -4,6 +4,7 @@ public class HTTPRequestParser {
 
     private static final String POST = "POST";
     private static final String PUT = "PUT";
+    private static final String PATCH = "PATCH";
 
     public static String getPath(String request) {
         String[] requestHeaders = getRequestLines(request);
@@ -25,7 +26,7 @@ public class HTTPRequestParser {
         String params = null;
         String[] requestHeaders = getRequestLines(request);
         String requestLine = requestHeaders[0];
-        if (isPostOrPut(requestLine)){
+        if (isRequestType(requestLine, POST) || isRequestType(requestLine, PUT)){
             params = requestHeaders[requestHeaders.length-1];
         }
         return params;
@@ -53,6 +54,31 @@ public class HTTPRequestParser {
 
     public static int getContentRangeStart(String request){
         return getContentRangeBeginningOrEnd(request, 0);
+    }
+
+    public static String getEtag(String request){
+        String etag = null;
+        String[] requestHeaders = getRequestLines(request);
+        String requestLine = requestHeaders[0];
+        if (isRequestType(requestLine, PATCH)){
+            String ifMatchLine = findRequestLine("If-Match:", requestHeaders);
+            etag = parseEtag(ifMatchLine);
+        }
+        return etag;
+    }
+
+    public static String getPatchContent(String request){
+        String content;
+        String[] requestHeaders = getRequestLines(request);
+        content = requestHeaders[requestHeaders.length-1];
+        return content;
+    }
+
+    private static String parseEtag(String ifMatchLine){
+        String[] splitLine = ifMatchLine.split(" ");
+        String rawTag = splitLine[1];
+        String strippedQuotesTag = rawTag.substring(1,rawTag.length());
+        return strippedQuotesTag;
     }
 
     private static int getContentRangeBeginningOrEnd(String request, int indexPosition){
@@ -112,8 +138,8 @@ public class HTTPRequestParser {
         return decodedCredentials.split(":");
     }
 
-    private static boolean isPostOrPut(String requestLine) {
-        return requestLine.contains(POST) || requestLine.contains(PUT);
+    private static boolean isRequestType(String requestLine, String type){
+        return requestLine.contains(type);
     }
 
     private static String parseEncodingIfFolder(String path){

@@ -3,7 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DirectoryDelivererTest {
 
@@ -29,25 +29,25 @@ public class DirectoryDelivererTest {
     }
 
     @Test
-    public void testGetHTTPCode() {
-        assertEquals("Returns 200", 200, directoryDeliverer.getHTTPCode());
+    public void testGetResponseHeaderReturns200HTTPCode() {
+        assertTrue("Includes 200 code line", directoryDeliverer.getResponseHeader().contains("200 OK"));
     }
 
     @Test
-    public void testGetHTTPCodeReturns405IfNotGetPassedIn(){
+    public void testGetResponseHeaderIncludes405WhenNotGet(){
         DirectoryDeliverer directoryServingPost = new DirectoryDeliverer(testDirectory, new FilePaths(testDirectory), "POST");
-        assertEquals("Returns 405 when POST passed in", 405, directoryServingPost.getHTTPCode());
+        assertTrue("Includes 405 code line when Post passed in", directoryServingPost.getResponseHeader().contains("405 Method Not Allowed"));
     }
 
     @Test
-    public void testGetContentTypeReturnsTextHTML(){
-        assertEquals("Returns text/html", "text/html", directoryDeliverer.getContentType());
+    public void testGetResponseHeaderIncludesTextHtml(){
+        assertTrue("Includes text/html", directoryDeliverer.getResponseHeader().contains("text/html"));
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGETAndOptions(){
+    public void testGetResponseHeaderIncludesOptionsWhenOPTIONS(){
         DirectoryDeliverer directoryServingOptions = new DirectoryDeliverer(testDirectory, new FilePaths(testDirectory), "OPTIONS");
-        assertArrayEquals("Method options return array with only get and options when options passed in", new String[]{"GET", "OPTIONS"}, directoryServingOptions.getMethodOptions());
+        assertTrue("Response header includes allow field", directoryServingOptions.getResponseHeader().contains("Allow: GET,OPTIONS"));
     }
 
     @After

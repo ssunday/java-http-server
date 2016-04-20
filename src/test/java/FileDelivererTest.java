@@ -10,8 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class FileDelivererTest {
 
@@ -21,40 +20,6 @@ public class FileDelivererTest {
     @Before
     public void setUp() throws Exception{
         FileTestingUtilities.makePath(testDirectory);
-    }
-
-    @Test
-    public void testGetContentTypeReturnsTextPlainForFile() throws Exception{
-        String fileName = "/single.txt";
-        String file = testDirectory + fileName.substring(1);
-        FileTestingUtilities.makeFile(file);
-        FileDeliverer fileDeliverer = new FileDeliverer(file, "GET");
-        assertEquals("Returns text/plain for file", "text/plain", fileDeliverer.getContentType());
-        FileTestingUtilities.clearPath(file);
-    }
-
-    @Test
-    public void testGetContentTypeReturnsImageForImage() throws Exception{
-        String imageName = "/image.jpg";
-        String imagePath = testDirectory + imageName.substring(1);
-        File imageOutputFile = new File(imagePath);
-        BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        ImageIO.write(image, "jpg", imageOutputFile);
-        FileDeliverer fileDeliverer = new FileDeliverer(imagePath, "GET");
-        assertEquals("Returns image for image", "image", fileDeliverer.getContentType());
-        FileTestingUtilities.clearPath(imagePath);
-    }
-
-    @Test
-    public void testGetHTTPCode() {
-        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
-        assertEquals("Returns 200", 200, fileDeliverer.getHTTPCode());
-    }
-
-    @Test
-    public void testGetHTTPCodeReturns405IfNotGetPassedIn(){
-        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "POST");
-        assertEquals("Returns 405 when POST passed in", 405, fileDeliverer.getHTTPCode());
     }
 
     @Test
@@ -98,9 +63,109 @@ public class FileDelivererTest {
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+    public void testGetBytesReturnsEmptyWhenPatched() throws Exception{
+        String content = "something";
+        String fileName = "/notemptyfile.txt";
+        String file = testDirectory + fileName.substring(1);
+        FileTestingUtilities.makeFile(file);
+        FileDeliverer fileDeliverer = new FileDeliverer(file, "!421412414", content,  "PATCH");
+        assertArrayEquals("Get bytes returns empty bytes when patch", new byte[0], fileDeliverer.getBytes());
+    }
+
+    @Test
+    public void testConstructorModifiesFileIfPatch() throws Exception{
+        String content = "something";
+        String fileName = "/patch.txt";
+        String filePath = testDirectory + fileName.substring(1);
+        FileTestingUtilities.makeFile(filePath);
+        FileDeliverer fileDeliverer = new FileDeliverer(filePath, "!421412414", content,  "PATCH");
+        File file = new File(filePath);
+        byte[] fileBytes = Files.readAllBytes(file.toPath());
+        assertArrayEquals("Bytes of file equals content to patch", content.getBytes(), fileBytes);
+        FileTestingUtilities.clearPath(filePath);
+    }
+
+    @Test
+    public void testGetBytesReturnsModifiedContentBytes() throws Exception {
+        String content = "something";
+        String fileName = "/patch.txt";
+        String filePath = testDirectory + fileName.substring(1);
+        FileTestingUtilities.makeFile(filePath);
+        FileDeliverer fileDeliverer = new FileDeliverer(filePath, "!421412414", content,  "PATCH");
+        fileDeliverer = new FileDeliverer(filePath, "GET");
+        assertArrayEquals("Bytes of file equals content to patch", content.getBytes(), fileDeliverer.getBytes());
+        FileTestingUtilities.clearPath(filePath);
+    }
+
+    @Test
+    public void testGetResponseHeaderReturns200HTTPCode() {
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
+        String response = fileDeliverer.getResponseHeader();
+        assertTrue("Includes 200", response.contains("200 OK"));
+    }
+
+    @Test
+    public void testGetResponseHeaderReturns204HTTPCodeWithEtag() throws Exception{
+        String fileName = "/patch.txt";
+        String filePath = testDirectory + fileName.substring(1);
+        FileTestingUtilities.makeFile(filePath);
+        FileDeliverer fileDeliverer = new FileDeliverer(filePath, "!421412414", "somecontent", "PATCH");
+        String response = fileDeliverer.getResponseHeader();
+        assertTrue("Includes 204 when patch", response.contains("204 No Content"));
+        FileTestingUtilities.clearPath(filePath);
+    }
+
+    @Test
+    public void testGetResponseHeaderIncludes405WhenNotGet(){
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt","POST");
+        String response = fileDeliverer.getResponseHeader();
+        assertTrue("Includes 405 when Post passed in", response.contains("405 Method Not Allowed"));
+    }
+
+    @Test
+    public void testGetResponseHeaderIncludesTextPlainWhenTextFile(){
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
+        String response = fileDeliverer.getResponseHeader();
+        assertTrue("Includes text/plain", response.contains("text/plain"));
+    }
+
+    @Test
+    public void testGetResponseHeaderIncludesImageWhenImage() throws Exception{
+        String imageName = "/image.jpg";
+        String imagePath = testDirectory + imageName.substring(1);
+        File imageOutputFile = new File(imagePath);
+        BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
+        ImageIO.write(image, "jpg", imageOutputFile);
+        FileDeliverer fileDeliverer = new FileDeliverer(imagePath, "GET");
+        String response = fileDeliverer.getResponseHeader();
+        assertTrue("Includes image for image", response.contains("image"));
+        FileTestingUtilities.clearPath(imagePath);
+    }
+
+    @Test
+    public void testGetResponseHeaderIncludesOptionsWhenOPTIONS(){
         FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "OPTIONS");
-        assertArrayEquals("Method options returns array with only get and options when options is passed in", new String[]{"GET", "OPTIONS"}, fileDeliverer.getMethodOptions());
+        String response = fileDeliverer.getResponseHeader();
+        assertTrue("Response header includes allow field", response.contains("Allow: GET,PATCH,OPTIONS"));
+    }
+
+    @Test
+    public void testGetResponseHeaderIncludesEtagIfEtagWasProvided() throws Exception{
+        String etag = "1232132gaffa";
+        String fileName = "/patch.txt";
+        String filePath = testDirectory + fileName.substring(1);
+        FileTestingUtilities.makeFile(filePath);
+        FileDeliverer fileDeliverer = new FileDeliverer(filePath, etag, "somecontent", "PATCH");
+        String response = fileDeliverer.getResponseHeader();
+        assertTrue("Etag is included when file is given ETAG", response.contains(etag));
+        FileTestingUtilities.clearPath(filePath);
+    }
+
+    @Test
+    public void testGetResponseHeaderDoesNotIncludeEtagIfNotProvided(){
+        FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
+        String response = fileDeliverer.getResponseHeader();
+        assertFalse("Etag is not present when not provided", response.contains("ETag: "));
     }
 
     @After

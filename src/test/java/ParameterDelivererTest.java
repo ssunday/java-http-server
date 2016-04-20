@@ -2,7 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ParameterDelivererTest {
 
@@ -47,27 +47,31 @@ public class ParameterDelivererTest {
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+    public void testGetResponseHeaderIncludesGETAndOPTIONS(){
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "OPTIONS");
-        assertArrayEquals("Method options returns array with only get and options when options is passed in", new String[]{"GET", "OPTIONS"}, parametersDeliverer.getMethodOptions());
+        String response = parametersDeliverer.getResponseHeader();
+        assertTrue("Header includes options in allow line", response.contains("GET,OPTIONS"));
     }
 
     @Test
-    public void testGetHTTPCodeReturns200(){
+    public void testGetResponseHeaderIncludes200(){
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "GET");
-        assertEquals("HTTP Code is 200 with get", 200, parametersDeliverer.getHTTPCode());
+        String response = parametersDeliverer.getResponseHeader();
+        assertTrue("HTTP Code is 200 with get", response.contains("200 OK"));
     }
 
     @Test
-    public void testGetHTTPCodeReturns405(){
+    public void testResponseHeaderIncludes405WhenPost(){
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "POST");
-        assertEquals("HTTP Code is 405 with POST", 405, parametersDeliverer.getHTTPCode());
+        String response = parametersDeliverer.getResponseHeader();
+        assertTrue("HTTP Code is 405 with POST", response.contains("405 Method Not Allowed"));
     }
 
     @Test
-    public void testGetContentTypeReturnsTextHTML() throws Exception {
-        ParameterDeliverer parametersDeliverer = new ParameterDeliverer(null, "GET");
-        assertEquals("Content type is text/html", "text/html", parametersDeliverer.getContentType());
+    public void testResponseHeaderIncludesTextHTML(){
+        ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "GET");
+        String response = parametersDeliverer.getResponseHeader();
+        assertTrue("Header includes text/html", response.contains("text/html"));
     }
 
 }

@@ -1,12 +1,9 @@
 import org.junit.Test;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PartialContentDelivererTest {
 
@@ -21,40 +18,23 @@ public class PartialContentDelivererTest {
     }
 
     @Test
-    public void testGetHTTPCode() throws Exception {
-        PartialContentDeliverer server = new PartialContentDeliverer(new DirectoryDeliverer("/", new FilePaths("/"), "GET"), 0, 20, "GET");
-        assertEquals("HTTP Code returns 206", 206, server.getHTTPCode());
-    }
-
-    @Test
-    public void testGetContentTypeReturnsTypeOfServerPassedInTextHTML() throws Exception {
-        DirectoryDeliverer directoryDeliverer = new DirectoryDeliverer("/", new FilePaths("/"), "GET");
-        PartialContentDeliverer server = new PartialContentDeliverer(directoryDeliverer, 0, 20, "GET");
-        assertEquals("Content type matches server passed in with text/html content type", directoryDeliverer.getContentType(), server.getContentType());
-    }
-
-    @Test
-    public void testGetContentTypeReturnsTypeOfServerPassedInTextPlain() throws Exception {
+    public void testGetResponseHeaderIncludes206() throws Exception {
         NotFoundDeliverer notFoundDeliverer = new NotFoundDeliverer("GET");
         PartialContentDeliverer server = new PartialContentDeliverer(notFoundDeliverer, 0, 20, "GET");
-        assertEquals("Content type matches server passed in with text/plain content type", notFoundDeliverer.getContentType(), server.getContentType());
+        assertTrue("Header includes returns 206", server.getResponseHeader().contains("206 Partial Content"));
     }
 
     @Test
-    public void testGetContentTypeReturnsTypeOfServerPassedInImageFile() throws Exception {
-        FileTestingUtilities.makePath(FileTestingUtilities.testDirectory);
-        String imageName = "/image.jpg";
-        String imagePath = FileTestingUtilities.testDirectory + imageName.substring(1);
-        File imageOutputFile = new File(imagePath);
-        BufferedImage image = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
-        ImageIO.write(image, "jpg", imageOutputFile);
-        FileDeliverer fileDeliverer = new FileDeliverer(imagePath, "GET");
-        assertEquals("Returns image for image", "image", fileDeliverer.getContentType());
-        FileTestingUtilities.clearPath(imagePath);
-        PartialContentDeliverer server = new PartialContentDeliverer(fileDeliverer, 0, 20, "GET");
-        assertEquals("Content type matches server passed in with image type", fileDeliverer.getContentType(), server.getContentType());
-        FileTestingUtilities.clearPath(imagePath);
-        FileTestingUtilities.clearPath(FileTestingUtilities.testDirectory);
+    public void testGetResponseHeaderIncludes405() throws Exception {
+        NotFoundDeliverer notFoundDeliverer = new NotFoundDeliverer("GET");
+        PartialContentDeliverer server = new PartialContentDeliverer(notFoundDeliverer, 0, 20, "POST");
+        assertTrue("Header includes 405 when server passed in cannot handle it", server.getResponseHeader().contains("405 Method Not Allowed"));
     }
 
+    @Test
+    public void testGetResponseHeaderIncludesAllowedMethods() throws Exception {
+        NotFoundDeliverer notFoundDeliverer = new NotFoundDeliverer("OPTIONS");
+        PartialContentDeliverer server = new PartialContentDeliverer(notFoundDeliverer, 0, 20, "OPTIONS");
+        assertTrue("Header includes server options when options", server.getResponseHeader().contains("GET,OPTIONS"));
+    }
 }

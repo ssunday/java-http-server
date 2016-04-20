@@ -4,6 +4,7 @@ public class NotFoundDeliverer extends DelivererBase {
         this.requestType = requestType;
         OPTIONS.add("GET");
         OPTIONS.add("OPTIONS");
+        contentType = "text/plain";
     }
 
     @Override
@@ -13,17 +14,11 @@ public class NotFoundDeliverer extends DelivererBase {
         return bytes;
     }
 
-    @Override
-    public int getHTTPCode(){
+    protected int getHTTPCode(){
         int httpCode = 404;
         if (!(OPTIONS.contains(requestType))){
             httpCode = 405;
         }
         return httpCode;
-    }
-
-    @Override
-    public String getContentType() {
-        return "text/plain";
     }
 }
