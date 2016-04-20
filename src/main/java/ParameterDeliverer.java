@@ -9,6 +9,7 @@ public class ParameterDeliverer extends DelivererBase {
         this.requestType = requestType;
         OPTIONS.add("GET");
         OPTIONS.add("OPTIONS");
+        contentType = "text/html";
     }
 
     @Override
@@ -22,9 +23,12 @@ public class ParameterDeliverer extends DelivererBase {
         return bytesToWrite;
     }
 
-    @Override
-    public String getContentType(){
-        return "text/html";
+    protected int getHTTPCode(){
+        int httpCode = 200;
+        if (!(OPTIONS.contains(requestType))){
+            httpCode = 405;
+        }
+        return httpCode;
     }
 
     private String[] getParameters(String path){

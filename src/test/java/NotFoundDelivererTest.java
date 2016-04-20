@@ -1,9 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 public class NotFoundDelivererTest {
 
@@ -21,24 +19,28 @@ public class NotFoundDelivererTest {
     }
 
     @Test
-    public void testGetHTTPCode() throws Exception {
-        assertEquals("Returns 404", 404, notFoundDeliverer.getHTTPCode());
+    public void testGetResponseHeaderIncludes404() throws Exception {
+        String response = notFoundDeliverer.getResponseHeader();
+        assertTrue("Returns 404", response.contains("404 Not Found"));
     }
 
     @Test
-    public void testGetHTTPCodeReturns405WhenNotGet() throws Exception {
+    public void testGetResponseHeaderIncludes405WhenPost() throws Exception {
         NotFoundDeliverer notFoundDeliverer1 = new NotFoundDeliverer("POST");
-        assertEquals("Returns 405", 405, notFoundDeliverer1.getHTTPCode());
+        String response = notFoundDeliverer1.getResponseHeader();
+        assertTrue("Returns 405", response.contains("405 Method Not Allowed"));
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+    public void testGetResponseHeaderIncludesGETAndOPTIONS(){
         NotFoundDeliverer notFoundDeliverer1 = new NotFoundDeliverer("OPTIONS");
-        assertArrayEquals("Method options returns array with only get and options when options is passed in", new String[]{"GET", "OPTIONS"}, notFoundDeliverer1.getMethodOptions());
+        String response = notFoundDeliverer1.getResponseHeader();
+        assertTrue("Header includes options", response.contains("GET,OPTIONS"));
     }
 
     @Test
     public void testGetContentTypeReturnsTextPlain() throws Exception {
-        assertEquals("Returns text plain", "text/plain", notFoundDeliverer.getContentType());
+        String response = notFoundDeliverer.getResponseHeader();
+        assertTrue("Header includes text plain", response.contains("text/plain"));
     }
 }

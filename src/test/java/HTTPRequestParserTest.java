@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -223,5 +224,32 @@ public class HTTPRequestParserTest {
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
         assertFalse("Has content range returns false when range does not exists", HTTPRequestParser.hasContentRange(request));
+    }
+
+    @Test
+    public void testGetEtagReturnsNullIfNotPatchRequest(){
+        String request = "GET / HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertNull("Get etag returns null with not a patch request", HTTPRequestParser.getEtag(request));
+    }
+
+    @Test
+    public void testGetEtagReturnsTagIfPatchRequestAndProvidedTag(){
+        String request = "PATCH / HTTP/1.1\r\n" +
+                "If-Match: 'bwer123124\r\n'" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        assertEquals("Get etag returns tag of patch request", "bwer123124", HTTPRequestParser.getEtag(request));
+    }
+
+    @Test
+    public void testGetPatchedContentReturnsContentToPatch(){
+        String request = "PATCH / HTTP/1.1\r\n" +
+                "If-Match: 'bwer123124\r\n'" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n\r\n"+
+                "some content";
+        assertEquals("Patch content returns content to use to patch", "some content", HTTPRequestParser.getPatchContent(request));
     }
 }

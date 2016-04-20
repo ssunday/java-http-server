@@ -16,7 +16,7 @@ public class ServerTest {
     private Server server;
     private Socket testSocket;
 
-    private static final int TEST_PORT = 6000;
+    private final int TEST_PORT = 6000;
 
     @Before
     public void setUp() throws Exception{
@@ -147,7 +147,7 @@ public class ServerTest {
         String info = new String(data).trim();
         DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
         byte[] contentBytes = deliver.getBytes();
-        byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 40);
+        byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 39);
         assertTrue("Socket serves partial content of length with only end range", info.contains(Integer.toString(truncated.length)));
     }
 
@@ -170,7 +170,7 @@ public class ServerTest {
         String info = new String(data).trim();
         DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
         byte[] contentBytes = deliver.getBytes();
-        byte[] truncated = Arrays.copyOfRange(contentBytes, 5, contentBytes.length);
+        byte[] truncated = Arrays.copyOfRange(contentBytes, 5, contentBytes.length - 1);
         assertTrue("Socket serves partial content of length with only start range", info.contains(Integer.toString(truncated.length)));
     }
 
@@ -189,7 +189,7 @@ public class ServerTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String info = new String(data).trim();
-        assertTrue("Redirect has header of location localhost test port", info.contains("Location: http://localhost:"+TEST_PORT+"/"));
+        assertTrue("Redirect has header with location localhost test port", info.contains("Location: http://localhost:"+TEST_PORT+"/"));
     }
 
     @Test

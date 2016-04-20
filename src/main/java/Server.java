@@ -1,6 +1,4 @@
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -40,18 +38,13 @@ public class Server {
     }
 
     public void serve() throws Exception{
-        String request, header, contentType;
-        int HTTPCode, contentLength;
+        String request, header;
         byte[] bytesToWrite;
         request = getRequest();
         logger.logRequest(request);
-        DelivererBase deliverer = DelivererFactory.getDeliverer(request, baseDirectory);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, port, baseDirectory);
         bytesToWrite = deliverer.getBytes();
-        HTTPCode = deliverer.getHTTPCode();
-        contentType = deliverer.getContentType();
-        contentLength = bytesToWrite.length;
-        String[] methodOptions = deliverer.getMethodOptions();
-        header = HTTPResponseHeaders.getHTTPHeader(port, HTTPCode, contentType, contentLength, methodOptions);
+        header = deliverer.getResponseHeader();
         output.writeBytes(header);
         output.write(bytesToWrite);
         output.flush();

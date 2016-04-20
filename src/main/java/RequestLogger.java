@@ -16,9 +16,10 @@ public class RequestLogger {
     }
 
     public void logRequest(String request){
+        String requestToLog = getPartOfRequestToLog(request);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(logName, true));
-            writer.write(request);
+            writer.write(requestToLog);
             writer.newLine();
             writer.flush();
         } catch (Exception e) {}
@@ -36,5 +37,10 @@ public class RequestLogger {
             log = "No Requests Logged";
         }
         return log.trim();
+    }
+
+    private String getPartOfRequestToLog(String request){
+        String[] linesOfRequest = request.split("\r\n");
+        return linesOfRequest[0];
     }
 }

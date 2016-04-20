@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class FormDelivererTest {
 
@@ -68,41 +67,45 @@ public class FormDelivererTest {
     }
 
     @Test
-    public void testGetHTTPCodeReturns200ForGet(){
+    public void testGetResponseIncludes200CodeForGet(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "GET");
-        assertEquals("Returns 200 for GET", 200, formDeliverer.getHTTPCode());
+        assertTrue("Includes 200 for GET",formDeliverer.getResponseHeader().contains("200 OK"));
     }
 
     @Test
-    public void testGetHTTPCodeReturns200ForPOST(){
+    public void tesGetResponseIncludes200CodeForPOST(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "POST");
-        assertEquals("Returns 200 for POST", 200, formDeliverer.getHTTPCode());
+        assertTrue("Includes 200 for POST", formDeliverer.getResponseHeader().contains("200 OK"));
     }
 
     @Test
-    public void testGetHTTPCodeReturns200ForPUT(){
+    public void testGetResponseIncludes200CodeForPUT(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "PUT");
-        assertEquals("Returns 200 for PUT", 200, formDeliverer.getHTTPCode());
+        assertTrue("Includes 200 for PUT", formDeliverer.getResponseHeader().contains("200 OK"));
     }
 
     @Test
-    public void testGetHTTPCodeReturns200ForDelete(){
+    public void testGetResponseIncludes200CodeForDelete(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "DELETE");
-        assertEquals("Returns 200 for DELETE", 200, formDeliverer.getHTTPCode());
+        assertTrue("Includes 200 for DELETE", formDeliverer.getResponseHeader().contains("200 OK"));
     }
 
     @Test
-    public void testGetContentTypeReturnsTextHTML(){
+    public void testGetResponseIncludes405CodeForPATCH(){
+        FormDeliverer formDeliverer = new FormDeliverer("foo", "PATCH");
+        assertTrue("Includes 405 for PATCH", formDeliverer.getResponseHeader().contains("405 Method Not Allowed"));
+    }
+
+    @Test
+    public void testGetResponseHeaderIncludesTextHtml(){
         FormDeliverer formDeliverer = new FormDeliverer(null, "GET");
-        assertEquals("Content type is text/html", "text/html", formDeliverer.getContentType());
+        assertTrue("Includes text/html", formDeliverer.getResponseHeader().contains("text/html"));
     }
 
-
     @Test
-    public void testGetMethodOptionsReturnsGETAndOtherOptions(){
+    public void testGetResponseHeaderIncludesOptionsWhenOPTIONS(){
         FormDeliverer formDeliverer = new FormDeliverer(null, "OPTIONS");
-        String[] options = new String[]{"GET", "POST", "PUT", "DELETE", "OPTIONS"};
-        assertArrayEquals("Method options returns array with get, post, put, delete and options when options is request", options, formDeliverer.getMethodOptions());
+        assertTrue("Response header includes all options when options request", formDeliverer.getResponseHeader().contains("Allow: GET,POST,PUT,DELETE,OPTIONS"));
     }
 
     @After

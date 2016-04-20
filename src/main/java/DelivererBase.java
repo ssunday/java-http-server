@@ -1,40 +1,27 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class DelivererBase {
+abstract class DelivererBase {
 
+    protected HTTPResponse response;
     protected List<String> OPTIONS = new ArrayList<String>();
     protected String requestType;
+    protected String contentType;
 
-    public DelivererBase(){}
+    abstract byte[] getBytes();
 
-    public DelivererBase(String requestType){
-        this.requestType = requestType;
-        OPTIONS.add("GET");
-    }
-
-    public byte[] getBytes()
-    {
-        return new byte[0];
-    }
-
-    public int getHTTPCode(){
-        int httpCode;
-        httpCode = (OPTIONS.contains(requestType)) ? 200 : 405;
-        return httpCode;
-    }
-
-    public String getContentType() {
-        return null;
-    }
-
-    public String[] getMethodOptions(){
+    public String getResponseHeader(){
+        response = new HTTPResponse();
+        response.setHTTPCode(getHTTPCode());
+        response.setContentType(contentType);
         if (requestType.equals("OPTIONS")){
-            String[]methodOptions = new String[OPTIONS.size()];
-            return OPTIONS.toArray(methodOptions);
+            String[] options = new String[OPTIONS.size()];
+            response.setAllow(OPTIONS.toArray(options));
         }
-        else{
-            return new String[0];
-        }
+        response.setContentLength(getBytes().length);
+        return response.getHeader();
     }
+
+    abstract int getHTTPCode();
+
 }
