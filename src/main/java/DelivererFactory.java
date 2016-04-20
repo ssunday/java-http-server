@@ -8,7 +8,7 @@ public class DelivererFactory {
     private static final String OPTIONS_PATH = "/method_options";
     private static final String REDIRECT_PATH = "/redirect";
 
-    public static DelivererBase getDeliverer(String request, String baseDirectory){
+    public static DelivererBase getDeliverer(String request, int port, String baseDirectory){
         String path = HTTPRequestParser.getPath(request);
         String requestType = HTTPRequestParser.getRequestType(request);
         FilePaths filePaths = new FilePaths(baseDirectory);
@@ -30,13 +30,21 @@ public class DelivererFactory {
             server = new MethodOptionDeliverer(requestType);
         }
         else if (isRoute(path, REDIRECT_PATH)){
-            server = new RedirectDeliverer(requestType);
+            server = new RedirectDeliverer(port, requestType);
         }
         else if (isDirectory(fullPath)){
             server = new DirectoryDeliverer(path, filePaths, requestType);
         }
         else if (isFile(fullPath)){
-            server = new FileDeliverer(fullPath, requestType);
+            String etag = HTTPRequestParser.getEtag(request);
+            if (etag != null){
+                String patchedContent = HTTPRequestParser.getPatchContent(request);
+                server = new FileDeliverer(fullPath, etag, patchedContent, requestType);
+            }
+            else
+            {
+                server = new FileDeliverer(fullPath, requestType);
+            }
         }
         else {
             server = new NotFoundDeliverer(requestType);

@@ -23,22 +23,23 @@ public class PartialContentDeliverer extends DelivererBase {
     }
 
     @Override
-    public int getHTTPCode(){
+    public String getResponseHeader(){
+        response = new HTTPResponse();
+        response.setHTTPCode(getHTTPCode());
+        if (requestType.equals("OPTIONS")){
+            String[] options = new String[server.OPTIONS.size()];
+            response.setAllow(server.OPTIONS.toArray(options));
+        }
+        response.setContentLength(getBytes().length-1);
+        return response.getHeader();
+    }
+
+    protected int getHTTPCode(){
         int httpCode = 206;
         if (!(server.OPTIONS.contains(requestType))){
             httpCode = 405;
         }
         return httpCode;
-    }
-
-    @Override
-    public String getContentType(){
-        return server.getContentType();
-    }
-
-    @Override
-    public String[] getMethodOptions(){
-        return super.getMethodOptions();
     }
 
     private int[] getByteRange(int fullByteLength){
@@ -51,7 +52,7 @@ public class PartialContentDeliverer extends DelivererBase {
                 rangeEnd = fullByteLength;
             }
         }
-        return new int[]{rangeStart, rangeEnd};
+        return new int[] {rangeStart, rangeEnd};
     }
 
     private boolean validByteRange(int bytePoint){

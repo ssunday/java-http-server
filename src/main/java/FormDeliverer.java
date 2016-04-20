@@ -20,6 +20,7 @@ public class FormDeliverer extends DelivererBase {
         OPTIONS.add(PUT);
         OPTIONS.add(DELETE);
         OPTIONS.add("OPTIONS");
+        contentType = "text/html";
     }
 
     @Override
@@ -42,9 +43,10 @@ public class FormDeliverer extends DelivererBase {
         return bytesToWrite;
     }
 
-    @Override
-    public String getContentType() {
-        return "text/html";
+    protected int getHTTPCode(){
+        int httpCode;
+        httpCode = (OPTIONS.contains(requestType)) ? 200 : 405;
+        return httpCode;
     }
 
     private boolean isGet(){

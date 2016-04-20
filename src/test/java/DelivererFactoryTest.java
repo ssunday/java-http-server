@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 public class DelivererFactoryTest {
 
+    private static final int TEST_PORT = 6000;
     @Before
     public void setUp() throws Exception{
         FileTestingUtilities.makePath(FileTestingUtilities.testDirectory);
@@ -18,7 +19,7 @@ public class DelivererFactoryTest {
         String request = "GET /single/ HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, FileTestingUtilities.testDirectory);
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
         assertTrue("Returns Directory object when passed in a directory", server instanceof DirectoryDeliverer);
         FileTestingUtilities.clearPath(path);
     }
@@ -30,7 +31,7 @@ public class DelivererFactoryTest {
         String request = "GET /single.txt HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, FileTestingUtilities.testDirectory);
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
         assertTrue("Returns File Deliverer object when file passed in", server instanceof FileDeliverer);
         FileTestingUtilities.clearPath(singleFile);
     }
@@ -40,7 +41,7 @@ public class DelivererFactoryTest {
         String request = "GET /parameters?var=blarg HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, "/");
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
         assertTrue("Returns Parameter Deliverer object when path with parameters passed in", server instanceof ParameterDeliverer);
     }
 
@@ -49,7 +50,7 @@ public class DelivererFactoryTest {
         String request = "GET /form HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, "/");
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
         assertTrue("Returns form Deliverer object when path with form is passed in", server instanceof FormDeliverer);
     }
 
@@ -59,7 +60,7 @@ public class DelivererFactoryTest {
                 "Authorization: Basic c29tZW9uZTpwYXNzd29yZA==\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, "/");
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
         assertTrue("Returns log Deliverer when logs route is passed in", server instanceof LogDeliverer);
     }
 
@@ -69,7 +70,7 @@ public class DelivererFactoryTest {
                 "Host: localhost\r\n" +
                 "Range: bytes=0-20" + "\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, "/");
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
         assertTrue("Returns partial content deliverer when range passed in", server instanceof PartialContentDeliverer);
     }
 
@@ -78,7 +79,7 @@ public class DelivererFactoryTest {
         String request = "GET /notfound.txt HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request,"/");
+        DelivererBase server = DelivererFactory.getDeliverer(request,TEST_PORT, "/");
         assertTrue("Returns not found server when non-existent file is passed in", server instanceof NotFoundDeliverer);
     }
 
@@ -87,7 +88,7 @@ public class DelivererFactoryTest {
         String request = "GET /method_options HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request,"/");
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
         assertTrue("Returns method option deliverer when that route is passed in", server instanceof MethodOptionDeliverer);
     }
     
@@ -96,7 +97,7 @@ public class DelivererFactoryTest {
         String request = "GET /redirect HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request,"/");
+        DelivererBase server = DelivererFactory.getDeliverer(request,TEST_PORT, "/");
         assertTrue("Returns redirect deliverer when that route is passed in", server instanceof RedirectDeliverer);
 
     }
