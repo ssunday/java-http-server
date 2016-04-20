@@ -3,11 +3,11 @@ public class MethodOptionDeliverer extends DelivererBase {
 
     public MethodOptionDeliverer(String requestType){
         this.requestType = requestType;
-        OPTIONS.add("GET");
-        OPTIONS.add("POST");
-        OPTIONS.add("PUT");
-        OPTIONS.add("OPTIONS");
-        OPTIONS.add("HEAD");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.POST);
+        OPTIONS.add(HTTPVerbs.PUT);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
+        OPTIONS.add(HTTPVerbs.HEAD);
     }
 
     @Override
@@ -19,10 +19,7 @@ public class MethodOptionDeliverer extends DelivererBase {
     public String getResponseHeader(){
         response = new HTTPResponse();
         response.setHTTPCode(getHTTPCode());
-        if (requestType.equals("OPTIONS")){
-            String[] options = new String[OPTIONS.size()];
-            response.setAllow(OPTIONS.toArray(options));
-        }
+        addAllowField();
         response.setContentLength(0);
         return response.getHeader();
     }

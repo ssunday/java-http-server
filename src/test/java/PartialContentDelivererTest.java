@@ -12,7 +12,7 @@ public class PartialContentDelivererTest {
         NotFoundDeliverer notFoundDeliverer = new NotFoundDeliverer("GET");
         PartialContentDeliverer server = new PartialContentDeliverer(notFoundDeliverer, 0, 20, "GET");
         byte[] directoryBytes = notFoundDeliverer.getBytes();
-        byte[] partialBytes = Arrays.copyOfRange(directoryBytes, 0, 21);
+        byte[] partialBytes = Arrays.copyOfRange(directoryBytes, 0, 22);
         assertArrayEquals("Bytes returned is partial of bytes of passed in server", partialBytes, server.getBytes());
 
     }

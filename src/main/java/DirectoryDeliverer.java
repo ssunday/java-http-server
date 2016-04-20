@@ -11,8 +11,8 @@ public class DirectoryDeliverer extends DelivererBase {
         this.requestType = requestType;
         display = new HTMLDirectoryDisplay();
         directoryListing = new DirectoryListing();
-        OPTIONS.add("GET");
-        OPTIONS.add("OPTIONS");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/html";
     }
 

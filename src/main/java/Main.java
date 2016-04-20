@@ -1,8 +1,8 @@
 public class Main {
 
     private static int port;
-
-    private static String directory;;
+    private static String directory;
+    private static int maxConnections = 10000;
 
     private static void configuration(String[] args) {
         CommandParser parser = new CommandParser(args);
@@ -10,16 +10,16 @@ public class Main {
         directory = parser.getDirectory();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         configuration(args);
-        Server server  = new Server(port, directory);
+        int connections = 0;
+        Server server = new Server(port, directory);
         try {
-            while (true) {
-                server.acceptConnection();
-                server.serve();
+            while ((connections++ < maxConnections)) {
+                server.run();
             }
         } finally {
-            server.disconnectServer();
+            server.end();
         }
     }
 }

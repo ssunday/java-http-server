@@ -1,7 +1,7 @@
 
 public class HTTPResponse {
 
-    private static final String SERVER_NAME = "Java HTTP Server";
+    private static final String SERVER_NAME = "Java HTTP ServerSocketListener";
     private String header;
 
     public HTTPResponse(){
@@ -43,7 +43,7 @@ public class HTTPResponse {
     }
 
     private String getServerName(){
-        String serverNameLine = "Server: " + SERVER_NAME + "\r\n";
+        String serverNameLine = "ServerSocketListener: " + SERVER_NAME + "\r\n";
         return serverNameLine;
     }
 

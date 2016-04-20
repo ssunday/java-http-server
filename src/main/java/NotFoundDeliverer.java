@@ -2,8 +2,8 @@ public class NotFoundDeliverer extends DelivererBase {
 
     public NotFoundDeliverer(String requestType){
         this.requestType = requestType;
-        OPTIONS.add("GET");
-        OPTIONS.add("OPTIONS");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/plain";
     }
 

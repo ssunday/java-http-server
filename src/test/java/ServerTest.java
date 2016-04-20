@@ -4,244 +4,77 @@ import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ServerTest {
 
     private Server server;
-    private Socket testSocket;
-
-    private final int TEST_PORT = 6000;
+    private int TEST_PORT;
+    private String TEST_DIRECTORY;
 
     @Before
-    public void setUp() throws Exception{
-        server = new Server(TEST_PORT, System.getProperty("user.dir"));
-        testSocket = new Socket("localhost", TEST_PORT);
+    public void setUp() throws Exception {
+        TEST_PORT = 6000;
+        TEST_DIRECTORY = FileTestingUtilities.testDirectory;
+        FileTestingUtilities.makePath(FileTestingUtilities.testDirectory);
+        server = new Server(TEST_PORT, TEST_DIRECTORY);
     }
 
     @Test
-    public void testAcceptConnection() throws Exception {
-        assertTrue("Server can accept connection", server.acceptConnection());
+    public void testRunCanWithstand100Requests() throws Exception{
+        runIterationNTimes(100);
     }
 
     @Test
-    public void testGetRequest() throws Exception {
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        assertEquals("Server can get entire socket request", request.trim(), server.getRequest());
+    public void testRunCanWithstand500Requests() throws Exception{
+        runIterationNTimes(500);
     }
 
     @Test
-    public void testGetRequestWithParams() throws Exception {
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "POST / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" + "\r\n" +
-                "var1=foo";
-        output.writeBytes(request);
-        output.flush();
-        assertEquals("Server can get entire socket request with params", request.trim(), server.getRequest());
+    public void testRunCanWithstand1000Requests() throws Exception{
+        runIterationNTimes(1000);
     }
 
     @Test
-    public void testServeHas200Code() throws Exception {
-        server.acceptConnection();
-        String directory = System.getProperty("user.dir");
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
-        String response = input.readLine();
-        assertTrue("Socket serves listing with HTTP/1.1 200 code", response.contains("HTTP/1.1 200"));
+    public void testRunCanWithstand1500Requests() throws Exception{
+        runIterationNTimes(1500);
     }
 
     @Test
-    public void testServeHas404CodeWithNonExistentDirectory() throws Exception {
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET /foobar HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
-        String response = input.readLine();
-        assertTrue("Socket serves non-existent directory listing with 404 code", response.contains("404"));
+    public void testRunCanWithstand3000Requests() throws Exception{
+        runIterationNTimes(3000);
     }
 
-    @Test
-    public void testServerHas206WhenContentRangeExists() throws Exception{
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Range: bytes=0-40" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        BufferedReader input = new BufferedReader(new InputStreamReader(testSocket.getInputStream()));
-        String response = input.readLine();
-        assertTrue("Socket serves 206 code when partial content is provided", response.contains("206"));
-    }
-
-    @Test
-    public void testServerHasPartialContentWhenRangeIsProvided() throws Exception{
-        server.acceptConnection();
-        String directory = System.getProperty("user.dir");
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Range: bytes=0-20" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        InputStream stream = testSocket.getInputStream();
-        byte[] data = new byte[18000];
-        stream.read(data);
-        String info = new String(data).trim();
-        DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
-        byte[] contentBytes = deliver.getBytes();
-        byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 21);
-        assertTrue("Socket serves partial content of length with entire range provided", info.contains(Integer.toString(truncated.length)));
-    }
-
-    @Test
-    public void testServerHasPartialContentWhenEndRangeIsProvided() throws Exception{
-        server.acceptConnection();
-        String directory = System.getProperty("user.dir");
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Range: bytes=-40" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        InputStream stream = testSocket.getInputStream();
-        byte[] data = new byte[18000];
-        stream.read(data);
-        String info = new String(data).trim();
-        DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
-        byte[] contentBytes = deliver.getBytes();
-        byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 39);
-        assertTrue("Socket serves partial content of length with only end range", info.contains(Integer.toString(truncated.length)));
-    }
-
-    @Test
-    public void testServerHasPartialContentWhenStartRangeIsProvided() throws Exception{
-        server.acceptConnection();
-        String directory = System.getProperty("user.dir");
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Range: bytes=5-" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        InputStream stream = testSocket.getInputStream();
-        byte[] data = new byte[18000];
-        stream.read(data);
-        String info = new String(data).trim();
-        DirectoryDeliverer deliver = new DirectoryDeliverer(directory, new FilePaths(directory), "GET");
-        byte[] contentBytes = deliver.getBytes();
-        byte[] truncated = Arrays.copyOfRange(contentBytes, 5, contentBytes.length - 1);
-        assertTrue("Socket serves partial content of length with only start range", info.contains(Integer.toString(truncated.length)));
-    }
-
-    @Test
-    public void testServerRedirectHasLocationFound() throws Exception{
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET /redirect HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        InputStream stream = testSocket.getInputStream();
-        byte[] data = new byte[18000];
-        stream.read(data);
-        String info = new String(data).trim();
-        assertTrue("Redirect has header with location localhost test port", info.contains("Location: http://localhost:"+TEST_PORT+"/"));
-    }
-
-    @Test
-    public void testServerResponseDoesNotHaveAllowWhenRequestTypeIsNotOptions() throws Exception{
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "GET / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        InputStream stream = testSocket.getInputStream();
-        byte[] data = new byte[18000];
-        stream.read(data);
-        String info = new String(data).trim();
-        assertFalse("Response does not have an allow field with get request", info.contains("Allow: "));
-    }
-
-    @Test
-    public void testServerResponseHasAllowLineWhenRequestTypeIsOptions() throws Exception{
-        server.acceptConnection();
-        DataOutputStream output = new DataOutputStream(testSocket.getOutputStream());
-        String get = "OPTIONS / HTTP/1.1";
-        String request =  get + "\r\n" +
-                "Host: " + "http://localhost:" + "\r\n" +
-                "Connection: close\r\n\r\n";
-        output.writeBytes(request);
-        output.flush();
-        server.serve();
-        InputStream stream = testSocket.getInputStream();
-        byte[] data = new byte[18000];
-        stream.read(data);
-        String info = new String(data).trim();
-        assertTrue("Response does have an allow field with options request", info.contains("Allow: "));
-    }
-
-    @Test
-    public void testDisconnectServerEndsConnection() throws Exception {
-        int dummyPort = 5001;
-        Server server_end = new Server(dummyPort, "/");
-        Socket dummySocket = new Socket("localhost", dummyPort);
-        server_end.disconnectServer();
-        assertFalse("When server ends connection cannot accept connections", server_end.acceptConnection());
-        dummySocket.close();
+    private void runIterationNTimes(int n) throws Exception{
+        Socket socket;
+        BufferedReader input;
+        DataOutputStream output;
+        for (int i = 0; i < n; i++){
+            socket = new Socket("localhost", TEST_PORT);
+            output = new DataOutputStream(socket.getOutputStream());
+            String get = "GET / HTTP/1.1" + "\r\n";
+            String request =  get + "\r\n" +
+                    "Host: " + "http://localhost:" + "\r\n" +
+                    "Connection: close\r\n\r\n";
+            output.writeBytes(request);
+            output.flush();
+            server.run();
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String response = input.readLine();
+            assertThat(response, containsString("HTTP/1.1 200"));
+            socket.close();
+            input.close();
+            output.close();
+        }
     }
 
     @After
-    public void end() throws Exception{
-        testSocket.close();
-        server.disconnectServer();
+    public void tearDown(){
+        server.end();
     }
 
 }
