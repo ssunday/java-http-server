@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 public class FormDelivererTest {
@@ -69,43 +70,50 @@ public class FormDelivererTest {
     @Test
     public void testGetResponseIncludes200CodeForGet(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "GET");
-        assertTrue("Includes 200 for GET",formDeliverer.getResponseHeader().contains("200 OK"));
+        String response = formDeliverer.getResponseHeader();
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
     public void tesGetResponseIncludes200CodeForPOST(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "POST");
-        assertTrue("Includes 200 for POST", formDeliverer.getResponseHeader().contains("200 OK"));
+        String response = formDeliverer.getResponseHeader();
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
     public void testGetResponseIncludes200CodeForPUT(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "PUT");
-        assertTrue("Includes 200 for PUT", formDeliverer.getResponseHeader().contains("200 OK"));
+        String response = formDeliverer.getResponseHeader();
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
     public void testGetResponseIncludes200CodeForDelete(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "DELETE");
-        assertTrue("Includes 200 for DELETE", formDeliverer.getResponseHeader().contains("200 OK"));
+        String response = formDeliverer.getResponseHeader();
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
     public void testGetResponseIncludes405CodeForPATCH(){
         FormDeliverer formDeliverer = new FormDeliverer("foo", "PATCH");
-        assertTrue("Includes 405 for PATCH", formDeliverer.getResponseHeader().contains("405 Method Not Allowed"));
+        String response = formDeliverer.getResponseHeader();
+        assertThat(response, containsString("405 Method Not Allowed"));
     }
 
     @Test
     public void testGetResponseHeaderIncludesTextHtml(){
         FormDeliverer formDeliverer = new FormDeliverer(null, "GET");
-        assertTrue("Includes text/html", formDeliverer.getResponseHeader().contains("text/html"));
+        String response = formDeliverer.getResponseHeader();
+        assertThat(response, containsString("text/html"));
     }
 
     @Test
-    public void testGetResponseHeaderIncludesOptionsWhenOPTIONS(){
+    public void testGetResponseHeaderIncludesAllowFieldWhenOptions(){
         FormDeliverer formDeliverer = new FormDeliverer(null, "OPTIONS");
-        assertTrue("Response header includes all options when options request", formDeliverer.getResponseHeader().contains("Allow: GET,POST,PUT,DELETE,OPTIONS"));
+        String response = formDeliverer.getResponseHeader();
+        assertThat(response, containsString("Allow: "));
     }
 
     @After

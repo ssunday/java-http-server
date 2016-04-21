@@ -1,7 +1,8 @@
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class LogDelivererTest {
 
@@ -26,31 +27,36 @@ public class LogDelivererTest {
     @Test
     public void testGetResponseHeaderIncludes200IfAuthorized(){
         LogDeliverer logDeliverer = new LogDeliverer(ADMIN_USERNAME, ADMIN_PASSWORD, "GET");
-        assertTrue("HTTP Code is 200 when if the user/password combo is correct", logDeliverer.getResponseHeader().contains("200 OK"));
+        String response = logDeliverer.getResponseHeader();
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
     public void testGetResponseHeaderIncludes405IfNotGetPassedIn(){
         LogDeliverer logDeliverer = new LogDeliverer(ADMIN_USERNAME, ADMIN_PASSWORD, "POST");
-        assertTrue("Header includes 405 when POST passed in", logDeliverer.getResponseHeader().contains("405 Method Not Allowed"));
+        String response = logDeliverer.getResponseHeader();
+        assertThat(response, containsString("405 Method Not Allowed"));
     }
 
     @Test
     public void testGetResponseHeaderIncludes401IfNotAuthorized(){
         LogDeliverer logDeliverer = new LogDeliverer("notadmin", "wrongpassword", "GET");
-        assertTrue("HTTP Code is 401 when if the user/password combo is wrong", logDeliverer.getResponseHeader().contains("401 Unauthorized"));
+        String response = logDeliverer.getResponseHeader();
+        assertThat(response, containsString("401 Unauthorized"));
     }
 
     @Test
-    public void testGetMethodOptionsReturnsGETAndOPTIONS(){
+    public void testGetResponseHeaderIncludesAllowFieldWhenOptions(){
         LogDeliverer logDeliverer = new LogDeliverer(ADMIN_USERNAME, ADMIN_PASSWORD, "OPTIONS");
-        assertTrue("Allow field has get and options", logDeliverer.getResponseHeader().contains("Allow: GET,OPTIONS"));
+        String response = logDeliverer.getResponseHeader();
+        assertThat(response, containsString("Allow: "));
     }
 
     @Test
-    public void testGetContentTypeReturnsTextPlain(){
+    public void testGetResponseHeaderIncludesTextPlain(){
         LogDeliverer logDeliverer = new LogDeliverer(ADMIN_USERNAME, ADMIN_PASSWORD, "GET");
-        assertTrue("Content type is text/plain", logDeliverer.getResponseHeader().contains("text/plain"));
+        String response = logDeliverer.getResponseHeader();
+        assertThat(response, containsString("text/plain"));
     }
 
 }

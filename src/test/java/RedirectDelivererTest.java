@@ -1,6 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class RedirectDelivererTest {
@@ -34,9 +36,9 @@ public class RedirectDelivererTest {
 
 
     @Test
-    public void testGetResponseHeaderIncludesAllowedMethods() throws Exception {
+    public void testGetResponseHeaderIncludesAllowFieldWhenOptions() throws Exception {
         RedirectDeliverer redirectDeliverer1 = new RedirectDeliverer(TEST_PORT, "OPTIONS");
         String response = redirectDeliverer1.getResponseHeader();
-        assertTrue("Header includes options when options", response.contains("GET,OPTIONS"));
+        assertThat(response, containsString("Allow: "));
     }
 }

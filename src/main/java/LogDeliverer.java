@@ -13,12 +13,13 @@ public class LogDeliverer extends DelivererBase {
         logger = new RequestLogger();
         this.requestType = requestType;
         OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.HEAD);
         OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/plain";
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         byte[] bytes;
         if (isAuthorized()){
             String content = logger.getLog();

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 public class FileDelivererTest {
@@ -101,7 +102,7 @@ public class FileDelivererTest {
     public void testGetResponseHeaderReturns200HTTPCode() {
         FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
         String response = fileDeliverer.getResponseHeader();
-        assertTrue("Includes 200", response.contains("200 OK"));
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
@@ -111,7 +112,7 @@ public class FileDelivererTest {
         FileTestingUtilities.makeFile(filePath);
         FileDeliverer fileDeliverer = new FileDeliverer(filePath, "!421412414", "somecontent", "PATCH");
         String response = fileDeliverer.getResponseHeader();
-        assertTrue("Includes 204 when patch", response.contains("204 No Content"));
+        assertThat(response, containsString("204 No Content"));
         FileTestingUtilities.clearPath(filePath);
     }
 
@@ -119,14 +120,14 @@ public class FileDelivererTest {
     public void testGetResponseHeaderIncludes405WhenNotGet(){
         FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt","POST");
         String response = fileDeliverer.getResponseHeader();
-        assertTrue("Includes 405 when Post passed in", response.contains("405 Method Not Allowed"));
+        assertThat(response, containsString("405 Method Not Allowed"));
     }
 
     @Test
     public void testGetResponseHeaderIncludesTextPlainWhenTextFile(){
         FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "GET");
         String response = fileDeliverer.getResponseHeader();
-        assertTrue("Includes text/plain", response.contains("text/plain"));
+        assertThat(response, containsString("text/plain"));
     }
 
     @Test
@@ -138,15 +139,15 @@ public class FileDelivererTest {
         ImageIO.write(image, "jpg", imageOutputFile);
         FileDeliverer fileDeliverer = new FileDeliverer(imagePath, "GET");
         String response = fileDeliverer.getResponseHeader();
-        assertTrue("Includes image for image", response.contains("image"));
+        assertThat(response, containsString("image"));
         FileTestingUtilities.clearPath(imagePath);
     }
 
     @Test
-    public void testGetResponseHeaderIncludesOptionsWhenOPTIONS(){
+    public void testGetResponseHeaderIncludesAllowFieldWhenOptions(){
         FileDeliverer fileDeliverer = new FileDeliverer("somefile.txt", "OPTIONS");
         String response = fileDeliverer.getResponseHeader();
-        assertTrue("Response header includes allow field", response.contains("Allow: GET,PATCH,OPTIONS"));
+        assertThat(response, containsString("Allow: "));
     }
 
     @Test
@@ -157,7 +158,7 @@ public class FileDelivererTest {
         FileTestingUtilities.makeFile(filePath);
         FileDeliverer fileDeliverer = new FileDeliverer(filePath, etag, "somecontent", "PATCH");
         String response = fileDeliverer.getResponseHeader();
-        assertTrue("Etag is included when file is given ETAG", response.contains(etag));
+        assertThat(response, containsString(etag));
         FileTestingUtilities.clearPath(filePath);
     }
 

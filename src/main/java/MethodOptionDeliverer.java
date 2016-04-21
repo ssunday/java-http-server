@@ -11,7 +11,7 @@ public class MethodOptionDeliverer extends DelivererBase {
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         return new byte[0];
     }
 

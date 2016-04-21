@@ -2,8 +2,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class DirectoryDelivererTest {
 
@@ -30,24 +31,28 @@ public class DirectoryDelivererTest {
 
     @Test
     public void testGetResponseHeaderReturns200HTTPCode() {
-        assertTrue("Includes 200 code line", directoryDeliverer.getResponseHeader().contains("200 OK"));
+        String response = directoryDeliverer.getResponseHeader();
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
     public void testGetResponseHeaderIncludes405WhenNotGet(){
         DirectoryDeliverer directoryServingPost = new DirectoryDeliverer(testDirectory, new FilePaths(testDirectory), "POST");
-        assertTrue("Includes 405 code line when Post passed in", directoryServingPost.getResponseHeader().contains("405 Method Not Allowed"));
+        String response = directoryServingPost.getResponseHeader();
+        assertThat(response, containsString("405 Method Not Allowed"));
     }
 
     @Test
     public void testGetResponseHeaderIncludesTextHtml(){
-        assertTrue("Includes text/html", directoryDeliverer.getResponseHeader().contains("text/html"));
+        String response = directoryDeliverer.getResponseHeader();
+        assertThat(response, containsString("text/html"));
     }
 
     @Test
-    public void testGetResponseHeaderIncludesOptionsWhenOPTIONS(){
+    public void testGetResponseHeaderIncludesAllowFieldWhenOptions(){
         DirectoryDeliverer directoryServingOptions = new DirectoryDeliverer(testDirectory, new FilePaths(testDirectory), "OPTIONS");
-        assertTrue("Response header includes allow field", directoryServingOptions.getResponseHeader().contains("Allow: GET,OPTIONS"));
+        String response = directoryServingOptions.getResponseHeader();
+        assertThat(response, containsString("Allow: "));
     }
 
     @After

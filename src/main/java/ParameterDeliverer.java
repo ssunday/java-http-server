@@ -8,12 +8,13 @@ public class ParameterDeliverer extends DelivererBase {
         pathToServe = path;
         this.requestType = requestType;
         OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.HEAD);
         OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/html";
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         byte[] bytesToWrite;
         HTMLParameterDisplay display = new HTMLParameterDisplay();
         String[] parameters = getParameters(pathToServe);

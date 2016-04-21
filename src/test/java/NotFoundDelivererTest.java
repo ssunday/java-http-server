@@ -1,6 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 public class NotFoundDelivererTest {
@@ -21,26 +22,26 @@ public class NotFoundDelivererTest {
     @Test
     public void testGetResponseHeaderIncludes404() throws Exception {
         String response = notFoundDeliverer.getResponseHeader();
-        assertTrue("Returns 404", response.contains("404 Not Found"));
+        assertThat(response, containsString("404 Not Found"));
     }
 
     @Test
     public void testGetResponseHeaderIncludes405WhenPost() throws Exception {
         NotFoundDeliverer notFoundDeliverer1 = new NotFoundDeliverer("POST");
         String response = notFoundDeliverer1.getResponseHeader();
-        assertTrue("Returns 405", response.contains("405 Method Not Allowed"));
+        assertThat(response, containsString("405 Method Not Allowed"));
     }
 
     @Test
-    public void testGetResponseHeaderIncludesGETAndOPTIONS(){
+    public void testGetResponseHeaderIncludesAllowFieldWhenOptions(){
         NotFoundDeliverer notFoundDeliverer1 = new NotFoundDeliverer("OPTIONS");
         String response = notFoundDeliverer1.getResponseHeader();
-        assertTrue("Header includes options", response.contains("GET,OPTIONS"));
+        assertThat(response, containsString("Allow: "));
     }
 
     @Test
-    public void testGetContentTypeReturnsTextPlain() throws Exception {
+    public void testGetResponseHeaderIncludesTextPlain() throws Exception {
         String response = notFoundDeliverer.getResponseHeader();
-        assertTrue("Header includes text plain", response.contains("text/plain"));
+        assertThat(response, containsString("text/plain"));
     }
 }
