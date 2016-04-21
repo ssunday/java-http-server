@@ -6,8 +6,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.*;
 
 
 public class RequestLoggerTest {
@@ -32,10 +32,10 @@ public class RequestLoggerTest {
 
     @Test
     public void testLogRequestWritesToLog() throws Exception {
-        requestLogger.logRequest("Request");
+        requestLogger.logRequest("GET / HTTP/1.1");
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
         String data = reader.readLine();
-        assertTrue("Log Request adds line to log", data.contains("Request"));
+        assertThat(data, containsString("GET /"));
         log.delete();
     }
 
@@ -47,7 +47,7 @@ public class RequestLoggerTest {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
         data += reader.readLine() + "\n";
         data += reader.readLine();
-        assertTrue("Log Request appends to existing log file", data.contains("Request1\nRequest2"));
+        assertThat(data, containsString("Request1\nRequest2"));
         log.delete();
     }
 
@@ -57,6 +57,12 @@ public class RequestLoggerTest {
         requestLogger.logRequest(data);
         assertEquals("Get log returns logged data", data, requestLogger.getLog());
         log.delete();
+    }
+
+    @Test
+    public void testGetLogReturnsNoRequestsLoggedIfNoFile(){
+        requestLogger = new RequestLogger("nonexistent.txt");
+        assertThat(requestLogger.getLog(), containsString("No Requests Logged"));
     }
 
     @Test

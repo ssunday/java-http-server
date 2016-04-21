@@ -2,6 +2,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class DelivererFactoryTest {
@@ -33,6 +35,20 @@ public class DelivererFactoryTest {
                 "Connection: Keep-Alive\r\n";
         DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
         assertTrue("Returns File Deliverer object when file passed in", server instanceof FileDeliverer);
+        FileTestingUtilities.clearPath(singleFile);
+    }
+
+    @Test
+    public void testGetServerReturnsFileDelivererWithEtag() throws Exception {
+        String singleFile = FileTestingUtilities.testDirectory + "single.txt";
+        FileTestingUtilities.makeFile(singleFile);
+        String request = "PATCH /single.txt HTTP/1.1\r\n" +
+                "If-Match: 'bwer123124\r\n'" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n" +
+                "some content";
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
+        assertThat(server.getResponseHeader(), containsString("ETag: "));
         FileTestingUtilities.clearPath(singleFile);
     }
 
@@ -99,7 +115,6 @@ public class DelivererFactoryTest {
                 "Connection: Keep-Alive\r\n";
         DelivererBase server = DelivererFactory.getDeliverer(request,TEST_PORT, "/");
         assertTrue("Returns redirect deliverer when that route is passed in", server instanceof RedirectDeliverer);
-
     }
 
     @After
