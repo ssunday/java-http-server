@@ -7,8 +7,8 @@ public class ParameterDeliverer extends DelivererBase {
     public ParameterDeliverer(String path, String requestType){
         pathToServe = path;
         this.requestType = requestType;
-        OPTIONS.add("GET");
-        OPTIONS.add("OPTIONS");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/html";
     }
 

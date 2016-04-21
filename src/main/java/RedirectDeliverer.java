@@ -5,8 +5,8 @@ public class RedirectDeliverer extends DelivererBase {
     public RedirectDeliverer(int port, String requestType){
         this.requestType = requestType;
         this.port = port;
-        OPTIONS.add("GET");
-        OPTIONS.add("OPTIONS");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
     }
 
     @Override
@@ -19,10 +19,7 @@ public class RedirectDeliverer extends DelivererBase {
         response = new HTTPResponse();
         response.setHTTPCode(getHTTPCode());
         response.setLocation("http://localhost:" + port +"/");
-        if (requestType.equals("OPTIONS")) {
-            String[] options = new String[OPTIONS.size()];
-            response.setAllow(OPTIONS.toArray(options));
-        }
+        addAllowField();
         response.setContentLength(getBytes().length);
         return response.getHeader();
     }

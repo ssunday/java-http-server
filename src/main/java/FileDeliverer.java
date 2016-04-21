@@ -28,9 +28,9 @@ public class FileDeliverer extends DelivererBase {
     private void generalConstructor(String filePath, String requestType) {
         file = new File(filePath);
         this.requestType = requestType;
-        OPTIONS.add("GET");
-        OPTIONS.add("PATCH");
-        OPTIONS.add("OPTIONS");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.PATCH);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = getContentType();
     }
 
@@ -60,10 +60,7 @@ public class FileDeliverer extends DelivererBase {
         if (etag != null){
             response.setETag(etag);
         }
-        if (requestType.equals("OPTIONS")){
-            String[] options = new String[OPTIONS.size()];
-            response.setAllow(OPTIONS.toArray(options));
-        }
+        addAllowField();
         response.setContentLength(getBytes().length);
         return response.getHeader();
     }

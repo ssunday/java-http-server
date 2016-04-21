@@ -12,8 +12,8 @@ public class LogDeliverer extends DelivererBase {
         this.password = password;
         logger = new RequestLogger();
         this.requestType = requestType;
-        OPTIONS.add("GET");
-        OPTIONS.add("OPTIONS");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/plain";
     }
 
@@ -38,10 +38,7 @@ public class LogDeliverer extends DelivererBase {
         if (!(isAuthorized())){
             response.setAuthenticateRealm("logs");
         }
-        if (requestType.equals("OPTIONS")){
-            String[] options = new String[OPTIONS.size()];
-            response.setAllow(OPTIONS.toArray(options));
-        }
+        addAllowField();
         response.setContentLength(getBytes().length);
         return response.getHeader();
     }

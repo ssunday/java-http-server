@@ -1,8 +1,8 @@
 public class Main {
 
     private static int port;
-
-    private static String directory;;
+    private static String directory;
+    private static boolean isRunning = true;
 
     private static void configuration(String[] args) {
         CommandParser parser = new CommandParser(args);
@@ -10,16 +10,13 @@ public class Main {
         directory = parser.getDirectory();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         configuration(args);
-        Server server  = new Server(port, directory);
+        Server server = new Server(port, directory);
         try {
-            while (true) {
-                server.acceptConnection();
-                server.serve();
+            while (isRunning) {
+                server.start();
             }
-        } finally {
-            server.disconnectServer();
-        }
+        } catch (Exception e){}
     }
 }

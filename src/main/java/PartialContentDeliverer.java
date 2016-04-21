@@ -26,7 +26,7 @@ public class PartialContentDeliverer extends DelivererBase {
     public String getResponseHeader(){
         response = new HTTPResponse();
         response.setHTTPCode(getHTTPCode());
-        if (requestType.equals("OPTIONS")){
+        if (requestType.equals(HTTPVerbs.OPTIONS)){
             String[] options = new String[server.OPTIONS.size()];
             response.setAllow(server.OPTIONS.toArray(options));
         }
@@ -52,7 +52,7 @@ public class PartialContentDeliverer extends DelivererBase {
                 rangeEnd = fullByteLength;
             }
         }
-        return new int[] {rangeStart, rangeEnd};
+        return new int[] {rangeStart, rangeEnd+1};
     }
 
     private boolean validByteRange(int bytePoint){

@@ -14,12 +14,16 @@ abstract class DelivererBase {
         response = new HTTPResponse();
         response.setHTTPCode(getHTTPCode());
         response.setContentType(contentType);
-        if (requestType.equals("OPTIONS")){
+        addAllowField();
+        response.setContentLength(getBytes().length);
+        return response.getHeader();
+    }
+
+    protected void addAllowField(){
+        if (requestType.equals(HTTPVerbs.OPTIONS)){
             String[] options = new String[OPTIONS.size()];
             response.setAllow(OPTIONS.toArray(options));
         }
-        response.setContentLength(getBytes().length);
-        return response.getHeader();
     }
 
     abstract int getHTTPCode();

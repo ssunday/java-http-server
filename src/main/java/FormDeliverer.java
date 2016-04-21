@@ -1,10 +1,5 @@
 public class FormDeliverer extends DelivererBase {
 
-    private final String GET = "GET";
-    private final String POST = "POST";
-    private final String PUT = "PUT";
-    private final String DELETE = "DELETE";
-
     private FormData formData;
     private HTMLFormDisplay htmlFormDisplay;
 
@@ -15,11 +10,11 @@ public class FormDeliverer extends DelivererBase {
         htmlFormDisplay = new HTMLFormDisplay();
         this.requestType = requestType;
         this.params = params;
-        OPTIONS.add(GET);
-        OPTIONS.add(POST);
-        OPTIONS.add(PUT);
-        OPTIONS.add(DELETE);
-        OPTIONS.add("OPTIONS");
+        OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.POST);
+        OPTIONS.add(HTTPVerbs.PUT);
+        OPTIONS.add(HTTPVerbs.DELETE);
+        OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/html";
     }
 
@@ -50,19 +45,19 @@ public class FormDeliverer extends DelivererBase {
     }
 
     private boolean isGet(){
-        return requestType.equals(GET);
+        return requestType.equals(HTTPVerbs.GET);
     }
 
     private boolean isPost(){
-        return requestType.equals(POST);
+        return requestType.equals(HTTPVerbs.POST);
     }
 
     private boolean isPut(){
-        return requestType.equals(PUT);
+        return requestType.equals(HTTPVerbs.PUT);
     }
 
     private boolean isDelete(){
-        return requestType.equals(DELETE);
+        return requestType.equals(HTTPVerbs.DELETE);
     }
 
 }
