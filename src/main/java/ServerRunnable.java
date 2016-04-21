@@ -17,13 +17,6 @@ public class ServerRunnable implements Runnable{
         initializeStreams(socket);
     }
 
-    private void initializeStreams(Socket socket){
-        try{
-            this.output = new DataOutputStream(socket.getOutputStream());
-            this.stream = socket.getInputStream();
-        }catch (Exception e){}
-    }
-
     public void run() {
         String request, responseHeader;
         byte[] bytesToWrite;
@@ -32,11 +25,18 @@ public class ServerRunnable implements Runnable{
             logger.logRequest(request);
             DelivererBase deliverer = DelivererFactory.getDeliverer(request, port, baseDirectory);
             responseHeader = deliverer.getResponseHeader();
-            bytesToWrite = deliverer.getBytes();
+            bytesToWrite = deliverer.getContentBytes();
             output.writeBytes(responseHeader);
             output.write(bytesToWrite);
             output.flush();
         } catch (Exception e){}
+    }
+
+    private void initializeStreams(Socket socket){
+        try{
+            output = new DataOutputStream(socket.getOutputStream());
+            stream = socket.getInputStream();
+        }catch (Exception e){}
     }
 
     private String getRequest() throws Exception{

@@ -14,7 +14,7 @@ public class PartialContentDeliverer extends DelivererBase {
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         byte[] fullBytes = server.getBytes();
         int[] byteRange = getByteRange(fullBytes.length);
         int start = byteRange[0];

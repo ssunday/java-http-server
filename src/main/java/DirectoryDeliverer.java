@@ -12,12 +12,13 @@ public class DirectoryDeliverer extends DelivererBase {
         display = new HTMLDirectoryDisplay();
         directoryListing = new DirectoryListing();
         OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.HEAD);
         OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/html";
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         byte[] bytesToWrite;
         String contentToServe = getContentToServe();
         bytesToWrite = contentToServe.getBytes();

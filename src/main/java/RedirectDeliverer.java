@@ -6,11 +6,12 @@ public class RedirectDeliverer extends DelivererBase {
         this.requestType = requestType;
         this.port = port;
         OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.HEAD);
         OPTIONS.add(HTTPVerbs.OPTIONS);
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         return new byte[0];
     }
 

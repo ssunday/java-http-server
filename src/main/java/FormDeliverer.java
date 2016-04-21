@@ -14,12 +14,13 @@ public class FormDeliverer extends DelivererBase {
         OPTIONS.add(HTTPVerbs.POST);
         OPTIONS.add(HTTPVerbs.PUT);
         OPTIONS.add(HTTPVerbs.DELETE);
+        OPTIONS.add(HTTPVerbs.HEAD);
         OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/html";
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         byte[] bytesToWrite;
         String paramsToDisplay = null;
         String html;

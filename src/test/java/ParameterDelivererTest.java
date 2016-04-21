@@ -1,8 +1,9 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 public class ParameterDelivererTest {
 
@@ -47,31 +48,31 @@ public class ParameterDelivererTest {
     }
 
     @Test
-    public void testGetResponseHeaderIncludesGETAndOPTIONS(){
+    public void testGetResponseHeaderIncludesAllowFieldWhenOptions(){
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "OPTIONS");
         String response = parametersDeliverer.getResponseHeader();
-        assertTrue("Header includes options in allow line", response.contains("GET,OPTIONS"));
+        assertThat(response, containsString("Allow: "));
     }
 
     @Test
     public void testGetResponseHeaderIncludes200(){
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "GET");
         String response = parametersDeliverer.getResponseHeader();
-        assertTrue("HTTP Code is 200 with get", response.contains("200 OK"));
+        assertThat(response, containsString("200 OK"));
     }
 
     @Test
     public void testResponseHeaderIncludes405WhenPost(){
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "POST");
         String response = parametersDeliverer.getResponseHeader();
-        assertTrue("HTTP Code is 405 with POST", response.contains("405 Method Not Allowed"));
+        assertThat(response, containsString("405 Method Not Allowed"));
     }
 
     @Test
     public void testResponseHeaderIncludesTextHTML(){
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer("/parameters?stuff=1", "GET");
         String response = parametersDeliverer.getResponseHeader();
-        assertTrue("Header includes text/html", response.contains("text/html"));
+        assertThat(response, containsString("text/html"));
     }
 
 }

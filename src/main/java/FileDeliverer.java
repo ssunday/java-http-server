@@ -30,12 +30,13 @@ public class FileDeliverer extends DelivererBase {
         this.requestType = requestType;
         OPTIONS.add(HTTPVerbs.GET);
         OPTIONS.add(HTTPVerbs.PATCH);
+        OPTIONS.add(HTTPVerbs.HEAD);
         OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = getContentType();
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         byte[] fileBytes = new byte[0];
         if (!(requestType.equals("PATCH"))){
             try {

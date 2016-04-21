@@ -3,12 +3,13 @@ public class NotFoundDeliverer extends DelivererBase {
     public NotFoundDeliverer(String requestType){
         this.requestType = requestType;
         OPTIONS.add(HTTPVerbs.GET);
+        OPTIONS.add(HTTPVerbs.HEAD);
         OPTIONS.add(HTTPVerbs.OPTIONS);
         contentType = "text/plain";
     }
 
     @Override
-    public byte[] getBytes(){
+    protected byte[] getBytes(){
         String message = "Not found.";
         byte[] bytes = message.getBytes();
         return bytes;

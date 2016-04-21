@@ -2,7 +2,9 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class PartialContentDelivererTest {
@@ -32,9 +34,10 @@ public class PartialContentDelivererTest {
     }
 
     @Test
-    public void testGetResponseHeaderIncludesAllowedMethods() throws Exception {
+    public void testGetResponseHeaderIncludesAllowedFieldWhenOptions() throws Exception {
         NotFoundDeliverer notFoundDeliverer = new NotFoundDeliverer("OPTIONS");
         PartialContentDeliverer server = new PartialContentDeliverer(notFoundDeliverer, 0, 20, "OPTIONS");
-        assertTrue("Header includes server options when options", server.getResponseHeader().contains("GET,OPTIONS"));
+        String response = server.getResponseHeader();
+        assertThat(response, containsString("Allow: "));
     }
 }

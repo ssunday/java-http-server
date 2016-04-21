@@ -8,6 +8,14 @@ abstract class DelivererBase {
     protected String requestType;
     protected String contentType;
 
+    public byte[] getContentBytes(){
+        byte[] bytes = getBytes();
+        if (requestType.equals(HTTPVerbs.HEAD) && OPTIONS.contains(HTTPVerbs.HEAD)){
+            bytes = new byte[0];
+        }
+        return bytes;
+    }
+
     abstract byte[] getBytes();
 
     public String getResponseHeader(){
