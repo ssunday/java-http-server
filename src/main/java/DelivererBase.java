@@ -28,7 +28,7 @@ abstract class DelivererBase {
     }
 
     protected void addAllowField(){
-        if (requestType.equals(HTTPVerbs.OPTIONS)){
+        if (requestType.equals(HTTPVerbs.OPTIONS) && OPTIONS.contains(HTTPVerbs.HEAD)){
             String[] options = new String[OPTIONS.size()];
             response.setAllow(OPTIONS.toArray(options));
         }

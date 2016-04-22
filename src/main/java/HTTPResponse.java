@@ -80,6 +80,9 @@ public class HTTPResponse {
             case 405:
                 HTTPCodeHeader += "405 Method Not Allowed";
                 break;
+            case 418:
+                HTTPCodeHeader += "418 I'm a teapot";
+                break;
             default:
                 HTTPCodeHeader += "200 OK";
                 break;
