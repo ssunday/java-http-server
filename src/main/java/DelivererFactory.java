@@ -2,35 +2,32 @@ import java.io.File;
 
 public class DelivererFactory {
 
-    private static final String PARAMETER_PATH = "/parameters?";
-    private static final String FORM_PATH = "/form";
-    private static final String LOG_PATH = "/logs";
-    private static final String OPTIONS_PATH = "/method_options";
-    private static final String REDIRECT_PATH = "/redirect";
-
     public static DelivererBase getDeliverer(String request, int port, String baseDirectory){
         String path = HTTPRequestParser.getPath(request);
         String requestType = HTTPRequestParser.getRequestType(request);
         FilePaths filePaths = new FilePaths(baseDirectory);
         String fullPath = filePaths.getPathToServe(path);
         DelivererBase server;
-        if (isRoute(path, LOG_PATH)){
+        if (isRoute(path, ServerRoutes.LOG_PATH)){
             String username = HTTPRequestParser.getAuthenticationUsername(request);
             String password = HTTPRequestParser.getAuthenticationPassword(request);
             server = new LogDeliverer(username, password, requestType);
         }
-        else if (isRoute(path, PARAMETER_PATH)){
+        else if (isRoute(path, ServerRoutes.PARAMETER_PATH)){
             server = new ParameterDeliverer(path, requestType);
         }
-        else if (isRoute(path, FORM_PATH)){
+        else if (isRoute(path, ServerRoutes.FORM_PATH)){
             String params = HTTPRequestParser.getParams(request);
             server = new FormDeliverer(params, requestType);
         }
-        else if (isRoute(path, OPTIONS_PATH)){
+        else if (isRoute(path, ServerRoutes.OPTIONS_PATH)){
             server = new MethodOptionDeliverer(requestType);
         }
-        else if (isRoute(path, REDIRECT_PATH)){
+        else if (isRoute(path, ServerRoutes.REDIRECT_PATH)){
             server = new RedirectDeliverer(port, requestType);
+        }
+        else if (isRoute(path, ServerRoutes.TEAPOT_PATH)){
+            server = new TeapotDeliverer(requestType);
         }
         else if (isDirectory(fullPath)){
             server = new DirectoryDeliverer(path, filePaths, requestType);
