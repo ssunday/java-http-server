@@ -2,44 +2,52 @@
 public class HTTPResponse {
 
     private static final String SERVER_NAME = "Java HTTP Server";
-    private String header;
+
+    private String header, HTTPCode, contentType, contentLength, allow, authenticate, location, eTag;
 
     public HTTPResponse(){
-        header = "";
+        header = HTTPCode = contentType = contentLength = allow = authenticate = location = eTag = "";
     }
 
     public String getHeader(){
+        header += HTTPCode;
         header += getServerName();
+        header += contentType;
+        header += contentLength;
+        header += allow;
+        header += authenticate;
+        header += location;
+        header += eTag;
         header += getConnectionClose();
         return header;
     }
 
     public void setHTTPCode(int code){
-        header += getHTTPCodeHeader(code);
+        HTTPCode = getHTTPCodeHeader(code);
     }
 
     public void setContentType(String contentType){
-        header += "Content-Type: " + contentType + "\r\n";
+        this.contentType = "Content-Type: " + contentType + "\r\n";
     }
 
     public void setContentLength(int contentLength){
-        header += "Content-Length: " + contentLength + "\r\n";
+        this.contentLength = "Content-Length: " + contentLength + "\r\n";
     }
 
     public void setAllow(String[] options){
-        header += constructAllowLine(options);
+        this.allow = constructAllowLine(options);
     }
 
     public void setAuthenticateRealm(String realm){
-        header += "WWW-Authenticate: Basic realm='"+ realm + "'"+ "\r\n";
+        this.authenticate = "WWW-Authenticate: Basic realm='"+ realm + "'"+ "\r\n";
     }
 
     public void setLocation(String location){
-        header += "Location: " + location + "\r\n";
+        this.location = "Location: " + location + "\r\n";
     }
 
     public void setETag(String etag){
-        header += "ETag: \"" + etag + '\"';
+        this.eTag += "ETag: \"" + etag + '\"';
     }
 
     private String getServerName(){

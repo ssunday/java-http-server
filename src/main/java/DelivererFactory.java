@@ -26,8 +26,8 @@ public class DelivererFactory {
         else if (isRoute(path, ServerRoutes.REDIRECT_PATH)){
             server = new RedirectDeliverer(port, requestType);
         }
-        else if (isRoute(path, ServerRoutes.TEAPOT_PATH)){
-            server = new TeapotDeliverer(requestType);
+        else if (isRoute(path, ServerRoutes.TEA_PATH) || isRoute(path, ServerRoutes.COFFEE_PATH)){
+            server = new TeapotDeliverer(path, requestType);
         }
         else if (isDirectory(fullPath)){
             server = new DirectoryDeliverer(path, filePaths, requestType);
