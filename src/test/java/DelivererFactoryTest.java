@@ -119,13 +119,21 @@ public class DelivererFactoryTest {
 
     @Test
     public void testGetServerReturnsTeapotDeliverer(){
-        String request = "GET /teapot HTTP/1.1\r\n" +
+        String request = "GET /tea HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
         DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns teapot deliverer when teapot route is passed in", server instanceof TeapotDeliverer);
+        assertTrue("Returns teapot deliverer when tea route is passed in", server instanceof TeapotDeliverer);
     }
 
+    @Test
+    public void testGetServerReturnsTeapotDelivererCoffee(){
+        String request = "GET /coffee HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns teapot deliverer when coffee route is passed in", server instanceof TeapotDeliverer);
+    }
 
     @After
     public void tearDown() throws Exception{
