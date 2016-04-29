@@ -1,4 +1,5 @@
 
+import TestingSupport.FileTestingUtilities;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,38 +40,24 @@ public class FilePathsTest {
     }
 
     @Test
-    public void testGetPathToLinkReturnsPathWithoutBaseDirectory(){
-        String fullPath = baseDirectory + "folder/";
-        String path = filePaths.getPathToLink(fullPath);
-        assertEquals("Returns path without base directory included", "/folder/", path);
-    }
-
-    @Test
-    public void testGetPathToLinkReturnsNestedPathWithoutBaseDirectory(){
-        String fullPath = baseDirectory + "folder/something/";
-        String path = filePaths.getPathToLink(fullPath);
-        assertEquals("Returns nested folder path without base directory included", "/folder/something/", path);
-    }
-
-    @Test
     public void testGetPreviousPathToLinkReturnsBaseDirectorIfPathIsTheBaseDirectory(){
-        String fullPath = baseDirectory;
+        String fullPath = "/";
         String path = filePaths.getPreviousPathToLink(fullPath);
-        assertEquals("Returns / if path is the base directory", "/", path);
+        assertEquals("Returns / if path is /", "/", path);
     }
 
     @Test
     public void testGetPreviousPathToLinkReturnsPathOneLevelUpWithoutBaseDirectory(){
-        String fullpath = baseDirectory + "folder/something/things/";
+        String fullpath = "/folder/something/things/";
         String path = filePaths.getPreviousPathToLink(fullpath);
         assertEquals("Returns path one level up without base directory included of a nested folder system", "/folder/something/", path);
     }
 
     @Test
     public void testGetPreviousPathToLinkReturnsBaseDirectoryWhenFolderIsOneLevelDown(){
-        String fullPath = baseDirectory + "folder/";
+        String fullPath = "/folder/";
         String path = filePaths.getPreviousPathToLink(fullPath);
-        assertEquals("Returns slash if one level up in path is the base directory", "/", path);
+        assertEquals("Returns slash if one level up in path is /", "/", path);
     }
 
 }

@@ -1,3 +1,4 @@
+import TestingSupport.FileTestingUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,6 @@ public class ServerTest {
 
     private int TEST_PORT = 6000;
     private String TEST_DIRECTORY = FileTestingUtilities.testDirectory;
-
     @Before
     public void setUp() throws Exception {
         FileTestingUtilities.makePath(TEST_DIRECTORY);
@@ -39,7 +39,7 @@ public class ServerTest {
                     "Connection: close\r\n\r\n";
             output.writeBytes(request);
             output.flush();
-            server.start();
+            server.runServer();
             String response = input.readLine();
             assertThat(response, containsString("HTTP/1.1 200"));
             socket.close();
@@ -47,6 +47,7 @@ public class ServerTest {
             output.close();
             Thread.yield();
         }
+        server.endServer();
         return;
     }
 

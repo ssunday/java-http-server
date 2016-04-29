@@ -1,3 +1,6 @@
+import Deliverer.*;
+import HTTP.HTTPRequestParser;
+
 import java.io.File;
 
 public class DelivererFactory {
@@ -30,7 +33,8 @@ public class DelivererFactory {
             server = new TeapotDeliverer(path, requestType);
         }
         else if (isDirectory(fullPath)){
-            server = new DirectoryDeliverer(path, filePaths, requestType);
+            String previousPath = filePaths.getPreviousPathToLink(path);
+            server = new DirectoryDeliverer(path, fullPath, previousPath, requestType);
         }
         else if (isFile(fullPath)){
             String etag = HTTPRequestParser.getEtag(request);
