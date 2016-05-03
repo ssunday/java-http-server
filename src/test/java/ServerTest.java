@@ -15,6 +15,7 @@ public class ServerTest {
 
     private int TEST_PORT = 6000;
     private String TEST_DIRECTORY = FileTestingUtilities.testDirectory;
+
     @Before
     public void setUp() throws Exception {
         FileTestingUtilities.makePath(TEST_DIRECTORY);
@@ -35,7 +36,7 @@ public class ServerTest {
             socket = new Socket("localhost", TEST_PORT);
             output = new DataOutputStream(socket.getOutputStream());
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String request =  "GET / HTTP/1.1" + "\r\n" +
+            String request =  "HEAD / HTTP/1.1" + "\r\n" +
                     "Connection: close\r\n\r\n";
             output.writeBytes(request);
             output.flush();
@@ -45,10 +46,8 @@ public class ServerTest {
             socket.close();
             input.close();
             output.close();
-            Thread.yield();
         }
         server.endServer();
-        return;
     }
 
     @After
