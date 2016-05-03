@@ -1,3 +1,4 @@
+import TestingSupport.FileTestingUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,19 +36,18 @@ public class ServerTest {
             socket = new Socket("localhost", TEST_PORT);
             output = new DataOutputStream(socket.getOutputStream());
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String request =  "GET / HTTP/1.1" + "\r\n" +
+            String request =  "HEAD / HTTP/1.1" + "\r\n" +
                     "Connection: close\r\n\r\n";
             output.writeBytes(request);
             output.flush();
-            server.start();
+            server.runServer();
             String response = input.readLine();
             assertThat(response, containsString("HTTP/1.1 200"));
             socket.close();
             input.close();
             output.close();
-            Thread.yield();
         }
-        return;
+        server.endServer();
     }
 
     @After

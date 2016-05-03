@@ -12,11 +12,14 @@ public class Main {
 
     public static void main(String[] args){
         configuration(args);
-        Server server = new Server(port, directory);
-        try {
-            while (isRunning) {
-                server.start();
+        final Server server = new Server(port, directory);
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                server.endServer();
             }
-        } catch (Exception e){}
+        });
+        while (isRunning) {
+            server.runServer();
+        }
     }
 }

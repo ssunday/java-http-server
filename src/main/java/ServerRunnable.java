@@ -1,3 +1,6 @@
+import Deliverer.DelivererBase;
+import Logging.LoggingQueue;
+
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.net.Socket;
@@ -6,12 +9,12 @@ public class ServerRunnable implements Runnable{
 
     private DataOutputStream output;
     private InputStream stream;
-    private RequestLogger logger;
     private int port;
     private String baseDirectory;
+    private LoggingQueue loggingQueue;
 
-    public ServerRunnable(Socket socket, int port, String baseDirectory){
-        this.logger = new RequestLogger();
+    public ServerRunnable(Socket socket, LoggingQueue loggingQueue, int port, String baseDirectory){
+        this.loggingQueue = loggingQueue;
         this.port = port;
         this.baseDirectory = baseDirectory;
         initializeStreams(socket);
@@ -22,7 +25,8 @@ public class ServerRunnable implements Runnable{
         byte[] bytesToWrite;
         try{
             request = getRequest();
-            logger.logRequest(request);
+            loggingQueue.addToQueue(request);
+            loggingQueue.logQueue();
             DelivererBase deliverer = DelivererFactory.getDeliverer(request, port, baseDirectory);
             responseHeader = deliverer.getResponseHeader();
             bytesToWrite = deliverer.getContentBytes();

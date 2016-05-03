@@ -1,3 +1,6 @@
+import Deliverer.DirectoryDeliverer;
+import TestingSupport.FileTestingUtilities;
+import TestingSupport.MockLoggingQueue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +38,7 @@ public class ServerRunnableTest {
         output = new DataOutputStream(testSocket.getOutputStream());
         stream = testSocket.getInputStream();
         input = new BufferedReader(new InputStreamReader(stream));
-        serverRunnable = new ServerRunnable(serverSocket.accept(), TEST_PORT, TEST_DIRECTORY);
+        serverRunnable = new ServerRunnable(serverSocket.accept(), new MockLoggingQueue(), TEST_PORT, TEST_DIRECTORY);
     }
 
     @Test
@@ -91,8 +94,8 @@ public class ServerRunnableTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String response = new String(data).trim();
-        DirectoryDeliverer deliver = new DirectoryDeliverer(TEST_DIRECTORY, new FilePaths(TEST_DIRECTORY), "GET");
-        byte[] contentBytes = deliver.getBytes();
+        DirectoryDeliverer deliver = new DirectoryDeliverer("/", TEST_DIRECTORY, "/", "GET");
+        byte[] contentBytes = deliver.getContentBytes();
         byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 20);
         assertThat(response, containsString(Integer.toString(truncated.length)));
     }
@@ -110,8 +113,8 @@ public class ServerRunnableTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String response = new String(data).trim();
-        DirectoryDeliverer deliver = new DirectoryDeliverer(TEST_DIRECTORY, new FilePaths(TEST_DIRECTORY), "GET");
-        byte[] contentBytes = deliver.getBytes();
+        DirectoryDeliverer deliver = new DirectoryDeliverer("/", TEST_DIRECTORY, "/", "GET");
+        byte[] contentBytes = deliver.getContentBytes();
         byte[] truncated = Arrays.copyOfRange(contentBytes, 0, 40);
         assertThat(response, containsString(Integer.toString(truncated.length)));
     }
@@ -129,8 +132,8 @@ public class ServerRunnableTest {
         byte[] data = new byte[18000];
         stream.read(data);
         String response = new String(data).trim();
-        DirectoryDeliverer deliver = new DirectoryDeliverer(TEST_DIRECTORY, new FilePaths(TEST_DIRECTORY), "GET");
-        byte[] contentBytes = deliver.getBytes();
+        DirectoryDeliverer deliver = new DirectoryDeliverer("/", TEST_DIRECTORY, "/",  "GET");
+        byte[] contentBytes = deliver.getContentBytes();
         byte[] truncated = Arrays.copyOfRange(contentBytes, 5, contentBytes.length);
         assertThat(response, containsString(Integer.toString(truncated.length)));
     }

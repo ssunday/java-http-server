@@ -1,3 +1,5 @@
+import Deliverer.*;
+import TestingSupport.FileTestingUtilities;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,31 +17,31 @@ public class DelivererFactoryTest {
     }
 
     @Test
-    public void testGetServerReturnsDirectoryDeliverer() throws Exception {
+    public void testGetDelivererReturnsDirectoryDeliverer() throws Exception {
         String path = FileTestingUtilities.testDirectory + "single/";
         FileTestingUtilities.makePath(path);
         String request = "GET /single/ HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
-        assertTrue("Returns Directory object when passed in a directory", server instanceof DirectoryDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
+        assertTrue("Returns Directory object when passed in a directory", deliverer instanceof DirectoryDeliverer);
         FileTestingUtilities.clearPath(path);
     }
 
     @Test
-    public void testGetServerReturnsFileDeliverer() throws Exception {
+    public void testGetDelivererReturnsFileDeliverer() throws Exception {
         String singleFile = FileTestingUtilities.testDirectory + "single.txt";
         FileTestingUtilities.makeFile(singleFile);
         String request = "GET /single.txt HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
-        assertTrue("Returns File Deliverer object when file passed in", server instanceof FileDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
+        assertTrue("Returns File Deliverer object when file passed in", deliverer instanceof FileDeliverer);
         FileTestingUtilities.clearPath(singleFile);
     }
 
     @Test
-    public void testGetServerReturnsFileDelivererWithEtag() throws Exception {
+    public void testGetDelivererReturnsFileDelivererWithEtag() throws Exception {
         String singleFile = FileTestingUtilities.testDirectory + "single.txt";
         FileTestingUtilities.makeFile(singleFile);
         String request = "PATCH /single.txt HTTP/1.1\r\n" +
@@ -47,92 +49,92 @@ public class DelivererFactoryTest {
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n" +
                 "some content";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
-        assertThat(server.getResponseHeader(), containsString("ETag: "));
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, FileTestingUtilities.testDirectory);
+        assertThat(deliverer.getResponseHeader(), containsString("ETag: "));
         FileTestingUtilities.clearPath(singleFile);
     }
 
     @Test
-    public void testGetServerReturnsParameterDeliverer() throws Exception {
+    public void testGetDelivererReturnsParameterDeliverer() throws Exception {
         String request = "GET /parameters?var=blarg HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns Parameter Deliverer object when path with parameters passed in", server instanceof ParameterDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns Parameter Deliverer object when path with parameters passed in", deliverer instanceof ParameterDeliverer);
     }
 
     @Test
-    public void testGetServerReturnsFormDeliverer() throws Exception {
+    public void testGetDelivererReturnsFormDeliverer() throws Exception {
         String request = "GET /form HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns form Deliverer object when path with form is passed in", server instanceof FormDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns form Deliverer object when path with form is passed in", deliverer instanceof FormDeliverer);
     }
 
     @Test
-    public void testGetServerReturnsLogDeliverer() throws Exception{
+    public void testGetDelivererReturnsLogDeliverer() throws Exception{
         String request = "GET /logs HTTP/1.1\r\n" +
                 "Authorization: Basic c29tZW9uZTpwYXNzd29yZA==\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns log Deliverer when logs route is passed in", server instanceof LogDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns log Deliverer when logs route is passed in", deliverer instanceof LogDeliverer);
     }
 
     @Test
-    public void testGetServerReturnsPartialContentDeliverer() throws Exception{
+    public void testGetDelivererReturnsPartialContentDeliverer() throws Exception{
         String request = "GET /logs HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Range: bytes=0-20" + "\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns partial content deliverer when range passed in", server instanceof PartialContentDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns partial content deliverer when range passed in", deliverer instanceof PartialContentDeliverer);
     }
 
     @Test
-    public void testGetServerReturnsNotFoundDeliverer() throws Exception {
+    public void testGetDelivererReturnsNotFoundDeliverer() throws Exception {
         String request = "GET /notfound.txt HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request,TEST_PORT, "/");
-        assertTrue("Returns not found server when non-existent file is passed in", server instanceof NotFoundDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request,TEST_PORT, "/");
+        assertTrue("Returns not found deliverer when non-existent file is passed in", deliverer instanceof NotFoundDeliverer);
     }
 
     @Test
-    public void testGetServerReturnsMethodOptionsDeliverer() throws Exception{
+    public void testGetDelivererReturnsMethodOptionsDeliverer() throws Exception{
         String request = "GET /method_options HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns method option deliverer when that route is passed in", server instanceof MethodOptionDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns method option deliverer when that route is passed in", deliverer instanceof MethodOptionDeliverer);
     }
     
     @Test
-    public void testGetServerReturnsRedirectDeliverer(){
+    public void testGetDelivererReturnsRedirectDeliverer(){
         String request = "GET /redirect HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request,TEST_PORT, "/");
-        assertTrue("Returns redirect deliverer when that route is passed in", server instanceof RedirectDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request,TEST_PORT, "/");
+        assertTrue("Returns redirect deliverer when that route is passed in", deliverer instanceof RedirectDeliverer);
     }
 
     @Test
-    public void testGetServerReturnsTeapotDeliverer(){
+    public void testGetDelivererReturnsTeapotDeliverer(){
         String request = "GET /tea HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns teapot deliverer when tea route is passed in", server instanceof TeapotDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns teapot deliverer when tea route is passed in", deliverer instanceof TeapotDeliverer);
     }
 
     @Test
-    public void testGetServerReturnsTeapotDelivererCoffee(){
+    public void testGetDelivererReturnsTeapotDelivererCoffee(){
         String request = "GET /coffee HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        DelivererBase server = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
-        assertTrue("Returns teapot deliverer when coffee route is passed in", server instanceof TeapotDeliverer);
+        DelivererBase deliverer = DelivererFactory.getDeliverer(request, TEST_PORT, "/");
+        assertTrue("Returns teapot deliverer when coffee route is passed in", deliverer instanceof TeapotDeliverer);
     }
 
     @After

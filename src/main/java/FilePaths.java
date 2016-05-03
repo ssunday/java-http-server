@@ -4,7 +4,6 @@ public class FilePaths {
     private String baseDirectory;
 
     public FilePaths(String baseDirectory){
-
         this.baseDirectory = baseDirectory;
     }
 
@@ -17,17 +16,13 @@ public class FilePaths {
     }
 
     public String getPreviousPathToLink(String path) {
-        String pathOneUp = getPathOneLevelUp(path);
-        return getPathToLink(pathOneUp);
-    }
-
-    public String getPathToLink(String path) {
-        int baseDirectoryLength = baseDirectory.length() - 1;
-        String linkPath = path;
-        if (baseDirectoryLength != -1 && path.length() > baseDirectoryLength) {
-            linkPath = path.substring(baseDirectoryLength);
+        String pathToLink = path;
+        if (path != "/"){
+            String fullPath = getPathToServe(path);
+            String pathOneUp = getPathOneLevelUp(fullPath);
+            pathToLink = getPathToLink(pathOneUp);
         }
-        return linkPath;
+        return pathToLink;
     }
 
     private String getPathOneLevelUp(String path){
@@ -38,6 +33,15 @@ public class FilePaths {
             pathUp = path.substring(0, secondToLastSlash+1);
         }
         return pathUp;
+    }
+
+    private String getPathToLink(String path) {
+        String linkPath = path;
+        int baseDirectoryLength = baseDirectory.length() - 1;
+        if (baseDirectoryLength != -1 && path.length() > baseDirectoryLength) {
+            linkPath = path.substring(baseDirectoryLength);
+        }
+        return linkPath;
     }
 
 }
