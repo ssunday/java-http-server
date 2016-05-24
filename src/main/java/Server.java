@@ -1,4 +1,5 @@
 import Logging.LoggingQueue;
+import Routes.DelivererFactoryBase;
 import Server.ServerSocketListener;
 
 import java.net.Socket;
@@ -8,16 +9,14 @@ import java.util.concurrent.Executors;
 public class Server {
 
     private ServerSocketListener serverSocketListener;
-    private int port;
-    private String baseDirectory;
     private ExecutorService threadPool;
+    private DelivererFactoryBase delivererFactory;
     private LoggingQueue loggingQueue;
     private ServerRunnable runnable;
     private Socket socket;
 
-    public Server(int port, String baseDirectory){
-        this.port = port;
-        this.baseDirectory = baseDirectory;
+    public Server(String mode, int port, String baseDirectory){
+        this.delivererFactory = ServerRouter.getDelivererFactory(mode, port, baseDirectory);
         this.serverSocketListener = new ServerSocketListener(port);
         this.threadPool = Executors.newFixedThreadPool(8);
         this.loggingQueue = new LoggingQueue();
@@ -25,7 +24,7 @@ public class Server {
 
     public void runServer(){
         socket = serverSocketListener.getSocket();
-        runnable = new ServerRunnable(socket, loggingQueue, port, baseDirectory);
+        runnable = new ServerRunnable(socket, loggingQueue, delivererFactory);
         threadPool.execute(runnable);
     }
 
@@ -34,4 +33,5 @@ public class Server {
         serverSocketListener.disconnectServer();
         threadPool.shutdown();
     }
+
 }

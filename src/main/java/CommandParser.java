@@ -5,41 +5,40 @@ public class CommandParser {
 
     private final String PORT_KEYWORD = "-p";
     private final String DIRECTORY_KEYWORD = "-d";
+    private final String MODE_KEYWORD = "-m";
 
     private List<String> options;
-    private int defaultPort;
+    private String defaultPort;
     private String defaultDirectory;
+    private String defaultMode;
 
     public CommandParser(String[] args) {
         options = Arrays.asList(args);
-        defaultPort = 5000;
+        defaultPort = "5000";
         defaultDirectory = System.getProperty("user.dir") + "/cob_spec/public/";
-    }
-
-    public boolean hasPort() {
-        return options.contains(PORT_KEYWORD);
-    }
-
-    public boolean hasDirectory()
-    {
-        return options.contains(DIRECTORY_KEYWORD);
+        defaultMode = ServerRoutes.WIKI_ROUTE;
     }
 
     public int getPort(){
-        int port = defaultPort;
-        if (hasPort()){
-            String stringPort = getOptionValue(PORT_KEYWORD);
-            port = Integer.parseInt(stringPort);
-        }
-        return port;
+        String port = getOption(PORT_KEYWORD, defaultPort);
+        return Integer.parseInt(port);
     }
 
     public String getDirectory(){
-        String directory = defaultDirectory;
-        if (hasDirectory()){
-            directory = getOptionValue(DIRECTORY_KEYWORD);
-        }
-        return directory;
+        return getOption(DIRECTORY_KEYWORD, defaultDirectory);
+    }
+
+    public String getMode(){
+        return getOption(MODE_KEYWORD, defaultMode);
+    }
+
+    private String getOption(String keyword, String defaultOption){
+        String option = hasKeyword(keyword) ? getOptionValue(keyword) : defaultOption;
+        return option;
+    }
+
+    private boolean hasKeyword(String keyword) {
+        return options.contains(keyword);
     }
 
     private String getOptionValue(String keyword){

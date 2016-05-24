@@ -1,4 +1,5 @@
-import Deliverer.DirectoryDeliverer;
+import Routes.Cobspec.CobspecDelivererFactory;
+import Routes.Cobspec.Deliverer.DirectoryDeliverer;
 import TestingSupport.FileTestingUtilities;
 import TestingSupport.MockLoggingQueue;
 import org.junit.After;
@@ -38,7 +39,7 @@ public class ServerRunnableTest {
         output = new DataOutputStream(testSocket.getOutputStream());
         stream = testSocket.getInputStream();
         input = new BufferedReader(new InputStreamReader(stream));
-        serverRunnable = new ServerRunnable(serverSocket.accept(), new MockLoggingQueue(), TEST_PORT, TEST_DIRECTORY);
+        serverRunnable = new ServerRunnable(serverSocket.accept(), new MockLoggingQueue(), new CobspecDelivererFactory(TEST_PORT, TEST_DIRECTORY));
     }
 
     @Test

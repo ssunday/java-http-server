@@ -31,7 +31,7 @@ public class ServerTest {
         Socket socket;
         BufferedReader input;
         DataOutputStream output;
-        Server server = new Server(TEST_PORT, TEST_DIRECTORY);
+        Server server = new Server("cobspec", TEST_PORT, TEST_DIRECTORY);
         for (int i = 0; i < n; i++){
             socket = new Socket("localhost", TEST_PORT);
             output = new DataOutputStream(socket.getOutputStream());

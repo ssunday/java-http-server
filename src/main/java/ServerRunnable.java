@@ -1,5 +1,6 @@
-import Deliverer.DelivererBase;
 import Logging.LoggingQueue;
+import Routes.DelivererBase;
+import Routes.DelivererFactoryBase;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -9,14 +10,12 @@ public class ServerRunnable implements Runnable{
 
     private DataOutputStream output;
     private InputStream stream;
-    private int port;
-    private String baseDirectory;
+    private DelivererFactoryBase delivererFactory;
     private LoggingQueue loggingQueue;
 
-    public ServerRunnable(Socket socket, LoggingQueue loggingQueue, int port, String baseDirectory){
+    public ServerRunnable(Socket socket, LoggingQueue loggingQueue, DelivererFactoryBase delivererFactoryBase){
         this.loggingQueue = loggingQueue;
-        this.port = port;
-        this.baseDirectory = baseDirectory;
+        this.delivererFactory= delivererFactoryBase;
         initializeStreams(socket);
     }
 
@@ -27,7 +26,7 @@ public class ServerRunnable implements Runnable{
             request = getRequest();
             loggingQueue.addToQueue(request);
             loggingQueue.logQueue();
-            DelivererBase deliverer = DelivererFactory.getDeliverer(request, port, baseDirectory);
+            DelivererBase deliverer = delivererFactory.getDeliverer(request);
             responseHeader = deliverer.getResponseHeader();
             bytesToWrite = deliverer.getContentBytes();
             output.writeBytes(responseHeader);
