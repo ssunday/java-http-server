@@ -10,33 +10,38 @@ public class HomePageTemplateTest {
     private HomePageTemplate homePageTemplate;
 
     @Test
-    public void testRenderHomePageIncludesHomePage(){
-        homePageTemplate =  new HomePageTemplate(null, null);
-        assertThat(homePageTemplate.renderHomePage(), containsString("Home Page"));
+    public void testRenderPageIncludesHomePage(){
+        homePageTemplate =  new HomePageTemplate(new String[0], new String[0]);
+        assertThat(homePageTemplate.renderPage(), containsString("Home Page"));
     }
 
     @Test
-    public void testRenderHomePageIncludesCreatePostButton(){
-        homePageTemplate =  new HomePageTemplate(null, null);
-        assertThat(homePageTemplate.renderHomePage(), containsString("Create Post"));
+    public void testRenderPageIncludesCreatePostButton(){
+        homePageTemplate =  new HomePageTemplate(new String[0], new String[0]);
+        assertThat(homePageTemplate.renderPage(), containsString("Create Post"));
     }
 
+    @Test
+    public void testRenderPageIncludesNoPostWhenNoPosts(){
+        homePageTemplate =  new HomePageTemplate(new String[0], new String[0]);
+        assertThat(homePageTemplate.renderPage(), containsString("No posts"));
+    }
 
     @Test
-    public void testRenderHomePageIncludesPostListWithTitles(){
+    public void testRenderPageIncludesPostListWithTitles(){
         String[] postIDs = {"1", "3"};
         String[] titles = {"A Title", "Some Title"};
         homePageTemplate =  new HomePageTemplate(postIDs, titles);
-        assertThat(homePageTemplate.renderHomePage(), containsString("A Title"));
-        assertThat(homePageTemplate.renderHomePage(), containsString("Some Title"));
+        assertThat(homePageTemplate.renderPage(), containsString("A Title"));
+        assertThat(homePageTemplate.renderPage(), containsString("Some Title"));
     }
 
     @Test
-    public void testRenderHomePageIncludesPostIDLinks(){
+    public void testRenderPageIncludesPostIDLinks(){
         String[] postIDs = {"1", "3"};
         String[] titles = {"A Title", "Some Title"};
         homePageTemplate =  new HomePageTemplate(postIDs, titles);
-        assertThat(homePageTemplate.renderHomePage(), containsString("href='/post-1'"));
-        assertThat(homePageTemplate.renderHomePage(), containsString("href='/post-3'"));
+        assertThat(homePageTemplate.renderPage(), containsString("href='/post-1'"));
+        assertThat(homePageTemplate.renderPage(), containsString("href='/post-3'"));
     }
 }

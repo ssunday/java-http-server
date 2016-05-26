@@ -1,6 +1,9 @@
 package HTTP;
 
+import java.net.URLDecoder;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HTTPRequestParser {
 
@@ -32,6 +35,19 @@ public class HTTPRequestParser {
             params = requestHeaders[requestHeaders.length-1];
         }
         return params;
+    }
+
+    public static Map getParsedParams(String request){
+        Map paramFieldsAndValues = new HashMap();
+        String params = getParams(request);
+        String[] paramsSplit = params.split("&");
+        for (int i = 0; i < paramsSplit.length; i++){
+            String[] fieldAndValue = paramsSplit[i].split("=");
+            String field = parseParam(fieldAndValue[0]);
+            String value = parseParam(fieldAndValue[1]);
+            paramFieldsAndValues.put(field,value);
+        }
+        return paramFieldsAndValues;
     }
 
     public static String getAuthenticationUsername(String request){
@@ -74,6 +90,16 @@ public class HTTPRequestParser {
         String[] requestHeaders = getRequestLines(request);
         content = requestHeaders[requestHeaders.length-1];
         return content;
+    }
+
+    private static String parseParam(String param){
+        String parsedParam;
+        try {
+            parsedParam = URLDecoder.decode(param, "UTF-8");
+        } catch (Exception e){
+            parsedParam = param;
+        }
+        return parsedParam;
     }
 
     private static String parseEtag(String ifMatchLine){

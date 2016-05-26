@@ -19,7 +19,7 @@ public class PostRecorderTest {
 
     @Test
     public void testGetLatestPostCountReturnsZeroWhenNoPostsHaveBeenMade(){
-        assertEquals(0, postRecorder.getLatestPostCount());
+        assertEquals(0, postRecorder.getLatestPostID());
     }
 
     @Test

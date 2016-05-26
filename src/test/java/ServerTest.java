@@ -22,9 +22,9 @@ public class ServerTest {
     }
 
     @Test
-    public void testRunCanWithstand1500Requests() throws Exception{
+    public void testRunCanWithstand500Requests() throws Exception{
         Thread.yield();
-        runIterationNTimes(1500);
+        runIterationNTimes(500);
     }
 
     private void runIterationNTimes(int n) throws Exception{

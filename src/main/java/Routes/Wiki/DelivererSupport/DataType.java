@@ -9,6 +9,7 @@ public interface DataType {
     String CONTENT = "content";
 
     void addPost(Map fieldsAndValues);
+    int getLatestID();
     void updatePost(Map newFieldsAndValues);
     String[][] getAllPosts();
     String[] selectPostByID(int id);

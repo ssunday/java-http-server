@@ -11,20 +11,16 @@ public class PostRecorder {
     private final int TITLE_INDEX = 1;
     private final int CONTENT_INDEX = 2;
 
-    int postCount = 0;
-
     public PostRecorder(DataType dataType) {
         this.dataType = dataType;
     }
 
-    public int getLatestPostCount(){
-        return postCount;
+    public int getLatestPostID(){
+        return dataType.getLatestID();
     }
 
     public void createNewPost(String title, String content){
-        postCount++;
         Map postMap = new HashMap();
-        postMap.put(DataType.ID, postCount);
         postMap.put(DataType.TITLE, title);
         postMap.put(DataType.CONTENT, content);
         dataType.addPost(postMap);

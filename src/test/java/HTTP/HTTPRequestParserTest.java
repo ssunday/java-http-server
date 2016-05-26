@@ -2,6 +2,9 @@ package HTTP;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -121,6 +124,40 @@ public class HTTPRequestParserTest {
                 + "Host: localhost" + "\r\n" + "Content-Type: application/x-www-form-urlencoded" + "\r\n\r\n"
                 + params;
         assertEquals("Returns put params", params, HTTPRequestParser.getParams(request));
+    }
+
+    @Test
+    public void testGetParsedParamsReturnsParamsAsMapOfTypeAndValue(){
+        String params = "var1=something";
+        String request = "PUT /something HTTP/1.1" + "\r\n"
+                + "Host: localhost" + "\r\n" + "Content-Type: application/x-www-form-urlencoded" + "\r\n\r\n"
+                + params;
+        Map parsed = new HashMap();
+        parsed.put("var1", "something");
+        assertEquals(parsed, HTTPRequestParser.getParsedParams(request));
+    }
+
+    @Test
+    public void testGetParsedParamsReturnsDecodedParam(){
+        String params = "var1=something%26something";
+        String request = "PUT /something HTTP/1.1" + "\r\n"
+                + "Host: localhost" + "\r\n" + "Content-Type: application/x-www-form-urlencoded" + "\r\n\r\n"
+                + params;
+        Map parsed = new HashMap();
+        parsed.put("var1", "something&something");
+        assertEquals(parsed, HTTPRequestParser.getParsedParams(request));
+    }
+
+    @Test
+    public void testGetParsedParamsReturnsMultipleParams(){
+        String params = "var1=something&var2=something2";
+        String request = "PUT /something HTTP/1.1" + "\r\n"
+                + "Host: localhost" + "\r\n" + "Content-Type: application/x-www-form-urlencoded" + "\r\n\r\n"
+                + params;
+        Map parsed = new HashMap();
+        parsed.put("var1", "something");
+        parsed.put("var2", "something2");
+        assertEquals(parsed, HTTPRequestParser.getParsedParams(request));
     }
 
     @Test

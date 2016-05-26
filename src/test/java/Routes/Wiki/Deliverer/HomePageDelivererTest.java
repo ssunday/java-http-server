@@ -23,8 +23,8 @@ public class HomePageDelivererTest {
     @Test
     public void testGetBytesReturnsHomePageBytes() throws Exception {
         HomePageTemplate homePageTemplate = new HomePageTemplate(postRecorder.getAllPostIDs(), postRecorder.getAllPostTitles());
-        String html = homePageTemplate.renderHomePage();
-        byte[] bytes  = html.getBytes();
+        String html = homePageTemplate.renderPage();
+        byte[] bytes = html.getBytes();
         assertArrayEquals(bytes, homePageDeliverer.getBytes());
     }
 

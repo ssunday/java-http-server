@@ -18,7 +18,7 @@ public class HomePageDeliverer extends DelivererBase {
     @Override
     protected byte[] getBytes(){
         HomePageTemplate homePageTemplate = new HomePageTemplate(postRecorder.getAllPostIDs(), postRecorder.getAllPostTitles());
-        String html = homePageTemplate.renderHomePage();
+        String html = homePageTemplate.renderPage();
         return html.getBytes();
     }
 }

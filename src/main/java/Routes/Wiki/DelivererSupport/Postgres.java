@@ -18,6 +18,19 @@ public class Postgres implements DataType{
         this.createTable();
     }
 
+    public int getLatestID(){
+        int id = 0;
+        String query = String.format("SELECT %s FROM %s ORDER BY %s DESC LIMIT 1", ID, tableName, ID);
+        ResultSet rs = execQuery(query);
+        try{
+            while (rs.next()) {
+                String stringID = rs.getString(ID);
+                id = Integer.parseInt(stringID);
+            }
+        }catch (SQLException se){}
+        return id;
+    }
+
     public void addPost(Map fieldsAndValues){
         String[] parsedFieldAndValues = parseFieldsAndValues(fieldsAndValues);
         String query = String.format("INSERT INTO %s (%s) VALUES (%s)", tableName,  parsedFieldAndValues[0], parsedFieldAndValues[1]);
@@ -67,6 +80,7 @@ public class Postgres implements DataType{
 
     public void clearData(){
         execQuery("DELETE FROM " + tableName);
+        execQuery(String.format("ALTER SEQUENCE %s_%s_seq RESTART", tableName, ID));
     }
 
     private void initiateConnection(){

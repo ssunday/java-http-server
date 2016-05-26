@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class PostgresTest {
@@ -35,7 +36,6 @@ public class PostgresTest {
     public void testAddPostEntersDataIntoTable() throws Exception {
         postgres = new Postgres("test");
         Map fieldsAndValues = new HashMap();
-        fieldsAndValues.put(postgres.ID, 1);
         fieldsAndValues.put(postgres.TITLE, "A title");
         fieldsAndValues.put(postgres.CONTENT, "something");
         postgres.addPost(fieldsAndValues);
@@ -46,18 +46,26 @@ public class PostgresTest {
     }
 
     @Test
+    public void testGetLatestIDReturnsLatestID() throws Exception{
+        postgres = new Postgres("test");
+        Map fieldsAndValues = new HashMap();
+        fieldsAndValues.put(postgres.TITLE, "A title");
+        fieldsAndValues.put(postgres.CONTENT, "something");
+        postgres.addPost(fieldsAndValues);
+        assertEquals(1, postgres.getLatestID());
+        postgres.clearData();
+    }
+
+    @Test
     public void testSelectPostByIDGetsCorrectDataFromID() throws Exception{
         postgres = new Postgres("test");
         Map fieldsAndValues1 = new HashMap();
         Map fieldsAndValues2 = new HashMap();
         Map fieldsAndValues3 = new HashMap();
-        fieldsAndValues1.put(postgres.ID, 1);
         fieldsAndValues1.put(postgres.TITLE, "A title");
         fieldsAndValues1.put(postgres.CONTENT, "something");
-        fieldsAndValues2.put(postgres.ID, 2);
         fieldsAndValues2.put(postgres.TITLE, "A title 2");
         fieldsAndValues2.put(postgres.CONTENT, "something 2");
-        fieldsAndValues3.put(postgres.ID, 3);
         fieldsAndValues3.put(postgres.TITLE, "A title 3");
         fieldsAndValues3.put(postgres.CONTENT, "something 3");
         postgres.addPost(fieldsAndValues1);
@@ -73,7 +81,6 @@ public class PostgresTest {
         postgres = new Postgres("test");
         Map fieldsAndValues1 = new HashMap();
         Map newFieldsAndValues = new HashMap();
-        fieldsAndValues1.put(postgres.ID, 1);
         fieldsAndValues1.put(postgres.TITLE, "A title");
         fieldsAndValues1.put(postgres.CONTENT, "something");
         postgres.addPost(fieldsAndValues1);
@@ -98,7 +105,6 @@ public class PostgresTest {
     public void testSelectByIDReturnsNullIfIDDoesNotExist() throws Exception {
         postgres = new Postgres("test");
         Map fieldsAndValues1 = new HashMap();
-        fieldsAndValues1.put(postgres.ID, 1);
         fieldsAndValues1.put(postgres.TITLE, "A title");
         fieldsAndValues1.put(postgres.CONTENT, "something");
         postgres.addPost(fieldsAndValues1);
@@ -111,7 +117,6 @@ public class PostgresTest {
     public void testDeleteByIDDeletesPost() throws Exception{
         postgres = new Postgres("test");
         Map fieldsAndValues1 = new HashMap();
-        fieldsAndValues1.put(postgres.ID, 1);
         fieldsAndValues1.put(postgres.TITLE, "A title");
         fieldsAndValues1.put(postgres.CONTENT, "something");
         postgres.addPost(fieldsAndValues1);
@@ -122,28 +127,25 @@ public class PostgresTest {
     }
 
     @Test
-    public void testGetAllPostIDsReturnsIntgerArrayOfAllPostIDs() throws Exception{
+    public void testGetAllPostIDsReturnsIntegerArrayOfAllPostIDs() throws Exception{
         postgres = new Postgres("test");
         Map fieldsAndValues1 = new HashMap();
         Map fieldsAndValues2 = new HashMap();
-        fieldsAndValues1.put(postgres.ID, 1);
         fieldsAndValues1.put(postgres.TITLE, "A title");
         fieldsAndValues1.put(postgres.CONTENT, "something");
-        fieldsAndValues2.put(postgres.ID, 2);
         fieldsAndValues2.put(postgres.TITLE, "A title 2");
         fieldsAndValues2.put(postgres.CONTENT, "something 2");
         postgres.addPost(fieldsAndValues1);
         postgres.addPost(fieldsAndValues2);
         String[][] posts = {{"1","A title", "something"},{"2",  "A title 2", "something 2"}};
         assertArrayEquals(posts, postgres.getAllPosts());
-        //postgres.clearData();
+        postgres.clearData();
     }
 
     @Test
     public void testClearDataDeletesTableContents() throws Exception{
         postgres = new Postgres("test");
         Map fieldsAndValues1 = new HashMap();
-        fieldsAndValues1.put(postgres.ID, 1);
         fieldsAndValues1.put(postgres.TITLE, "A title");
         fieldsAndValues1.put(postgres.CONTENT, "something");
         postgres.addPost(fieldsAndValues1);
@@ -151,6 +153,7 @@ public class PostgresTest {
         Statement st = connection.createStatement();
         ResultSet resultSet = st.executeQuery("SELECT * FROM " + "test");
         assertFalse(resultSet.next());
+        postgres.clearData();
     }
 
 }
