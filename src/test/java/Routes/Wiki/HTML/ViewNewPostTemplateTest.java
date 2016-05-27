@@ -12,7 +12,7 @@ public class ViewNewPostTemplateTest {
 
     @Before
     public void setUp(){
-        viewNewPostTemplate = new ViewNewPostTemplate("New Post Title", 1);
+        viewNewPostTemplate = new ViewNewPostTemplate("Created Post", "New Post Title", 1);
     }
 
     @Test

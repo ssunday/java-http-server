@@ -34,7 +34,7 @@ public class CreatePostDeliverer extends DelivererBase {
             html = createPostTemplate.renderPage();
 
         } else if (requestType.equals(HTTPVerbs.POST)){
-            ViewNewPostTemplate viewNewPostTemplate = new ViewNewPostTemplate(title, postRecorder.getLatestPostID());
+            ViewNewPostTemplate viewNewPostTemplate = new ViewNewPostTemplate("Create Post", title, postRecorder.getLatestPostID());
             html = viewNewPostTemplate.renderPage();
         }
         byte[] bytes = html.getBytes();

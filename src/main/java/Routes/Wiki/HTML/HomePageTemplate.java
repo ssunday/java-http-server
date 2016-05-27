@@ -19,7 +19,7 @@ public class HomePageTemplate extends PageTemplate{
     }
 
     private String postList(){
-        String htmlWikiPosts = "<h3> Post List:</h3>";
+        String htmlWikiPosts = "<h3>Post List:</h3>";
         if (postIDs.length == 0 ){
             htmlWikiPosts += "No posts.";
         } else{
@@ -31,7 +31,7 @@ public class HomePageTemplate extends PageTemplate{
     }
 
     private String addCreatePostButton(){
-        return "<h3><a href='/create-post'>Create Post</a></h3>";
+        return "<hr><h3><a href='/create-post'>Create Post</a></h3>";
     }
 
 }

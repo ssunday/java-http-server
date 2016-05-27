@@ -19,6 +19,7 @@ public abstract class PageTemplate {
 
     private String startHTML(){
         return "<HTML><HEAD>"+
+                "<style> body{padding: 80px;} </style>" +
                 "<title>" + pageTitle + "</title>" +
                 "<h1>" + pageTitle + "</h1></HEAD>";
     }
@@ -27,3 +28,4 @@ public abstract class PageTemplate {
         return "</HTML>";
     }
 }
+

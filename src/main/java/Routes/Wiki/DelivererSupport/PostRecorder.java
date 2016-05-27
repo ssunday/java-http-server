@@ -11,6 +11,8 @@ public class PostRecorder {
     private final int TITLE_INDEX = 1;
     private final int CONTENT_INDEX = 2;
 
+    public PostRecorder(){}
+
     public PostRecorder(DataType dataType) {
         this.dataType = dataType;
     }

@@ -2,29 +2,29 @@ package Routes.Wiki.HTML;
 
 public class ViewPostTemplate extends PageTemplate {
 
-    private String postTitle;
+    private int postID;
     private String postContent;
 
-    public ViewPostTemplate(String postTitle, String postContent){
-        this.postTitle = postTitle;
+    public ViewPostTemplate(int postID, String postTitle, String postContent){
+        this.postID = postID;
         this.postContent = postContent;
         this.pageTitle = postTitle;
     }
 
     @Override
     protected String getBody(){
-        String body = displayTitle();
-        body += displayContent();
+        String body = displayContent();
+        body += editPostLink();
         body += homeLink();
         return body;
     }
 
-    private String displayTitle(){
-        return String.format("<h2>%s</h2><br>", postTitle);
+    private String displayContent(){
+        return String.format("<p>%s</p><hr><br>", postContent);
     }
 
-    private String displayContent(){
-        return String.format("<p>%s</h2><p><br><br>", postContent);
+    private String editPostLink(){
+        return String.format("<a href='/edit-%s'>Edit Post</a><br><br>", postID);
     }
 
     private String homeLink(){

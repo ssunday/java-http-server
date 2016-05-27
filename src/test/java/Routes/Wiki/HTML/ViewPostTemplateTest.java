@@ -13,7 +13,7 @@ public class ViewPostTemplateTest {
     public void testRenderPageHasPostContent(){
         String postTitle = "Post title";
         String postContent = "THIS IS MY POST CONTENT";
-        viewPostTemplate = new ViewPostTemplate(postTitle, postContent);
+        viewPostTemplate = new ViewPostTemplate(1, postTitle, postContent);
         assertThat(viewPostTemplate.renderPage(), containsString(postContent));
     }
 
@@ -21,7 +21,7 @@ public class ViewPostTemplateTest {
     public void testRenderPageHasPostTitle(){
         String postTitle = "Post title";
         String postContent = "THIS IS MY POST CONTENT";
-        viewPostTemplate = new ViewPostTemplate(postTitle,postContent);
+        viewPostTemplate = new ViewPostTemplate(1, postTitle,postContent);
         assertThat(viewPostTemplate.renderPage(), containsString(postTitle));
     }
 
@@ -29,7 +29,7 @@ public class ViewPostTemplateTest {
     public void testRenderPageHasHomeLink(){
         String postTitle = "Post title";
         String postContent = "THIS IS MY POST CONTENT";
-        viewPostTemplate = new ViewPostTemplate(postTitle,postContent);
+        viewPostTemplate = new ViewPostTemplate(1, postTitle,postContent);
         assertThat(viewPostTemplate.renderPage(), containsString("<a href='/'>"));
     }
 

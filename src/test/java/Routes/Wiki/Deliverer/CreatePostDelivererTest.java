@@ -29,7 +29,7 @@ public class CreatePostDelivererTest {
         params.put("title", "A title");
         params.put("content", "Some content");
         createPostDeliverer = new CreatePostDeliverer(postRecorder, params, "POST");
-        String html = new ViewNewPostTemplate("A title", 1).renderPage();
+        String html = new ViewNewPostTemplate("Create Page", "A title", 1).renderPage();
         assertArrayEquals(createPostDeliverer.getBytes(), html.getBytes());
     }
 }
