@@ -14,7 +14,7 @@ public class Main {
         CommandParser parser = new CommandParser(args);
         port = parser.getPort();
         DataType dataType = new Postgres("posts");
-        delivererFactory = new WikiDelivererFactory(dataType);
+        delivererFactory = new WikiDelivererFactory(dataType, port);
     }
 
     public static void main(String[] args){
@@ -29,5 +29,4 @@ public class Main {
             server.runServer();
         }
     }
-
 }

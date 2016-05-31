@@ -1,20 +1,21 @@
 package Wiki.Deliverer;
 
-import Wiki.Deliverer.CreatePostDeliverer;
+import TestingSupport.MockDataType;
 import Wiki.DelivererSupport.PostRecorder;
 import Wiki.HTML.CreatePostTemplate;
-import Wiki.HTML.ViewNewPostTemplate;
-import TestingSupport.MockDataType;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 public class CreatePostDelivererTest {
 
     private CreatePostDeliverer createPostDeliverer;
+    private final int TEST_PORT = 6000;
 
     @Test
     public void testGetBytesIsTheSameAsTemplateBytesWhenGET(){
@@ -24,13 +25,12 @@ public class CreatePostDelivererTest {
     }
 
     @Test
-    public void testGetBytesIsViewNewPostWhenPost(){
+    public void testGetResponseHeaderIs302WhenPost(){
         PostRecorder postRecorder = new PostRecorder(new MockDataType());
         Map params = new HashMap();
         params.put("title", "A title");
         params.put("content", "Some content");
-        createPostDeliverer = new CreatePostDeliverer(postRecorder, params, "POST");
-        String html = new ViewNewPostTemplate("Created Post", "A title", 1).renderPage();
-        assertArrayEquals(createPostDeliverer.getBytes(), html.getBytes());
+        createPostDeliverer = new CreatePostDeliverer(postRecorder, TEST_PORT, params, "POST");
+        assertThat(createPostDeliverer.getResponseHeader(), containsString("302 Found"));
     }
 }

@@ -18,9 +18,11 @@ import java.util.Map;
 public class WikiDelivererFactory extends DelivererFactoryBase {
 
     private PostRecorder postRecorder;
+    private int port;
 
-    public WikiDelivererFactory(DataType dataType){
-        postRecorder = new PostRecorder(dataType);
+    public WikiDelivererFactory(DataType dataType, int port){
+        this.postRecorder = new PostRecorder(dataType);
+        this.port = port;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class WikiDelivererFactory extends DelivererFactoryBase {
             deliverer = new EditPostDeliverer(postRecorder,path,requestType);
         }else{
             Map parsedParams = HTTPRequestParser.getParsedParams(request);
-            deliverer = new EditPostDeliverer(postRecorder,path, parsedParams, requestType);
+            deliverer = new EditPostDeliverer(postRecorder,path, port, parsedParams, requestType);
         }
         return deliverer;
     }
@@ -66,7 +68,7 @@ public class WikiDelivererFactory extends DelivererFactoryBase {
         DelivererBase deliverer;
         if (requestType.equals(HTTPVerbs.POST)){
             Map parsedParams = HTTPRequestParser.getParsedParams(request);
-            deliverer = new CreatePostDeliverer(postRecorder,parsedParams,requestType);
+            deliverer = new CreatePostDeliverer(postRecorder, port, parsedParams,requestType);
         }
         else {
             deliverer = new CreatePostDeliverer(requestType);

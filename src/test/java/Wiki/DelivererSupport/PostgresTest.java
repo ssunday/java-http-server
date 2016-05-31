@@ -1,6 +1,5 @@
 package Wiki.DelivererSupport;
 
-import Wiki.DelivererSupport.Postgres;
 import org.junit.Before;
 import org.junit.Test;
 
