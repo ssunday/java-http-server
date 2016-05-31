@@ -1,6 +1,6 @@
 package TestingSupport;
 
-import Routes.Wiki.DelivererSupport.PostRecorder;
+import Wiki.DelivererSupport.PostRecorder;
 
 public class MockPostRecorder extends PostRecorder {
 

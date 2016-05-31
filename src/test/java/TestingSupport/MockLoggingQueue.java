@@ -1,6 +1,6 @@
 package TestingSupport;
 
-import Logging.LoggingQueue;
+import Server.Logging.LoggingQueue;
 
 public class MockLoggingQueue extends LoggingQueue{
     public void addToQueue(){}

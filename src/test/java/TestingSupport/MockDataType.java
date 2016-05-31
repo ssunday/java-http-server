@@ -1,6 +1,6 @@
 package TestingSupport;
 
-import Routes.Wiki.DelivererSupport.DataType;
+import Wiki.DelivererSupport.DataType;
 
 import java.util.Map;
 
