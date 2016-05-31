@@ -1,10 +1,11 @@
 package Wiki.Deliverer;
 
-import Server.HTTP.HTTPVerbs;
 import Server.Deliverer.DelivererBase;
+import Server.HTTP.HTTPCode;
+import Server.HTTP.HTTPResponse;
+import Server.HTTP.HTTPVerbs;
 import Wiki.DelivererSupport.PostRecorder;
 import Wiki.HTML.CreatePostTemplate;
-import Wiki.HTML.ViewNewPostTemplate;
 
 import java.util.Map;
 
@@ -12,40 +13,59 @@ public class CreatePostDeliverer extends DelivererBase {
 
     private PostRecorder postRecorder;
     private String title;
-    private int latestPostID;
+    private int port;
 
     public CreatePostDeliverer(String requestType){
         this.requestType = requestType;
         this.OPTIONS.add(HTTPVerbs.GET);
     }
 
-    public CreatePostDeliverer(PostRecorder postRecorder, Map params, String requestType){
+    public CreatePostDeliverer(PostRecorder postRecorder, int port, Map params, String requestType){
         this.requestType = requestType;
         this.postRecorder = postRecorder;
+        this.port = port;
         this.OPTIONS.add(HTTPVerbs.POST);
-        latestPostID = createPost(params);
+        createPost(params);
     }
 
     @Override
     public byte[] getBytes(){
-        String html = "";
-        if (requestType.equals(HTTPVerbs.GET)){
-            CreatePostTemplate createPostTemplate = new CreatePostTemplate();
-            html = createPostTemplate.renderPage();
-
-        } else if (requestType.equals(HTTPVerbs.POST)){
-            ViewNewPostTemplate viewNewPostTemplate = new ViewNewPostTemplate("Created Post", title, postRecorder.getLatestPostID());
-            html = viewNewPostTemplate.renderPage();
-        }
+        CreatePostTemplate createPostTemplate = new CreatePostTemplate();
+        String html = createPostTemplate.renderPage();
         byte[] bytes = html.getBytes();
         return bytes;
     }
 
-    private int createPost(Map params){
+    @Override
+    public String getResponseHeader(){
+        response = new HTTPResponse();
+        response.setHTTPCode(getHTTPCode());
+        response.setContentType(contentType);
+        addAllowField();
+        if (isPOST()){
+            response.setLocation("http://localhost:" + port + "/post-" + postRecorder.getLatestPostID());
+        }
+        response.setContentLength(getBytes().length);
+        return response.getHeader();
+    }
+
+    @Override
+    protected HTTPCode getHTTPCode(){
+        HTTPCode code = super.getHTTPCode();
+        if (isPOST()){
+            code = HTTPCode.FOUND;
+        }
+        return code;
+    }
+
+    private void createPost(Map params){
         title = params.get("title").toString();
         String content = params.get("content").toString();
         postRecorder.createNewPost(title, content);
-        return postRecorder.getLatestPostID();
+    }
+
+    private boolean isPOST(){
+        return requestType.equals(HTTPVerbs.POST);
     }
 
 }

@@ -1,11 +1,12 @@
 package Wiki.Deliverer;
 
-import Server.HTTP.HTTPVerbs;
 import Server.Deliverer.DelivererBase;
+import Server.HTTP.HTTPCode;
+import Server.HTTP.HTTPResponse;
+import Server.HTTP.HTTPVerbs;
 import Wiki.DelivererSupport.PathParser;
 import Wiki.DelivererSupport.PostRecorder;
 import Wiki.HTML.EditPostTemplate;
-import Wiki.HTML.ViewNewPostTemplate;
 
 import java.util.Map;
 
@@ -14,6 +15,7 @@ public class EditPostDeliverer extends DelivererBase {
     private PostRecorder postRecorder;
     private int postID;
     private String title;
+    private int port;
 
     public EditPostDeliverer(PostRecorder postRecorder, String path, String requestType){
         this.requestType = requestType;
@@ -22,9 +24,10 @@ public class EditPostDeliverer extends DelivererBase {
         this.OPTIONS.add(HTTPVerbs.GET);
     }
 
-    public EditPostDeliverer(PostRecorder postRecorder, String path, Map params, String requestType){
+    public EditPostDeliverer(PostRecorder postRecorder, String path, int port, Map params, String requestType){
         this.requestType = requestType;
         this.postRecorder = postRecorder;
+        this.port = port;
         this.postID = PathParser.getIDFromPath(path);
         this.OPTIONS.add(HTTPVerbs.POST);
         updatePost(params);
@@ -33,15 +36,35 @@ public class EditPostDeliverer extends DelivererBase {
     @Override
     protected byte[] getBytes(){
         byte[] bytes;
-        String html = "";
-        if (requestType.equals(HTTPVerbs.GET)){
-            html = getEditPostHTML();
-
-        } else if (requestType.equals(HTTPVerbs.POST)){
-            html = getPostUpdatedHTML();
-        }
+        String html = getEditPostHTML();
         bytes = html.getBytes();
         return bytes;
+    }
+
+    @Override
+    public String getResponseHeader(){
+        response = new HTTPResponse();
+        response.setHTTPCode(getHTTPCode());
+        response.setContentType(contentType);
+        addAllowField();
+        if (isPOST()){
+            response.setLocation("http://localhost:" + port + "/post-" + postID);
+        }
+        response.setContentLength(getBytes().length);
+        return response.getHeader();
+    }
+
+    @Override
+    protected HTTPCode getHTTPCode(){
+        HTTPCode code = super.getHTTPCode();
+        if (isPOST()){
+            code = HTTPCode.FOUND;
+        }
+        return code;
+    }
+
+    private boolean isPOST(){
+        return requestType.equals(HTTPVerbs.POST);
     }
 
     private void updatePost(Map params){
@@ -58,8 +81,4 @@ public class EditPostDeliverer extends DelivererBase {
         return editPostTemplate.renderPage();
     }
 
-    private String getPostUpdatedHTML(){
-        ViewNewPostTemplate viewNewPostTemplate = new ViewNewPostTemplate("Edited Post", title, postID);
-        return viewNewPostTemplate.renderPage();
-    }
 }

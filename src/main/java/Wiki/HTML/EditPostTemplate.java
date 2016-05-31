@@ -28,8 +28,8 @@ public class EditPostTemplate extends PageTemplate{
     }
 
     private String editPostTitle() {
-        String label = "<label for=\"title\">Post Title</label><br>";
-        String input = String.format("<input type=\"text\" id=\"title\" name =\"title\" value='%s'/>", title);
+        String label = "<label for='title'>Post Title</label><br>";
+        String input = InputJavascript.getTitleInputForm(title);
         return label + input;
 
     }

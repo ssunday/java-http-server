@@ -18,11 +18,12 @@ public class WikiDelivererFactoryTest {
 
     private WikiDelivererFactory wikiDelivererFactory;
     private Postgres postgres;
+    private final int TEST_PORT = 6000;
 
     @Before
     public void setUp(){
         postgres = new Postgres("test");
-        wikiDelivererFactory = new WikiDelivererFactory(postgres);
+        wikiDelivererFactory = new WikiDelivererFactory(postgres, TEST_PORT);
     }
 
     @Test

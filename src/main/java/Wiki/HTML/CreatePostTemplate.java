@@ -21,12 +21,12 @@ public class CreatePostTemplate extends PageTemplate {
     }
 
     private String postTitleInput(){
-        return "<label for=\"title\">Post Title</label><br>" + "<input type=\"text\" id=\"title\" name =\"title\" />";
+        return "<label for='title'>Post Title</label><br>" + InputJavascript.getTitleInputForm("YourPostTitle");
     }
 
     private String postContentInput(){
         return "<br><br><label for='content'>Post Content</label><br>" +
-                "<TEXTAREA NAME='content' ROWS=3 COLS=30>Your Post Content</TEXTAREA>";
+                "<TEXTAREA name='content' ROWS=3 COLS=30>Your Post Content</TEXTAREA>";
     }
 
     private String submitButton(){
