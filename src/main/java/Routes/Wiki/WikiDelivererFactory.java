@@ -51,7 +51,7 @@ public class WikiDelivererFactory extends DelivererFactoryBase {
             deliverer = new EditPostDeliverer(postRecorder,path,requestType);
         }else{
             Map parsedParams = HTTPRequestParser.getParsedParams(request);
-            deliverer = new EditPostDeliverer(postRecorder,path,parsedParams, requestType);
+            deliverer = new EditPostDeliverer(postRecorder,path, parsedParams, requestType);
         }
         return deliverer;
     }

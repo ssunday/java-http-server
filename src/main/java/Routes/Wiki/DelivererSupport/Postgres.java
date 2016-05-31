@@ -91,7 +91,6 @@ public class Postgres implements DataType{
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     private void createTable(){

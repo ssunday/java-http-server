@@ -44,6 +44,17 @@ public class WikiDelivererFactoryTest {
     }
 
     @Test
+    public void testGetDelivererReturnsCreatePostDeliverOnPostCreate() throws Exception {
+        String request = "POST /create-post HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n\r\n" +
+                "title=something&content=anotherone";
+        DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
+        assertTrue(deliverer instanceof CreatePostDeliverer);
+        postgres.clearData();
+    }
+
+    @Test
     public void testGetDelivererReturnsViewPostDeliverOnPostRoute() throws Exception {
         String request = "GET /post-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
@@ -62,6 +73,21 @@ public class WikiDelivererFactoryTest {
         String request = "GET /edit-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
+        Map map = new HashMap();
+        map.put("title", "A Title");
+        map.put("content", "Content");
+        postgres.addPost(map);
+        DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
+        assertTrue(deliverer instanceof EditPostDeliverer);
+        postgres.clearData();
+    }
+
+    @Test
+    public void testGetDelivererReturnsEditPostDeliverOnPostRoute() throws Exception {
+        String request = "POST /edit-1 HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n\r\n" +
+                "title=something&content=anotherone";
         Map map = new HashMap();
         map.put("title", "A Title");
         map.put("content", "Content");
