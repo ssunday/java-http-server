@@ -43,7 +43,7 @@ public class CreatePostDeliverer extends DelivererBase {
         response.setContentType(contentType);
         addAllowField();
         if (isPOST()){
-            response.setLocation("http://localhost:" + port + "/post-" + postRecorder.getLatestPostID());
+            response.setLocation("http://localhost:" + port + "/post/" + title + "-" + postRecorder.getLatestPostID());
         }
         response.setContentLength(getBytes().length);
         return response.getHeader();

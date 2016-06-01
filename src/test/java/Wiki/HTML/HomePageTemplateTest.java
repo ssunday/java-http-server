@@ -1,6 +1,5 @@
 package Wiki.HTML;
 
-import Wiki.HTML.HomePageTemplate;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -40,9 +39,9 @@ public class HomePageTemplateTest {
     @Test
     public void testRenderPageIncludesPostIDLinks(){
         String[] postIDs = {"1", "3"};
-        String[] titles = {"A Title", "Some Title"};
+        String[] titles = {"ATitle", "SomeTitle"};
         homePageTemplate =  new HomePageTemplate(postIDs, titles);
-        assertThat(homePageTemplate.renderPage(), containsString("href='/post-1'"));
-        assertThat(homePageTemplate.renderPage(), containsString("href='/post-3'"));
+        assertThat(homePageTemplate.renderPage(), containsString("href='/post/ATitle-1'"));
+        assertThat(homePageTemplate.renderPage(), containsString("href='/post/SomeTitle-3'"));
     }
 }

@@ -24,7 +24,7 @@ public class HomePageTemplate extends PageTemplate{
             htmlWikiPosts += "No posts.";
         } else{
             for (int i = 0; i < postIDs.length; i++){
-                htmlWikiPosts += String.format("<p><a href='/post-%s'>%s</a></p>", postIDs[i],postTitles[i]);
+                htmlWikiPosts += String.format("<p><a href='/post/%s-%s'>%s</a></p>", postTitles[i], postIDs[i],postTitles[i]);
             }
         }
         return htmlWikiPosts;

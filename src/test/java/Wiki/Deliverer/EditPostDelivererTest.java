@@ -21,7 +21,7 @@ public class EditPostDelivererTest {
     @Test
     public void testGetBytesReturnsEditPostTemplateBytesWhenGet(){
         MockPostRecorder mockPostRecorder = new MockPostRecorder("Title", "Content");
-        editPostDeliverer = new EditPostDeliverer(mockPostRecorder, "post-1", "GET");
+        editPostDeliverer = new EditPostDeliverer(mockPostRecorder, "/post/Title-1", "GET");
         byte[] templateBytes = new EditPostTemplate(1, "Title", "Content").renderPage().getBytes();
         assertArrayEquals(editPostDeliverer.getBytes(),templateBytes);
     }
@@ -30,11 +30,11 @@ public class EditPostDelivererTest {
     public void testGetResponseHeaderHas302Code(){
         Postgres postgres = new Postgres("test");
         PostRecorder postRecorder = new PostRecorder(postgres);
-        postRecorder.createNewPost("A title", "Content");
+        postRecorder.createNewPost("Atitle", "Content");
         Map newValues = new HashMap();
         newValues.put("title", "Something");
         newValues.put("content", "Content");
-        editPostDeliverer = new EditPostDeliverer(postRecorder, "post-1", TEST_PORT, newValues, "POST");
+        editPostDeliverer = new EditPostDeliverer(postRecorder, "/post/Atitle-1", TEST_PORT, newValues, "POST");
         assertThat(editPostDeliverer.getResponseHeader(), containsString("302 Found"));
         postgres.clearData();
     }

@@ -1,10 +1,7 @@
 package Wiki;
 
 import Server.Deliverer.DelivererBase;
-import Wiki.Deliverer.CreatePostDeliverer;
-import Wiki.Deliverer.EditPostDeliverer;
-import Wiki.Deliverer.HomePageDeliverer;
-import Wiki.Deliverer.ViewPostDeliverer;
+import Wiki.Deliverer.*;
 import Wiki.DelivererSupport.Postgres;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,11 +54,11 @@ public class WikiDelivererFactoryTest {
 
     @Test
     public void testGetDelivererReturnsViewPostDeliverOnPostRoute() throws Exception {
-        String request = "GET /post-1 HTTP/1.1\r\n" +
+        String request = "GET /post/ATitle-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
         Map map = new HashMap();
-        map.put("title", "A Title");
+        map.put("title", "ATitle");
         map.put("content", "Content");
         postgres.addPost(map);
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
@@ -71,11 +68,11 @@ public class WikiDelivererFactoryTest {
 
     @Test
     public void testGetDelivererReturnsEditPostDeliverOnEditRoute() throws Exception {
-        String request = "GET /edit-1 HTTP/1.1\r\n" +
+        String request = "GET /edit/A-Title-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
         Map map = new HashMap();
-        map.put("title", "A Title");
+        map.put("title", "ATitle");
         map.put("content", "Content");
         postgres.addPost(map);
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
@@ -85,16 +82,27 @@ public class WikiDelivererFactoryTest {
 
     @Test
     public void testGetDelivererReturnsEditPostDeliverOnPostRoute() throws Exception {
-        String request = "POST /edit-1 HTTP/1.1\r\n" +
+        String request = "POST /edit/A-Title-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n\r\n" +
                 "title=something&content=anotherone";
         Map map = new HashMap();
-        map.put("title", "A Title");
+        map.put("title", "ATitle");
         map.put("content", "Content");
         postgres.addPost(map);
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof EditPostDeliverer);
+        postgres.clearData();
+    }
+
+    @Test
+    public void testGetDelivererReturnsTempPostDeliverer() throws Exception {
+        String request = "POST /tmp/A-Title HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n\r\n" +
+                "content=anotherone";
+        DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
+        assertTrue(deliverer instanceof TempPostDeliverer);
         postgres.clearData();
     }
 }

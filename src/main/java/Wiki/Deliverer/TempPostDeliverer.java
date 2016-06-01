@@ -6,38 +6,36 @@ import Server.HTTP.HTTPResponse;
 import Server.HTTP.HTTPVerbs;
 import Wiki.DelivererSupport.PathParser;
 import Wiki.DelivererSupport.PostRecorder;
-import Wiki.HTML.EditPostTemplate;
+import Wiki.HTML.TempPostTemplate;
 
 import java.util.Map;
 
-public class EditPostDeliverer extends DelivererBase {
+public class TempPostDeliverer extends DelivererBase {
 
-    private PostRecorder postRecorder;
-    private int postID;
     private String title;
+    private PostRecorder postRecorder;
     private int port;
 
-    public EditPostDeliverer(PostRecorder postRecorder, String path, String requestType){
+    public TempPostDeliverer(String path, String requestType){
+        this.title = PathParser.getTitleFromPath(path);
         this.requestType = requestType;
-        this.postRecorder = postRecorder;
-        this.postID = PathParser.getIDFromPath(path);
         this.OPTIONS.add(HTTPVerbs.GET);
     }
 
-    public EditPostDeliverer(PostRecorder postRecorder, String path, int port, Map params, String requestType){
-        this.requestType = requestType;
+    public TempPostDeliverer(PostRecorder postRecorder, int port, Map params, String path, String requestType){
         this.postRecorder = postRecorder;
         this.port = port;
-        this.postID = PathParser.getIDFromPath(path);
+        this.title = PathParser.getTitleFromPath(path);
+        this.requestType = requestType;
         this.OPTIONS.add(HTTPVerbs.POST);
-        updatePost(params);
+        this.createPost(params);
     }
 
     @Override
     protected byte[] getBytes(){
-        byte[] bytes;
-        String html = getEditPostHTML();
-        bytes = html.getBytes();
+        TempPostTemplate template = new TempPostTemplate(title);
+        String html = template.renderPage();
+        byte[] bytes = html.getBytes();
         return bytes;
     }
 
@@ -48,7 +46,7 @@ public class EditPostDeliverer extends DelivererBase {
         response.setContentType(contentType);
         addAllowField();
         if (isPOST()){
-            response.setLocation("http://localhost:" + port + "/post/" + title + "-" + postID);
+            response.setLocation("http://localhost:" + port + "/post/" + title + "-" + postRecorder.getLatestPostID());
         }
         response.setContentLength(getBytes().length);
         return response.getHeader();
@@ -63,22 +61,12 @@ public class EditPostDeliverer extends DelivererBase {
         return code;
     }
 
-    private void updatePost(Map params){
-        title = params.get("title").toString();
+    private void createPost(Map params){
         String content = params.get("content").toString();
-        postRecorder.updateExistingPost(postID, title, content);
-    }
-
-    private String getEditPostHTML(){
-        String[] titleAndContent = postRecorder.getPostTitleAndContent(postID);
-        String title = titleAndContent[0];
-        String content = titleAndContent[1];
-        EditPostTemplate editPostTemplate = new EditPostTemplate(postID, title, content);
-        return editPostTemplate.renderPage();
+        postRecorder.createNewPost(title, content);
     }
 
     private boolean isPOST(){
         return requestType.equals(HTTPVerbs.POST);
     }
-
 }

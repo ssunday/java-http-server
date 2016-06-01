@@ -4,11 +4,15 @@ public class ViewPostTemplate extends PageTemplate {
 
     private int postID;
     private String postContent;
+    private String[] postTitles;
+    private String[] postIDs;
 
-    public ViewPostTemplate(int postID, String postTitle, String postContent){
+    public ViewPostTemplate(int postID, String postTitle, String postContent, String[] postTitles, String[] postIDs){
         this.postID = postID;
         this.postContent = postContent;
         this.pageTitle = postTitle;
+        this.postTitles = postTitles;
+        this.postIDs = postIDs;
     }
 
     @Override
@@ -20,11 +24,12 @@ public class ViewPostTemplate extends PageTemplate {
     }
 
     private String displayContent(){
-        return String.format("<p>%s</p><hr><br>", postContent);
+        String content = ContentProcessing.hyperlinkPostTitles(postContent, postTitles, postIDs);
+        return String.format("<p>%s</p><hr><br>", content);
     }
 
     private String editPostLink(){
-        return String.format("<a href='/edit-%s'>Edit Post</a><br><br>", postID);
+        return String.format("<a href='/edit/%s-%s'>Edit Post</a><br><br>", pageTitle, postID);
     }
 
     private String homeLink(){
