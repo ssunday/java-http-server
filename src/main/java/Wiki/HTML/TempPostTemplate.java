@@ -9,7 +9,7 @@ public class TempPostTemplate extends PageTemplate {
     @Override
     protected String getBody(){
         String body = InputForms.formStart("/tmp/" + pageTitle);
-        body += InputForms.getPostContentForm("");
+        body += InputForms.getPostContentForm("There is currently no content here.");
         body += InputForms.getSubmitButton("Make Post");
         body += InputForms.formEnd();
         return body;

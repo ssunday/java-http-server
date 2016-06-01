@@ -9,15 +9,16 @@ public class InputForms {
     public static String getTitleForm(String title){
         return String.format("<html>\n" +
                 "<label for='title'>Post Title</label><br>" +
-                "<input type='text' name='title' value=%s onkeyup=\"nospaces(this)\"/>\n" +
+                "<input type='text' name='title' value=%s onfocusout=\"nospaces(this)\" pattern=\"^[a-zA-Z0-9_]*$\" required/>\n" +
                 "<script>\n" +
                 "function nospaces(t){\n" +
                 "\n" +
-                "    if( t.value.match(/\\s/g)){\n" +
+                "    if(t.value.match(/\\s/g) || t.value.match(/_$/)){\n" +
                 "\n" +
-                "        alert('Title cannot have spaces');\n" +
+                "        alert('Title must not have spaces or trailing underscores.');\n" +
                 "\n" +
-                "        t.value= t.value.replace(/\\s/g,'_');\n" +
+                "        t.value = t.value.replace(/\\s/g,'_');\n" +
+                "        t.value = t.value.replace(/_$/, '');" +
                 "    }\n" +
                 "\n" +
                 "}\n" +

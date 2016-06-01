@@ -9,9 +9,9 @@ public class CreatePostTemplate extends PageTemplate {
     @Override
     protected String getBody(){
         String body = InputForms.formStart("/create-post");
-        body += InputForms.getTitleForm("YourPostTitle");
+        body += InputForms.getTitleForm("Your_Post_Title");
         body += InputForms.getPostContentForm("");
-        body += InputForms.getPostContentForm("Create Post");
+        body += InputForms.getSubmitButton("Create Post");
         body += InputForms.formEnd();
         return body;
     }
