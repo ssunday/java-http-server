@@ -15,36 +15,12 @@ public class EditPostTemplate extends PageTemplate{
 
     @Override
     public String getBody() {
-        String body = formStart();
-        body += editPostTitle();
-        body += editPostContent();
-        body += saveChanges();
-        body += formEnd();
+        String body = InputForms.formStart(String.format("/edit/%s-%s", title, postID));
+        body += InputForms.getTitleForm(title);
+        body += InputForms.getPostContentForm(content);
+        body += InputForms.getSubmitButton("Save Changes");
+        body += InputForms.formEnd();
         return body;
     }
 
-    private String formStart(){
-        return String.format("<form action='/edit-%s' method='post'>", postID);
-    }
-
-    private String editPostTitle() {
-        String label = "<label for='title'>Post Title</label><br>";
-        String input = InputJavascript.getTitleInputForm(title);
-        return label + input;
-
-    }
-
-    private String editPostContent() {
-        String label = "<br><br><label for='content'>Post Content</label><br>";
-        String form = String.format("<TEXTAREA NAME='content' ROWS=3 COLS=30>%s</TEXTAREA>", content);
-        return label + form;
-    }
-
-    private String saveChanges(){
-        return "<br><br><input type='submit' value='Save Changes'>";
-    }
-
-    private String formEnd(){
-        return "</form>";
-    }
 }

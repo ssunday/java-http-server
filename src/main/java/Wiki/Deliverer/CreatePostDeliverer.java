@@ -42,8 +42,8 @@ public class CreatePostDeliverer extends DelivererBase {
         response.setHTTPCode(getHTTPCode());
         response.setContentType(contentType);
         addAllowField();
-        if (isPOST()){
-            response.setLocation("http://localhost:" + port + "/post-" + postRecorder.getLatestPostID());
+        if (isPOSTAndValid()){
+            response.setLocation("http://localhost:" + port + "/post/" + title + "-" + postRecorder.getLatestPostID());
         }
         response.setContentLength(getBytes().length);
         return response.getHeader();
@@ -52,7 +52,7 @@ public class CreatePostDeliverer extends DelivererBase {
     @Override
     protected HTTPCode getHTTPCode(){
         HTTPCode code = super.getHTTPCode();
-        if (isPOST()){
+        if (isPOSTAndValid()){
             code = HTTPCode.FOUND;
         }
         return code;
@@ -64,7 +64,7 @@ public class CreatePostDeliverer extends DelivererBase {
         postRecorder.createNewPost(title, content);
     }
 
-    private boolean isPOST(){
+    private boolean isPOSTAndValid(){
         return requestType.equals(HTTPVerbs.POST);
     }
 

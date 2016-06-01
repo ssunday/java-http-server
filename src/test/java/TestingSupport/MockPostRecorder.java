@@ -12,8 +12,19 @@ public class MockPostRecorder extends PostRecorder {
         this.content = content;
     }
 
+    @Override
     public String[] getPostTitleAndContent(int id){
         String[] postTitleAndContent = {title, content};
         return postTitleAndContent;
+    }
+
+    @Override
+    public String[] getAllPostTitles(){
+        return new String[0];
+    }
+
+    @Override
+    public String[] getAllPostIDs(){
+        return new String[0];
     }
 }

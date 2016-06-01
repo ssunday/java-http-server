@@ -3,8 +3,14 @@ package Wiki.DelivererSupport;
 public class PathParser {
 
     public static int getIDFromPath(String postPath){
-        String[] splitByHyphen = postPath.split("-");
-        String stringID = splitByHyphen[1];
+        String[] splitBySlash = postPath.split("/");
+        String[] splitByHyphen = splitBySlash[2].split("-");
+        String stringID = splitByHyphen[splitByHyphen.length-1];
         return Integer.parseInt(stringID);
+    }
+
+    public static String getTitleFromPath(String postPath){
+        String[] splitBySlash = postPath.split("/");
+        return splitBySlash[2];
     }
 }

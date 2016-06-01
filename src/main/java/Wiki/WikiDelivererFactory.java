@@ -6,10 +6,7 @@ import Server.HTTP.HTTPVerbs;
 import Server.Deliverer.NotFoundDeliverer;
 import Server.Deliverer.DelivererBase;
 import Server.DelivererFactoryBase;
-import Wiki.Deliverer.CreatePostDeliverer;
-import Wiki.Deliverer.EditPostDeliverer;
-import Wiki.Deliverer.HomePageDeliverer;
-import Wiki.Deliverer.ViewPostDeliverer;
+import Wiki.Deliverer.*;
 import Wiki.DelivererSupport.DataType;
 import Wiki.DelivererSupport.PostRecorder;
 
@@ -40,6 +37,9 @@ public class WikiDelivererFactory extends DelivererFactoryBase {
         }
         else if(isRoute(path, WikiRoutes.CREATE_POST)){
             deliverer = getCreatePostDeliverer(request,requestType);
+        }
+        else if(isRoute(path, WikiRoutes.NOT_CREATED_POST)){
+            deliverer = getTempPostDeliverer(request, path, requestType);
         }
         else if(isRoute(path, WikiRoutes.POST)){
             deliverer = new ViewPostDeliverer(postRecorder, path, requestType);
@@ -72,6 +72,18 @@ public class WikiDelivererFactory extends DelivererFactoryBase {
         }
         else {
             deliverer = new CreatePostDeliverer(requestType);
+        }
+        return deliverer;
+    }
+
+    private DelivererBase getTempPostDeliverer(String request, String route, String requestType){
+        DelivererBase deliverer;
+        if (requestType.equals(HTTPVerbs.POST)){
+            Map parsedParams = HTTPRequestParser.getParsedParams(request);
+            deliverer = new TempPostDeliverer(postRecorder, port, parsedParams, route, requestType);
+        }
+        else {
+            deliverer = new TempPostDeliverer(route, requestType);
         }
         return deliverer;
     }
