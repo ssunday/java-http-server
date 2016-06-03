@@ -20,7 +20,7 @@ public class WikiDelivererFactoryTest {
     @Before
     public void setUp(){
         postgres = new Postgres("test");
-        wikiDelivererFactory = new WikiDelivererFactory(postgres, TEST_PORT);
+        wikiDelivererFactory = new WikiDelivererFactory("wiki-test-log", postgres, TEST_PORT);
     }
 
     @Test

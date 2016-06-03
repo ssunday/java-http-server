@@ -14,15 +14,15 @@ public class FormDeliverer extends DelivererBase {
     private String params;
 
     public FormDeliverer(String params, String requestType){
-        formData = new FormData();
-        htmlFormDisplay = new HTMLFormDisplay();
+        this.formData = new FormData();
+        this.htmlFormDisplay = new HTMLFormDisplay();
         this.requestType = requestType;
         this.params = params;
-        OPTIONS.add(HTTPVerbs.GET);
-        OPTIONS.add(HTTPVerbs.POST);
-        OPTIONS.add(HTTPVerbs.PUT);
-        OPTIONS.add(HTTPVerbs.DELETE);
-        contentType = "text/html";
+        this.OPTIONS.add(HTTPVerbs.GET);
+        this.OPTIONS.add(HTTPVerbs.POST);
+        this.OPTIONS.add(HTTPVerbs.PUT);
+        this.OPTIONS.add(HTTPVerbs.DELETE);
+        this.contentType = "text/html";
     }
 
     @Override

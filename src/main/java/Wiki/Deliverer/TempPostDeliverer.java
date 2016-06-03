@@ -54,10 +54,7 @@ public class TempPostDeliverer extends DelivererBase {
 
     @Override
     protected HTTPCode getHTTPCode(){
-        HTTPCode code = super.getHTTPCode();
-        if (isPOST()){
-            code = HTTPCode.FOUND;
-        }
+        HTTPCode code = isPOST() ? HTTPCode.FOUND : HTTPCode.OK;
         return code;
     }
 

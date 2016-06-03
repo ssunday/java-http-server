@@ -7,10 +7,6 @@ import java.util.Map;
 
 public class HTTPRequestParser {
 
-    private static final String POST = "POST";
-    private static final String PUT = "PUT";
-    private static final String PATCH = "PATCH";
-
     public static String getPath(String request) {
         String[] requestHeaders = getRequestLines(request);
         String pathLine = requestHeaders[0];
@@ -31,7 +27,7 @@ public class HTTPRequestParser {
         String params = null;
         String[] requestHeaders = getRequestLines(request);
         String requestLine = requestHeaders[0];
-        if (isRequestType(requestLine, POST) || isRequestType(requestLine, PUT)){
+        if (isRequestType(requestLine, HTTPVerbs.POST) || isRequestType(requestLine, HTTPVerbs.PUT)){
             params = requestHeaders[requestHeaders.length-1];
         }
         return params;
@@ -78,7 +74,7 @@ public class HTTPRequestParser {
         String etag = null;
         String[] requestHeaders = getRequestLines(request);
         String requestLine = requestHeaders[0];
-        if (isRequestType(requestLine, PATCH)){
+        if (isRequestType(requestLine, HTTPVerbs.PATCH)){
             String ifMatchLine = findRequestLine("If-Match:", requestHeaders);
             etag = parseEtag(ifMatchLine);
         }

@@ -9,17 +9,18 @@ import Server.DelivererFactoryBase;
 
 import java.io.File;
 
-public class CobspecDelivererFactory extends DelivererFactoryBase{
+public class CobspecDelivererFactory implements DelivererFactoryBase{
 
     private int port;
     private String baseDirectory;
+    private String logName;
 
-    public CobspecDelivererFactory(int port, String baseDirectory){
+    public CobspecDelivererFactory(String logName, int port, String baseDirectory){
+        this.logName = logName;
         this.port = port;
         this.baseDirectory = baseDirectory;
     }
 
-    @Override
     public DelivererBase getDeliverer(String request){
         String path = HTTPRequestParser.getPath(request);
         String requestType = HTTPRequestParser.getRequestType(request);
@@ -29,7 +30,7 @@ public class CobspecDelivererFactory extends DelivererFactoryBase{
         if (isRoute(path, CobspecServerRoutes.LOG_PATH)){
             String username = HTTPRequestParser.getAuthenticationUsername(request);
             String password = HTTPRequestParser.getAuthenticationPassword(request);
-            server = new LogDeliverer(username, password, requestType);
+            server = new LogDeliverer(logName, username, password, requestType);
         }
         else if (isRoute(path, CobspecServerRoutes.PARAMETER_PATH)){
             server = new ParameterDeliverer(path, requestType);
@@ -73,6 +74,10 @@ public class CobspecDelivererFactory extends DelivererFactoryBase{
         }
 
         return server;
+    }
+
+    public static boolean isRoute(String path, String route){
+        return path.contains(route);
     }
 
     private boolean isDirectory(String path){

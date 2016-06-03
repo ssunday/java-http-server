@@ -1,6 +1,6 @@
 package Wiki.HTML;
 
-public abstract class PageTemplate {
+public class PageTemplate {
 
     protected String pageTitle;
 
@@ -15,7 +15,9 @@ public abstract class PageTemplate {
         return "<body>" + getBody() + "</body>";
     }
 
-    abstract String getBody();
+    protected String getBody(){
+        return "";
+    }
 
     private String startHTML(){
         return "<HTML><HEAD>"+

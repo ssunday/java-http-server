@@ -12,7 +12,7 @@ public class RedirectDeliverer extends DelivererBase {
     public RedirectDeliverer(int port, String requestType){
         this.requestType = requestType;
         this.port = port;
-        OPTIONS.add(HTTPVerbs.GET);
+        this.OPTIONS.add(HTTPVerbs.GET);
     }
 
     @Override

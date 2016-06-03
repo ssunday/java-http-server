@@ -12,10 +12,10 @@ public class ParameterDeliverer extends DelivererBase {
     private String pathToServe;
 
     public ParameterDeliverer(String path, String requestType){
-        pathToServe = path;
+        this.pathToServe = path;
         this.requestType = requestType;
-        OPTIONS.add(HTTPVerbs.GET);
-        contentType = "text/html";
+        this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/html";
     }
 
     @Override

@@ -12,7 +12,7 @@ public class RequestLogger {
     private String logName;
 
     public RequestLogger(){
-        logName = "logs";
+        this.logName = "logs";
     }
 
     public RequestLogger(String logName){

@@ -2,6 +2,7 @@
 test-files/
 cob_spec/
 target/
+wiki-log
 form.txt
 logs
 java-http-server.jar

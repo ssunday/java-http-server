@@ -2,12 +2,17 @@ package Server.Logging;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class LoggingQueue {
+public class LoggingQueue implements LoggingInterface {
 
     private ConcurrentLinkedQueue requestQueue;
+    private String logFile;
 
     public LoggingQueue(){
+        this.logFile = "log";
+    }
+    public LoggingQueue(String logFile){
         this.requestQueue = new ConcurrentLinkedQueue();
+        this.logFile = logFile;
     }
 
     public void addToQueue(String request){
@@ -19,7 +24,7 @@ public class LoggingQueue {
     }
 
     public void logQueue(){
-        RequestLogger requestLogger = new RequestLogger();
+        RequestLogger requestLogger = new RequestLogger(logFile);
         synchronized(requestQueue) {
             if(!requestQueue.isEmpty()) {
                 requestLogger.logRequest(getHeadRequest());

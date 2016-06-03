@@ -11,7 +11,7 @@ public class TeapotDeliverer extends DelivererBase {
     public TeapotDeliverer(String path, String requestType){
         this.requestType = requestType;
         this.path = path;
-        OPTIONS.add(HTTPVerbs.GET);
+        this.OPTIONS.add(HTTPVerbs.GET);
     }
 
     protected byte[] getBytes(){

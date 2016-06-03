@@ -8,6 +8,7 @@ public class Main {
 
     private static int port;
     private static String directory;
+    private static String logName;
     private static DelivererFactoryBase delivererFactory;
     private static boolean isRunning = true;
 
@@ -15,12 +16,13 @@ public class Main {
         CommandParser parser = new CommandParser(args);
         port = parser.getPort();
         directory = parser.getDirectory();
-        delivererFactory = new CobspecDelivererFactory(port, directory);
+        logName = "logs";
+        delivererFactory = new CobspecDelivererFactory(logName, port, directory);
     }
 
     public static void main(String[] args){
         configuration(args);
-        final Server server = new Server(delivererFactory, port);
+        final Server server = new Server(delivererFactory, logName, port);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 server.endServer();

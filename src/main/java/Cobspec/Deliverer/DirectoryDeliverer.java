@@ -9,7 +9,6 @@ import Server.Deliverer.DelivererBase;
 public class DirectoryDeliverer extends DelivererBase {
 
     private HTMLDirectoryDisplay display;
-    private DirectoryListing directoryListing;
     private String path;
     private String pathToServe;
     private String previousPath;
@@ -20,9 +19,8 @@ public class DirectoryDeliverer extends DelivererBase {
         this.previousPath = previousPath;
         this.requestType = requestType;
         this.display = new HTMLDirectoryDisplay();
-        this.directoryListing = new DirectoryListing();
-        OPTIONS.add(HTTPVerbs.GET);
-        contentType = "text/html";
+        this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/html";
     }
 
     @Override
@@ -47,7 +45,7 @@ public class DirectoryDeliverer extends DelivererBase {
     }
 
     private String getDirectoryListing(String pathToServe){
-        String[] listing = directoryListing.getListing(pathToServe);
+        String[] listing = DirectoryListing.getListing(pathToServe);
         return display.displayListing(listing, path);
     }
 

@@ -15,11 +15,11 @@ public class Server {
     private ServerRunnable runnable;
     private Socket socket;
 
-    public Server(DelivererFactoryBase delivererFactory, int port){
+    public Server(DelivererFactoryBase delivererFactory, String logFileName,int port){
         this.delivererFactory = delivererFactory;
         this.serverSocketListener = new ServerSocketListener(port);
         this.threadPool = Executors.newFixedThreadPool(8);
-        this.loggingQueue = new LoggingQueue();
+        this.loggingQueue = new LoggingQueue(logFileName);
     }
 
     public void runServer(){

@@ -9,9 +9,9 @@ public class MethodOptionDeliverer extends DelivererBase {
 
     public MethodOptionDeliverer(String requestType){
         this.requestType = requestType;
-        OPTIONS.add(HTTPVerbs.GET);
-        OPTIONS.add(HTTPVerbs.POST);
-        OPTIONS.add(HTTPVerbs.PUT);
+        this.OPTIONS.add(HTTPVerbs.GET);
+        this.OPTIONS.add(HTTPVerbs.POST);
+        this.OPTIONS.add(HTTPVerbs.PUT);
     }
 
     @Override

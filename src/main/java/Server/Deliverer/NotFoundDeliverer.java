@@ -2,14 +2,13 @@ package Server.Deliverer;
 
 import Server.HTTP.HTTPCode;
 import Server.HTTP.HTTPVerbs;
-import Server.Deliverer.DelivererBase;
 
 public class NotFoundDeliverer extends DelivererBase {
 
     public NotFoundDeliverer(String requestType){
         this.requestType = requestType;
-        OPTIONS.add(HTTPVerbs.GET);
-        contentType = "text/plain";
+        this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/plain";
     }
 
     @Override

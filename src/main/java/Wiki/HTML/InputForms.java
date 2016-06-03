@@ -28,7 +28,7 @@ public class InputForms {
 
     public static String getPostContentForm(String content) {
         String label = "<br><br><label for='content'>Post Content</label><br>";
-        String form = String.format("<TEXTAREA name='content' ROWS=3 COLS=30>%s</TEXTAREA>", content);
+        String form = String.format("<TEXTAREA name='content' ROWS=10 COLS=60>%s</TEXTAREA>", content);
         return label + form;
     }
 

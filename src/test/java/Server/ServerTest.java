@@ -18,6 +18,7 @@ public class ServerTest {
 
     private int TEST_PORT = 6000;
     private String TEST_DIRECTORY = FileTestingUtilities.testDirectory;
+    private String TEST_LOG = "test-cobspec-log";
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +35,7 @@ public class ServerTest {
         Socket socket;
         BufferedReader input;
         DataOutputStream output;
-        Server server = new Server(new CobspecDelivererFactory(TEST_PORT, TEST_DIRECTORY), TEST_PORT);
+        Server server = new Server(new CobspecDelivererFactory(TEST_LOG, TEST_PORT, TEST_DIRECTORY), TEST_LOG, TEST_PORT);
         for (int i = 0; i < n; i++){
             socket = new Socket("localhost", TEST_PORT);
             output = new DataOutputStream(socket.getOutputStream());
@@ -56,6 +57,7 @@ public class ServerTest {
     @After
     public void tearDown() throws Exception{
         FileTestingUtilities.clearPath(TEST_DIRECTORY);
+        FileTestingUtilities.clearPath(TEST_LOG);
     }
 
 }
