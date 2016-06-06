@@ -1,9 +1,10 @@
 package TestingSupport;
 
-import Logging.LoggingQueue;
+import Server.Logging.LoggingInterface;
 
-public class MockLoggingQueue extends LoggingQueue{
-    public void addToQueue(){}
+public class MockLoggingQueue implements LoggingInterface{
+
+    public void addToQueue(String request){}
 
     public String getHeadRequest(){return "";}
 
