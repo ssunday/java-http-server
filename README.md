@@ -4,6 +4,7 @@ HTTP Server written in Java.
 
 ##Features
 
+Cobspec:
 * Can view files in a particular directory
 
 * Serve images and basic text files
@@ -15,10 +16,15 @@ HTTP Server written in Java.
 * Form submitting/persisting in /form
 
 
+Wiki Mode:
+* Add Posts to postgres database. Needs to be created and named 'WIKI' on port 5432.
+
+* Edit posts
+
+* Display posts
+
+* Post name hyperlinking
+
 ##Running
 
-Run the java-http-server.jar file with -p PORT -d DIRECTORY.
-
-```
-java -jar java-http-server.jar -p 5000 -d /directory/
-```
+Run the respective mains of the folder systems.
