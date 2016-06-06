@@ -22,6 +22,7 @@ public class EditPostDeliverer extends DelivererBase {
         this.postRecorder = postRecorder;
         this.postID = PathParser.getIDFromPath(path);
         this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/html";
     }
 
     public EditPostDeliverer(PostRecorder postRecorder, String path, int port, Map params, String requestType){
@@ -30,6 +31,7 @@ public class EditPostDeliverer extends DelivererBase {
         this.port = port;
         this.postID = PathParser.getIDFromPath(path);
         this.OPTIONS.add(HTTPVerbs.POST);
+        this.contentType = "text/html";
         updatePost(params);
     }
 

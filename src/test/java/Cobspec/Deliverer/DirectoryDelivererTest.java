@@ -1,8 +1,7 @@
 package Cobspec.Deliverer;
 
-import Cobspec.Deliverer.DirectoryDeliverer;
-import Cobspec.HTML.HTMLDirectoryDisplay;
 import Cobspec.DelivererSupport.DirectoryListing;
+import Cobspec.HTML.DirectoryDisplayTemplate;
 import TestingSupport.FileTestingUtilities;
 import org.junit.After;
 import org.junit.Before;
@@ -25,11 +24,10 @@ public class DirectoryDelivererTest {
 
     @Test
     public void testGetBytesReturnsByteArrayOfHeaderAndHTMLBytes() throws Exception {
-        HTMLDirectoryDisplay directoryDisplay = new HTMLDirectoryDisplay();
         DirectoryListing directoryListing = new DirectoryListing();
-        String html = directoryDisplay.displayListing(directoryListing.getListing(testDirectory), "/");
-        String content = directoryDisplay.displayDirectoryBackNavigation("/") + html;
-        byte[] bytes = content.getBytes();
+        DirectoryDisplayTemplate directoryDisplay = new DirectoryDisplayTemplate(directoryListing.getListing(testDirectory), "/", "/");
+        String html = directoryDisplay.renderPage();
+        byte[] bytes = html.getBytes();
         assertArrayEquals("Get Bytes returns bytes of HTML and back navigation for test directory", bytes, directoryDeliverer.getBytes());
     }
 

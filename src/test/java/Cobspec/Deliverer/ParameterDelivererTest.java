@@ -1,8 +1,6 @@
 package Cobspec.Deliverer;
 
-import Cobspec.Deliverer.ParameterDeliverer;
-import Cobspec.HTML.HTMLParameterDisplay;
-import org.junit.Before;
+import Cobspec.HTML.ParameterDisplayTemplate;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -11,18 +9,14 @@ import static org.junit.Assert.assertThat;
 
 public class ParameterDelivererTest {
 
-    private HTMLParameterDisplay htmlParameterDisplay;
-
-    @Before
-    public void setUp(){
-        htmlParameterDisplay = new HTMLParameterDisplay();
-    }
+    private ParameterDisplayTemplate parameterDisplayTemplate;
 
     @Test
     public void testGetBytesReturnsBytesOfSimpleParameters() throws Exception {
         String[] param = new String[]{"variable_2=stuff"};
         String[] parsedParam = new String[]{"variable_2 = stuff"};
-        String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
+        parameterDisplayTemplate = new ParameterDisplayTemplate(parsedParam);
+        String wrappedParam = parameterDisplayTemplate.renderPage();
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer(path, "GET");
@@ -33,7 +27,8 @@ public class ParameterDelivererTest {
     public void testGetBytesReturnsByteOfComplexEncodedParameters() throws Exception {
         String[] param = new String[]{"variable_1=Operators <%2C"};
         String[] parsedParam = new String[]{"variable_1 = Operators <,"};
-        String wrappedParam = htmlParameterDisplay.htmlWrap(parsedParam);
+        parameterDisplayTemplate = new ParameterDisplayTemplate(parsedParam);
+        String wrappedParam = parameterDisplayTemplate.renderPage();
         byte[] bytes = wrappedParam.getBytes();
         String path = "/somePath?" + param[0];
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer(path, "GET");
@@ -44,7 +39,8 @@ public class ParameterDelivererTest {
     public void testGetBytesReturnsBytesOfMultipleParametersWrappedInHTML() throws Exception {
         String[] params = new String[]{"variable_1=Operators <%2C", "variable_2=stuff"};
         String[] parsedParam = new String[]{"variable_1 = Operators <,", "variable_2 = stuff"};
-        String wrappedParams = htmlParameterDisplay.htmlWrap(parsedParam);
+        parameterDisplayTemplate = new ParameterDisplayTemplate(parsedParam);
+        String wrappedParams = parameterDisplayTemplate.renderPage();
         byte[] bytes = wrappedParams.getBytes();
         String path = "/somePath?" + params[0] + "&" + params[1];
         ParameterDeliverer parametersDeliverer = new ParameterDeliverer(path, "GET");

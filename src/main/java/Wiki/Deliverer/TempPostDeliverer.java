@@ -20,6 +20,7 @@ public class TempPostDeliverer extends DelivererBase {
         this.title = PathParser.getTitleFromPath(path);
         this.requestType = requestType;
         this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/html";
     }
 
     public TempPostDeliverer(PostRecorder postRecorder, int port, Map params, String path, String requestType){

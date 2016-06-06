@@ -1,6 +1,6 @@
 package Cobspec.Deliverer;
 
-import Cobspec.HTML.HTMLDirectoryDisplay;
+import Cobspec.HTML.DirectoryDisplayTemplate;
 import Cobspec.DelivererSupport.DirectoryListing;
 import Server.HTTP.HTTPCode;
 import Server.HTTP.HTTPVerbs;
@@ -8,7 +8,6 @@ import Server.Deliverer.DelivererBase;
 
 public class DirectoryDeliverer extends DelivererBase {
 
-    private HTMLDirectoryDisplay display;
     private String path;
     private String pathToServe;
     private String previousPath;
@@ -18,7 +17,6 @@ public class DirectoryDeliverer extends DelivererBase {
         this.pathToServe = pathToServe;
         this.previousPath = previousPath;
         this.requestType = requestType;
-        this.display = new HTMLDirectoryDisplay();
         this.OPTIONS.add(HTTPVerbs.GET);
         this.contentType = "text/html";
     }
@@ -38,18 +36,9 @@ public class DirectoryDeliverer extends DelivererBase {
     }
 
     private String getContentToServe(){
-        String backNavigation = getBackNavigation();
-        String directoryListingDisplay = getDirectoryListing(pathToServe);
-        String content = backNavigation + directoryListingDisplay;
+        String[] directoryListing = DirectoryListing.getListing(pathToServe);
+        DirectoryDisplayTemplate display = new DirectoryDisplayTemplate(directoryListing, path, previousPath);
+        String content = display.renderPage();
         return content;
-    }
-
-    private String getDirectoryListing(String pathToServe){
-        String[] listing = DirectoryListing.getListing(pathToServe);
-        return display.displayListing(listing, path);
-    }
-
-    private String getBackNavigation(){
-        return display.displayDirectoryBackNavigation(previousPath);
     }
 }

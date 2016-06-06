@@ -1,4 +1,4 @@
-package Wiki.HTML;
+package HTMLTemplating;
 
 public class PageTemplate {
 
@@ -11,12 +11,12 @@ public class PageTemplate {
         return html;
     }
 
-    private String wrapBody(){
-        return "<body>" + getBody() + "</body>";
-    }
-
     protected String getBody(){
         return "";
+    }
+
+    private String wrapBody(){
+        return "<body>" + getBody() + "</body>";
     }
 
     private String startHTML(){

@@ -1,5 +1,7 @@
 package Wiki.HTML;
 
+import HTMLTemplating.PageTemplate;
+
 public class TempPostTemplate extends PageTemplate {
 
     public TempPostTemplate(String pageTitle){

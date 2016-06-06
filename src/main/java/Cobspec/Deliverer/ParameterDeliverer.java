@@ -1,6 +1,6 @@
 package Cobspec.Deliverer;
 
-import Cobspec.HTML.HTMLParameterDisplay;
+import Cobspec.HTML.ParameterDisplayTemplate;
 import Server.HTTP.HTTPCode;
 import Server.HTTP.HTTPVerbs;
 import Server.Deliverer.DelivererBase;
@@ -21,10 +21,10 @@ public class ParameterDeliverer extends DelivererBase {
     @Override
     protected byte[] getBytes(){
         byte[] bytesToWrite;
-        HTMLParameterDisplay display = new HTMLParameterDisplay();
         String[] parameters = getParameters(pathToServe);
         String[] parsedParameters = getParsedParameters(parameters);
-        String wrappedParameters = display.htmlWrap(parsedParameters);
+        ParameterDisplayTemplate display = new ParameterDisplayTemplate(parsedParameters);
+        String wrappedParameters = display.renderPage();
         bytesToWrite = wrappedParameters.getBytes();
         return bytesToWrite;
     }
