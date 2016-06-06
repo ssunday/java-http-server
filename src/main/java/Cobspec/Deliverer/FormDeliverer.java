@@ -1,7 +1,7 @@
 package Cobspec.Deliverer;
 
 import Cobspec.DelivererSupport.FormData;
-import Cobspec.HTML.HTMLFormDisplay;
+import Cobspec.HTML.FormDisplayTemplate;
 import Server.HTTP.HTTPCode;
 import Server.HTTP.HTTPVerbs;
 import Server.Deliverer.DelivererBase;
@@ -9,20 +9,19 @@ import Server.Deliverer.DelivererBase;
 public class FormDeliverer extends DelivererBase {
 
     private FormData formData;
-    private HTMLFormDisplay htmlFormDisplay;
+    private FormDisplayTemplate htmlFormDisplay;
 
     private String params;
 
     public FormDeliverer(String params, String requestType){
-        formData = new FormData();
-        htmlFormDisplay = new HTMLFormDisplay();
+        this.formData = new FormData();
         this.requestType = requestType;
         this.params = params;
-        OPTIONS.add(HTTPVerbs.GET);
-        OPTIONS.add(HTTPVerbs.POST);
-        OPTIONS.add(HTTPVerbs.PUT);
-        OPTIONS.add(HTTPVerbs.DELETE);
-        contentType = "text/html";
+        this.OPTIONS.add(HTTPVerbs.GET);
+        this.OPTIONS.add(HTTPVerbs.POST);
+        this.OPTIONS.add(HTTPVerbs.PUT);
+        this.OPTIONS.add(HTTPVerbs.DELETE);
+        this.contentType = "text/html";
     }
 
     @Override
@@ -40,7 +39,8 @@ public class FormDeliverer extends DelivererBase {
         else if (isDelete()){
             formData.deleteData();
         }
-        html = htmlFormDisplay.displayFormPage(paramsToDisplay);
+        this.htmlFormDisplay = new FormDisplayTemplate(paramsToDisplay);
+        html = htmlFormDisplay.renderPage();
         bytesToWrite = html.getBytes();
         return bytesToWrite;
     }

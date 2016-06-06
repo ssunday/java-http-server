@@ -13,9 +13,9 @@ public class CommandParser {
     private String defaultDirectory;
 
     public CommandParser(String[] args) {
-        options = Arrays.asList(args);
-        defaultPort = "5000";
-        defaultDirectory = System.getProperty("user.dir") + "/cob_spec/public/";
+        this.options = Arrays.asList(args);
+        this.defaultPort = "5000";
+        this.defaultDirectory = System.getProperty("user.dir") + "/cob_spec/public/";
     }
 
     public int getPort(){

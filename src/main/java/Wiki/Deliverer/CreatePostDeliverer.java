@@ -18,6 +18,7 @@ public class CreatePostDeliverer extends DelivererBase {
     public CreatePostDeliverer(String requestType){
         this.requestType = requestType;
         this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/html";
     }
 
     public CreatePostDeliverer(PostRecorder postRecorder, int port, Map params, String requestType){

@@ -1,7 +1,7 @@
 package Server;
 
 import Server.Deliverer.DelivererBase;
-import Server.Logging.LoggingQueue;
+import Server.Logging.LoggingInterface;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -12,9 +12,9 @@ public class ServerRunnable implements Runnable{
     private DataOutputStream output;
     private InputStream stream;
     private DelivererFactoryBase delivererFactory;
-    private LoggingQueue loggingQueue;
+    private LoggingInterface loggingQueue;
 
-    public ServerRunnable(Socket socket, LoggingQueue loggingQueue, DelivererFactoryBase delivererFactoryBase){
+    public ServerRunnable(Socket socket, LoggingInterface loggingQueue, DelivererFactoryBase delivererFactoryBase){
         this.loggingQueue = loggingQueue;
         this.delivererFactory= delivererFactoryBase;
         initializeStreams(socket);

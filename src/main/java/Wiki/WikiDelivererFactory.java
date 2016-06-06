@@ -12,17 +12,18 @@ import Wiki.DelivererSupport.PostRecorder;
 
 import java.util.Map;
 
-public class WikiDelivererFactory extends DelivererFactoryBase {
+public class WikiDelivererFactory implements DelivererFactoryBase {
 
     private PostRecorder postRecorder;
     private int port;
+    private String logName;
 
-    public WikiDelivererFactory(DataType dataType, int port){
+    public WikiDelivererFactory(String logName, DataType dataType, int port){
+        this.logName = logName;
         this.postRecorder = new PostRecorder(dataType);
         this.port = port;
     }
 
-    @Override
     public DelivererBase getDeliverer(String request){
         String path = HTTPRequestParser.getPath(request);
         String requestType = HTTPRequestParser.getRequestType(request);
@@ -33,7 +34,7 @@ public class WikiDelivererFactory extends DelivererFactoryBase {
         else if (isRoute(path, WikiRoutes.LOGS)){
             String username = HTTPRequestParser.getAuthenticationUsername(request);
             String password = HTTPRequestParser.getAuthenticationPassword(request);
-            deliverer = new LogDeliverer(username, password, requestType);
+            deliverer = new LogDeliverer(logName, username, password, requestType);
         }
         else if(isRoute(path, WikiRoutes.CREATE_POST)){
             deliverer = getCreatePostDeliverer(request,requestType);
@@ -51,6 +52,10 @@ public class WikiDelivererFactory extends DelivererFactoryBase {
             deliverer = new NotFoundDeliverer(requestType);
         }
         return deliverer;
+    }
+
+    public static boolean isRoute(String path, String route){
+        return path.contains(route);
     }
 
     private DelivererBase getEditPostDeliverer(String request, String path, String requestType){

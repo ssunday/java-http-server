@@ -18,6 +18,7 @@ public class ViewPostDeliverer extends DelivererBase{
         this.postID = PathParser.getIDFromPath(postPath);
         this.OPTIONS.add(HTTPVerbs.GET);
         this.postRecorder = postRecorder;
+        this.contentType = "text/html";
         setPostTitleAndContent();
     }
 

@@ -20,6 +20,7 @@ public class TempPostDeliverer extends DelivererBase {
         this.title = PathParser.getTitleFromPath(path);
         this.requestType = requestType;
         this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/html";
     }
 
     public TempPostDeliverer(PostRecorder postRecorder, int port, Map params, String path, String requestType){
@@ -54,10 +55,7 @@ public class TempPostDeliverer extends DelivererBase {
 
     @Override
     protected HTTPCode getHTTPCode(){
-        HTTPCode code = super.getHTTPCode();
-        if (isPOST()){
-            code = HTTPCode.FOUND;
-        }
+        HTTPCode code = isPOST() ? HTTPCode.FOUND : HTTPCode.OK;
         return code;
     }
 

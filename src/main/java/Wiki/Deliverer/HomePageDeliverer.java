@@ -13,6 +13,7 @@ public class HomePageDeliverer extends DelivererBase {
         this.requestType = requestType;
         this.postRecorder = postRecorder;
         this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/html";
     }
 
     @Override

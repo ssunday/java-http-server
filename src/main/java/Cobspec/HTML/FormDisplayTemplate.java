@@ -1,23 +1,24 @@
 package Cobspec.HTML;
 
-public class HTMLFormDisplay {
+import HTMLTemplating.PageTemplate;
 
-    private final String HTML_START = "<HTML>"
-            + "<HEAD>"
-            + "<style>body{padding:80px;}</style>"
-            + "<title>Form</title><h1>Form</h1></HEAD>"
-            + "<body>";
+public class FormDisplayTemplate extends PageTemplate {
 
-    private final String HTML_END = "</body>" + "</HTML>";
+    private String paramToDisplay;
 
-    public String displayFormPage(String paramToDisplay) {
-        String formPage = HTML_START;
-        formPage += getForm();
+    public FormDisplayTemplate(String paramToDisplay){
+        this.pageTitle = "Form";
+        this.paramToDisplay = paramToDisplay;
+    }
+
+    @Override
+    public String getBody(){
+        String html = "";
+        html += getForm();
         if (paramToDisplay != null){
-            formPage += displayParam(paramToDisplay);
+            html += displayParam(paramToDisplay);
         }
-        formPage += HTML_END;
-        return formPage;
+        return html;
     }
 
     private String getForm(){

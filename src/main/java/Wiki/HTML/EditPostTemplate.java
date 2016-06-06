@@ -1,6 +1,8 @@
 package Wiki.HTML;
 
-public class EditPostTemplate extends PageTemplate{
+import HTMLTemplating.PageTemplate;
+
+public class EditPostTemplate extends PageTemplate {
 
     private String title;
     private String content;

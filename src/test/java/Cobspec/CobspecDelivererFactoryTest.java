@@ -21,7 +21,7 @@ public class CobspecDelivererFactoryTest {
     @Before
     public void setUp() throws Exception{
         FileTestingUtilities.makePath(FileTestingUtilities.testDirectory);
-        cobspecDelivererFactory = new CobspecDelivererFactory(TEST_PORT, FileTestingUtilities.testDirectory);
+        cobspecDelivererFactory = new CobspecDelivererFactory("TEST_LOG", TEST_PORT, FileTestingUtilities.testDirectory);
     }
 
     @Test

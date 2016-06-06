@@ -1,5 +1,7 @@
 package Wiki.HTML;
 
+import HTMLTemplating.PageTemplate;
+
 public class ViewPostTemplate extends PageTemplate {
 
     private int postID;

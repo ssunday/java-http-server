@@ -1,7 +1,8 @@
 package Server.Logging;
 
-import Server.Logging.LoggingQueue;
+import TestingSupport.FileTestingUtilities;
 import org.hamcrest.CoreMatchers;
+import org.junit.After;
 import org.junit.Test;
 
 import static org.junit.Assert.assertThat;
@@ -9,9 +10,11 @@ import static org.junit.Assert.assertThat;
 
 public class LoggingQueueTest {
 
+    private String TEST_LOG = "test-log";
+
     @Test
     public void testAddQueueAddsToEmptyList(){
-        LoggingQueue loggingQueue = new LoggingQueue();
+        LoggingQueue loggingQueue = new LoggingQueue("test-log");
         String request =  "GET / HTTP/1.1" + "\r\n" +
                 "Connection: close\r\n\r\n";
         loggingQueue.addToQueue(request);
@@ -20,7 +23,7 @@ public class LoggingQueueTest {
 
     @Test
     public void testGetHeadRequestReturnsHeadElement(){
-        LoggingQueue loggingQueue = new LoggingQueue();
+        LoggingQueue loggingQueue = new LoggingQueue("test-log");
         String request =  "GET / HTTP/1.1" + "\r\n" +
                 "Connection: close\r\n\r\n";
         loggingQueue.addToQueue(request);
@@ -32,7 +35,12 @@ public class LoggingQueueTest {
 
     @Test
     public void testGetHeadRequestReturnsNullIfEmpty(){
-        LoggingQueue loggingQueue = new LoggingQueue();
+        LoggingQueue loggingQueue = new LoggingQueue("test-log");
         assertThat(loggingQueue.getHeadRequest(), CoreMatchers.equalTo(null));
+    }
+
+    @After
+    public void tearDown() throws Exception{
+        FileTestingUtilities.clearPath(TEST_LOG);
     }
 }

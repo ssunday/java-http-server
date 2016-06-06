@@ -9,18 +9,18 @@ public class LogDeliverer extends DelivererBase {
 
     private final String ADMIN_USERNAME = "admin";
     private final String ADMIN_PASSWORD = "hunter2";
-    private RequestLogger logger;
 
     private String username;
     private String password;
+    private RequestLogger logger;
 
-    public LogDeliverer(String username, String password, String requestType){
+    public LogDeliverer(String logName, String username, String password, String requestType){
         this.username = username;
         this.password = password;
-        logger = new RequestLogger();
+        this.logger = new RequestLogger(logName);
         this.requestType = requestType;
-        OPTIONS.add(HTTPVerbs.GET);
-        contentType = "text/plain";
+        this.OPTIONS.add(HTTPVerbs.GET);
+        this.contentType = "text/plain";
     }
 
     @Override

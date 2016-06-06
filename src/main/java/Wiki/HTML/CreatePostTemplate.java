@@ -1,5 +1,7 @@
 package Wiki.HTML;
 
+import HTMLTemplating.PageTemplate;
+
 public class CreatePostTemplate extends PageTemplate {
 
     public CreatePostTemplate(){

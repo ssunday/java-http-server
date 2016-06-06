@@ -1,6 +1,8 @@
 package Wiki.HTML;
 
-public class HomePageTemplate extends PageTemplate{
+import HTMLTemplating.PageTemplate;
+
+public class HomePageTemplate extends PageTemplate {
 
     private String[] postIDs;
     private String[] postTitles;

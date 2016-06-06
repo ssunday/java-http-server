@@ -41,7 +41,7 @@ public class ServerRunnableTest {
         output = new DataOutputStream(testSocket.getOutputStream());
         stream = testSocket.getInputStream();
         input = new BufferedReader(new InputStreamReader(stream));
-        serverRunnable = new ServerRunnable(serverSocket.accept(), new MockLoggingQueue(), new CobspecDelivererFactory(TEST_PORT, TEST_DIRECTORY));
+        serverRunnable = new ServerRunnable(serverSocket.accept(), new MockLoggingQueue(), new CobspecDelivererFactory("TEST-log", TEST_PORT, TEST_DIRECTORY));
     }
 
     @Test
