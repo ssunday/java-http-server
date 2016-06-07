@@ -7,28 +7,13 @@ public class InputForms {
     }
 
     public static String getTitleForm(String title){
-        return String.format("<html>\n" +
-                "<label for='title'>Post Title</label><br>" +
-                "<input type='text' name='title' value=%s onfocusout=\"nospaces(this)\" pattern=\"^[a-zA-Z0-9_]*$\" required/>\n" +
-                "<script>\n" +
-                "function nospaces(t){\n" +
-                "\n" +
-                "    if(t.value.match(/\\s/g) || t.value.match(/_$/)){\n" +
-                "\n" +
-                "        alert('Title must not have spaces or trailing underscores.');\n" +
-                "\n" +
-                "        t.value = t.value.replace(/\\s/g,'_');\n" +
-                "        t.value = t.value.replace(/_$/, '');" +
-                "    }\n" +
-                "\n" +
-                "}\n" +
-                "</script>\n" +
-                "</html>", title);
+        return String.format("<label for='title'>Post Title</label><br>" +
+                "<input type='text' name='title' value=%s pattern='^[a-zA-Z0-9_]*$' required/>\n", title);
     }
 
     public static String getPostContentForm(String content) {
         String label = "<br><br><label for='content'>Post Content</label><br>";
-        String form = String.format("<TEXTAREA name='content' ROWS=10 COLS=60>%s</TEXTAREA>", content);
+        String form = String.format("<textarea name='content' style='display:inherit;height:180px;' row='10' cols='80' required>%s</textarea>", content);
         return label + form;
     }
 
@@ -39,7 +24,6 @@ public class InputForms {
     public static String homeLink(){
         return "<button><a href='/'>Home</a></button>";
     }
-
 
     public static String formEnd(){
         return "</form>";

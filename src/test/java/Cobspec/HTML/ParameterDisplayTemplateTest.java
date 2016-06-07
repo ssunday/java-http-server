@@ -16,12 +16,4 @@ public class ParameterDisplayTemplateTest {
         assertTrue("HTML Wrapped parameters contains single parameter", wrappedParams.contains(params[0]));
     }
 
-    @Test
-    public void testRenderPageContainsBodyTag(){
-        String[] params = new String[]{"var1=stuff"};
-        parameterDisplayTemplate = new ParameterDisplayTemplate(params);
-        String wrappedParams = parameterDisplayTemplate.renderPage();
-        assertTrue("HTML Wrapped parameters contains body tag", wrappedParams.contains("<body>"));
-    }
-
 }

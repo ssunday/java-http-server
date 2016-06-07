@@ -15,7 +15,7 @@ public class DeletePostTemplate extends PageTemplate {
 
     @Override
     protected String getBody(){
-        String body = String.format("You have successfully deleted the post %s with ID of %s. <br><br>", postTitle, postID);
+        String body = String.format("##You have successfully deleted the post %s with ID of %s. <br><br>", postTitle, postID);
         body += InputForms.homeLink();
         return body;
     }
