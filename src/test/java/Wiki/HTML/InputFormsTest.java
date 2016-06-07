@@ -25,6 +25,11 @@ public class InputFormsTest {
     }
 
     @Test
+    public void testHomeLinkIncludesHome() throws Exception {
+        assertThat(InputForms.homeLink(), containsString("Home"));
+    }
+
+    @Test
     public void testFormStartIncludesBeginFormTag() throws Exception {
         assertThat(InputForms.formStart("/create-post"), containsString("<form"));
     }

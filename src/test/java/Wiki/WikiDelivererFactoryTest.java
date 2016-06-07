@@ -1,6 +1,7 @@
 package Wiki;
 
 import Server.Deliverer.DelivererBase;
+import Server.Deliverer.LogDeliverer;
 import Wiki.Deliverer.*;
 import Wiki.DelivererSupport.Postgres;
 import org.junit.Before;
@@ -93,6 +94,29 @@ public class WikiDelivererFactoryTest {
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof EditPostDeliverer);
         postgres.clearData();
+    }
+
+    @Test
+    public void testGetDelivererReturnsDeletePostDeliverer() throws Exception {
+        String request = "POST /delete/A_Title-1 HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        Map map = new HashMap();
+        map.put("title", "A_Title");
+        map.put("content", "Content");
+        postgres.addPost(map);
+        DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
+        assertTrue(deliverer instanceof DeletePostDeliverer);
+        postgres.clearData();
+    }
+
+    @Test
+    public void testGetDelivererReturnsLogDeliverer() throws Exception {
+        String request = "GET /logs/ HTTP/1.1\r\n" +
+                "Host: localhost\r\n" +
+                "Connection: Keep-Alive\r\n";
+        DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
+        assertTrue(deliverer instanceof LogDeliverer);
     }
 
     @Test

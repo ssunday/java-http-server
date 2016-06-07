@@ -4,8 +4,13 @@ import Wiki.DelivererSupport.PostRecorder;
 
 public class MockPostRecorder extends PostRecorder {
 
-    private String title;
-    private String content;
+    public String title;
+    public String content;
+    public boolean isDeleted = false;
+
+    public MockPostRecorder(){
+
+    }
 
     public MockPostRecorder(String title, String content){
         this.title = title;
@@ -16,6 +21,11 @@ public class MockPostRecorder extends PostRecorder {
     public String[] getPostTitleAndContent(int id){
         String[] postTitleAndContent = {title, content};
         return postTitleAndContent;
+    }
+
+    @Override
+    public void deletePost(int id){
+        isDeleted = true;
     }
 
     @Override

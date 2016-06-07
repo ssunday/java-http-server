@@ -11,6 +11,8 @@ public class PathParser {
 
     public static String getTitleFromPath(String postPath){
         String[] splitBySlash = postPath.split("/");
-        return splitBySlash[2];
+        String[] splitByHyphen = splitBySlash[2].split("-");
+        String stringTitle = splitByHyphen[0];
+        return stringTitle;
     }
 }

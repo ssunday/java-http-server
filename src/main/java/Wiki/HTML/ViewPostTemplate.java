@@ -21,7 +21,8 @@ public class ViewPostTemplate extends PageTemplate {
     protected String getBody(){
         String body = displayContent();
         body += editPostLink();
-        body += homeLink();
+        body += deletePostButton();
+        body += InputForms.homeLink();
         return body;
     }
 
@@ -31,10 +32,14 @@ public class ViewPostTemplate extends PageTemplate {
     }
 
     private String editPostLink(){
-        return String.format("<a href='/edit/%s-%s'>Edit Post</a><br><br>", pageTitle, postID);
+        return String.format("<button><a href='/edit/%s-%s'>Edit Post</a></button><br><br>", pageTitle, postID);
     }
 
-    private String homeLink(){
-        return "<a href='/'>Home</a>";
+    private String deletePostButton(){
+        String deleteButton = String.format("<form action='/delete/%s-%s' method='post'>", pageTitle, postID);
+        deleteButton += "<input type='submit' value='Delete Post'><br>";
+        deleteButton += "</form>";
+        return deleteButton;
     }
+
 }
