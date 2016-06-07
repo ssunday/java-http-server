@@ -28,7 +28,7 @@ public class ViewPostTemplate extends PageTemplate {
 
     private String displayContent(){
         String content = ContentProcessing.hyperlinkPostTitles(postContent, postTitles, postIDs);
-        return String.format("<p>%s</p><hr><br>", content);
+        return String.format("%s\n***\n", content);
     }
 
     private String editPostLink(){

@@ -16,18 +16,18 @@ public class PageTemplate {
     }
 
     private String wrapBody(){
-        return "<body>" + getBody() + "</body>";
+        return "<xmp theme='simplex'>" + getBody() + "</xmp>";
     }
 
     private String startHTML(){
-        return "<HTML><HEAD>"+
-                "<style> body{padding: 80px;} </style>" +
+        return "<!DOCTYPE html><html><head>"+
                 "<title>" + pageTitle + "</title>" +
-                "<h1>" + pageTitle + "</h1></HEAD>";
+                "</head>";
     }
 
     private String endHTML(){
-        return "</HTML>";
+        String script = "<script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script>";
+        return script + "</html>";
     }
 }
 

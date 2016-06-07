@@ -21,19 +21,19 @@ public class HomePageTemplate extends PageTemplate {
     }
 
     private String postList(){
-        String htmlWikiPosts = "<h3>Post List:</h3>";
+        String htmlWikiPosts = "<h2>Post List:</h2>\n";
         if (postIDs.length == 0 ){
             htmlWikiPosts += "No posts.";
         } else{
             for (int i = 0; i < postIDs.length; i++){
-                htmlWikiPosts += String.format("<p><a href='/post/%s-%s'>%s</a></p>", postTitles[i], postIDs[i],postTitles[i]);
+                htmlWikiPosts += String.format("<a href='/post/%s-%s'>%s</a><br>", postTitles[i], postIDs[i],postTitles[i]);
             }
         }
-        return htmlWikiPosts;
+        return htmlWikiPosts + "\n";
     }
 
     private String addCreatePostButton(){
-        return "<hr><h3><a href='/create-post'>Create Post</a></h3>";
+        return "<hr />\n<h2><a href='/create-post'>Create Post</a></h2>";
     }
 
 }
