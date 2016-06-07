@@ -42,6 +42,14 @@ public class ViewPostTemplateTest {
     }
 
     @Test
+    public void testRenderPageHasDeleteButton(){
+        String postTitle = "Post_Title";
+        String postContent = "A Post_Title";
+        viewPostTemplate = new ViewPostTemplate(1, postTitle, postContent, new String[0], new String[0]);
+        assertThat(viewPostTemplate.renderPage(), containsString("delete"));
+    }
+
+    @Test
     public void testRenderPageHasPostTitleLink(){
         String postTitle = "Post_Title";
         String postContent = "A Post_Title2";

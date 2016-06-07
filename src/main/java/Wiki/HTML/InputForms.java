@@ -36,6 +36,11 @@ public class InputForms {
         return String.format("<br><br><input type='submit' value=%s>", buttonValue);
     }
 
+    public static String homeLink(){
+        return "<button><a href='/'>Home</a></button>";
+    }
+
+
     public static String formEnd(){
         return "</form>";
     }

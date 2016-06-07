@@ -24,4 +24,11 @@ public class PathParserTest {
         String path = "/tmp/" + title;
         assertEquals(title, PathParser.getTitleFromPath(path));
     }
+    @Test
+    public void testGetTitleFromPathDelete() throws Exception {
+        String title = "Post_Title";
+        String path = "/delete/" + title + "-1";
+        assertEquals(title, PathParser.getTitleFromPath(path));
+    }
 }
+

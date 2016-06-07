@@ -48,6 +48,9 @@ public class WikiDelivererFactory implements DelivererFactoryBase {
         else if(isRoute(path, WikiRoutes.EDIT_POST)){
             deliverer = getEditPostDeliverer(request, path, requestType);
         }
+        else if(isRoute(path, WikiRoutes.DELETE_POST)){
+            deliverer = new DeletePostDeliverer(postRecorder, path, requestType);
+        }
         else {
             deliverer = new NotFoundDeliverer(requestType);
         }
