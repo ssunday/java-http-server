@@ -1,8 +1,8 @@
 package Wiki.HTML;
 
-import HTMLTemplating.PageTemplate;
+import HTMLTemplating.PageTemplateMarkdown;
 
-public class CreatePostTemplate extends PageTemplate {
+public class CreatePostTemplate extends PageTemplateMarkdown {
 
     public CreatePostTemplate(){
         this.pageTitle = "Create Post";

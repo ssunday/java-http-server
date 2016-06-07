@@ -1,12 +1,12 @@
 package HTMLTemplating;
 
-public class PageTemplate {
+public class PageTemplate implements PageTemplateInterface {
 
     protected String pageTitle;
 
     public String renderPage(){
         String html = startHTML();
-        html += wrapBody();
+        html += wrapBodyWithBodyTags();
         html += endHTML();
         return html;
     }
@@ -15,19 +15,19 @@ public class PageTemplate {
         return "";
     }
 
-    private String wrapBody(){
-        return "<xmp theme='simplex'>" + getBody() + "</xmp>";
+    private String wrapBodyWithBodyTags(){
+        return "<body>" + getBody() + "<body>";
     }
 
     private String startHTML(){
-        return "<!DOCTYPE html><html><head>"+
+        return "<html><head>"+
                 "<title>" + pageTitle + "</title>" +
+                "<h1>" + pageTitle + "</h1>"+
                 "</head>";
     }
 
     private String endHTML(){
-        String script = "<script src=\"http://strapdownjs.com/v/0.2/strapdown.js\"></script>";
-        return script + "</html>";
+        return "</html>";
     }
 }
 

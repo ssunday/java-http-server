@@ -1,8 +1,8 @@
 package Wiki.HTML;
 
-import HTMLTemplating.PageTemplate;
+import HTMLTemplating.PageTemplateMarkdown;
 
-public class DeletePostTemplate extends PageTemplate {
+public class DeletePostTemplate extends PageTemplateMarkdown {
 
     private int postID;
     private String postTitle;

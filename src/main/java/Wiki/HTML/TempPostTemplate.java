@@ -1,8 +1,8 @@
 package Wiki.HTML;
 
-import HTMLTemplating.PageTemplate;
+import HTMLTemplating.PageTemplateMarkdown;
 
-public class TempPostTemplate extends PageTemplate {
+public class TempPostTemplate extends PageTemplateMarkdown {
 
     public TempPostTemplate(String pageTitle){
         this.pageTitle = pageTitle;
