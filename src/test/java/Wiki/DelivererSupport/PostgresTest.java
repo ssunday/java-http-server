@@ -1,159 +1,132 @@
 package Wiki.DelivererSupport;
 
+import TestingSupport.PostgresTestingUtilities;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class PostgresTest {
-
-    private final String DATABASE_NAME = "WIKI";
-    private final String DATABASE_PORT = "5432";
-    private final String USER_NAME = System.getProperty("user.name");
-
     private Postgres postgres;
-    private Connection connection;
+    private PostgresTestingUtilities postgresTestingUtilities;
 
     @Before
     public void setUp() throws Exception{
-        Class.forName("org.postgresql.Driver");
-        connection = DriverManager.getConnection("jdbc:postgresql://localhost:" + DATABASE_PORT + "/"
-                + DATABASE_NAME, USER_NAME, "");
+        postgresTestingUtilities = new PostgresTestingUtilities(Postgres.ID, Postgres.TITLE, Postgres.CONTENT);
+        postgres = new Postgres(postgresTestingUtilities.TABLE_NAME);
 
     }
 
     @Test
     public void testAddPostEntersDataIntoTable() throws Exception {
-        postgres = new Postgres("test");
         Map fieldsAndValues = new HashMap();
         fieldsAndValues.put(postgres.TITLE, "A title");
         fieldsAndValues.put(postgres.CONTENT, "something");
         postgres.addPost(fieldsAndValues);
-        Statement st = connection.createStatement();
-        ResultSet resultSet = st.executeQuery("SELECT * FROM " + "test");
-        assertNotNull(resultSet.next());
-        postgres.clearData();
+        ResultSet resultSet = postgresTestingUtilities.select(1);
+        assertTrue(resultSet.next());
+        postgresTestingUtilities.clearData();
+    }
+
+    @Test
+    public void testAddPostEntersCorrectDataIntoTable() throws Exception {
+        Map fieldsAndValues = new HashMap();
+        fieldsAndValues.put(postgres.TITLE, "A title");
+        fieldsAndValues.put(postgres.CONTENT, "something");
+        postgres.addPost(fieldsAndValues);
+        ResultSet resultSet = postgresTestingUtilities.select(1);
+        String[] postContents = new String[2];
+        String[] realContent = {"A title", "something"};
+        while (resultSet.next()) {
+            postContents[0] = resultSet.getString("title");
+            postContents[1] = resultSet.getString("content");
+        }
+        assertArrayEquals(realContent, postContents);
+        postgresTestingUtilities.clearData();
     }
 
     @Test
     public void testGetLatestIDReturnsLatestID() throws Exception{
         postgres = new Postgres("test");
-        Map fieldsAndValues = new HashMap();
-        fieldsAndValues.put(postgres.TITLE, "A title");
-        fieldsAndValues.put(postgres.CONTENT, "something");
-        postgres.addPost(fieldsAndValues);
+        String title = "A_title";
+        String content = "something";
+        postgresTestingUtilities.insert(title, content);
         assertEquals(1, postgres.getLatestID());
-        postgres.clearData();
+        postgresTestingUtilities.clearData();
     }
 
     @Test
     public void testSelectPostByIDGetsCorrectDataFromID() throws Exception{
         postgres = new Postgres("test");
-        Map fieldsAndValues1 = new HashMap();
-        Map fieldsAndValues2 = new HashMap();
-        Map fieldsAndValues3 = new HashMap();
-        fieldsAndValues1.put(postgres.TITLE, "A title");
-        fieldsAndValues1.put(postgres.CONTENT, "something");
-        fieldsAndValues2.put(postgres.TITLE, "A title 2");
-        fieldsAndValues2.put(postgres.CONTENT, "something 2");
-        fieldsAndValues3.put(postgres.TITLE, "A title 3");
-        fieldsAndValues3.put(postgres.CONTENT, "something 3");
-        postgres.addPost(fieldsAndValues1);
-        postgres.addPost(fieldsAndValues2);
-        postgres.addPost(fieldsAndValues3);
-        String[] correctPost = {"A title 2", "something 2"};
+        String title1 = "A_title";
+        String content1 = "something";
+        String title2 = title1 + "2";
+        String content2 = content1 + "2";
+        postgresTestingUtilities.insert(title1, content1);
+        postgresTestingUtilities.insert(title2, content2);
+        String[] correctPost = {title2, content2};
         assertArrayEquals(correctPost, postgres.selectPostByID(2));
-        postgres.clearData();
+        postgresTestingUtilities.clearData();
     }
 
     @Test
     public void testUpdatePostUpdatesPostData() throws Exception{
         postgres = new Postgres("test");
-        Map fieldsAndValues1 = new HashMap();
         Map newFieldsAndValues = new HashMap();
-        fieldsAndValues1.put(postgres.TITLE, "A title");
-        fieldsAndValues1.put(postgres.CONTENT, "something");
-        postgres.addPost(fieldsAndValues1);
+        String title = "A_title";
+        String content = "something";
+        postgresTestingUtilities.insert(title, content);
         newFieldsAndValues.put(postgres.ID, 1);
-        newFieldsAndValues.put(postgres.TITLE, "New Title");
+        newFieldsAndValues.put(postgres.TITLE, "New_Title");
         newFieldsAndValues.put(postgres.CONTENT, "new Content");
         postgres.updatePost(newFieldsAndValues);
-        String[] correctPost = {"New Title", "new Content"};
+        String[] correctPost = {"New_Title", "new Content"};
         String[] postContents = new String[2];
-        String query = String.format("SELECT * FROM %s WHERE id=%s", "test", 1);
-        Statement st = connection.createStatement();
-        ResultSet resultSet = st.executeQuery(query);
+        ResultSet resultSet = postgresTestingUtilities.select(1);
         while (resultSet.next()) {
             postContents[0] = resultSet.getString(postgres.TITLE);
             postContents[1] = resultSet.getString(postgres.CONTENT);
         }
         assertArrayEquals(correctPost, postContents);
-        postgres.clearData();
+        postgresTestingUtilities.clearData();
     }
 
     @Test
     public void testSelectByIDReturnsNullIfIDDoesNotExist() throws Exception {
         postgres = new Postgres("test");
-        Map fieldsAndValues1 = new HashMap();
-        fieldsAndValues1.put(postgres.TITLE, "A title");
-        fieldsAndValues1.put(postgres.CONTENT, "something");
-        postgres.addPost(fieldsAndValues1);
         String[] correctPost = {null, null};
         assertArrayEquals(correctPost, postgres.selectPostByID(2));
-        postgres.clearData();
+        postgresTestingUtilities.clearData();
     }
 
     @Test
     public void testDeleteByIDDeletesPost() throws Exception{
         postgres = new Postgres("test");
-        Map fieldsAndValues1 = new HashMap();
-        fieldsAndValues1.put(postgres.TITLE, "A title");
-        fieldsAndValues1.put(postgres.CONTENT, "something");
-        postgres.addPost(fieldsAndValues1);
+        String title = "A title";
+        String content = "something";
+        postgresTestingUtilities.insert(title, content);
         postgres.deleteByID(1);
         String[] post = {null, null};
         assertArrayEquals(post, postgres.selectPostByID(1));
-        postgres.clearData();
+        postgresTestingUtilities.clearData();
     }
 
     @Test
-    public void testGetAllPostIDsReturnsIntegerArrayOfAllPostIDs() throws Exception{
+    public void testGetAllPostIDsReturnsIntegerArrayOfAllPostIDs() throws Exception {
         postgres = new Postgres("test");
-        Map fieldsAndValues1 = new HashMap();
-        Map fieldsAndValues2 = new HashMap();
-        fieldsAndValues1.put(postgres.TITLE, "A title");
-        fieldsAndValues1.put(postgres.CONTENT, "something");
-        fieldsAndValues2.put(postgres.TITLE, "A title 2");
-        fieldsAndValues2.put(postgres.CONTENT, "something 2");
-        postgres.addPost(fieldsAndValues1);
-        postgres.addPost(fieldsAndValues2);
-        String[][] posts = {{"1","A title", "something"},{"2",  "A title 2", "something 2"}};
+        String title1 = "A_title";
+        String content1 = "something";
+        String title2 = title1 + "2";
+        String content2 = content1 + "2";
+        postgresTestingUtilities.insert(title1, content1);
+        postgresTestingUtilities.insert(title2, content2);
+        String[][] posts = {{"1", title1, content1}, {"2", title2, content2}};
         assertArrayEquals(posts, postgres.getAllPosts());
-        postgres.clearData();
-    }
-
-    @Test
-    public void testClearDataDeletesTableContents() throws Exception{
-        postgres = new Postgres("test");
-        Map fieldsAndValues1 = new HashMap();
-        fieldsAndValues1.put(postgres.TITLE, "A title");
-        fieldsAndValues1.put(postgres.CONTENT, "something");
-        postgres.addPost(fieldsAndValues1);
-        postgres.clearData();
-        Statement st = connection.createStatement();
-        ResultSet resultSet = st.executeQuery("SELECT * FROM " + "test");
-        assertFalse(resultSet.next());
-        postgres.clearData();
+        postgresTestingUtilities.clearData();
     }
 
 }

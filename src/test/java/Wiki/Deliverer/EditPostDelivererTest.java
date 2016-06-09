@@ -2,7 +2,6 @@ package Wiki.Deliverer;
 
 import TestingSupport.MockPostRecorder;
 import Wiki.DelivererSupport.PostRecorder;
-import Wiki.DelivererSupport.Postgres;
 import Wiki.HTML.EditPostTemplate;
 import org.junit.Test;
 
@@ -28,15 +27,12 @@ public class EditPostDelivererTest {
 
     @Test
     public void testGetResponseHeaderHas302Code(){
-        Postgres postgres = new Postgres("test");
-        PostRecorder postRecorder = new PostRecorder(postgres);
-        postRecorder.createNewPost("Atitle", "Content");
+        PostRecorder postRecorder = new MockPostRecorder("ATitle", "Content");
         Map newValues = new HashMap();
         newValues.put("title", "Something");
         newValues.put("content", "Content");
         editPostDeliverer = new EditPostDeliverer(postRecorder, "/post/Atitle-1", TEST_PORT, newValues, "POST");
         assertThat(editPostDeliverer.getResponseHeader(), containsString("302 Found"));
-        postgres.clearData();
     }
 
 }

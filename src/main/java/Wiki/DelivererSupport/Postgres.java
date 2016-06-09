@@ -82,13 +82,6 @@ public class Postgres implements DataType{
         execQuery(query,args);
     }
 
-    public void clearData(){
-        String deleteQuery = String.format("DELETE FROM %s", tableName);
-        String resetSequenceQuery = String.format("ALTER SEQUENCE %s_%s_seq RESTART", tableName, ID);
-        execQuery(deleteQuery);
-        execQuery(resetSequenceQuery);
-    }
-
     private void initiateConnection(){
         try {
             Class.forName("org.postgresql.Driver");
