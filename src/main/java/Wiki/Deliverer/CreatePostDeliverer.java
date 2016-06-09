@@ -62,6 +62,7 @@ public class CreatePostDeliverer extends DelivererBase {
     private void createPost(Map params){
         title = params.get("title").toString();
         String content = params.get("content").toString();
+        content = content.replaceAll("\\r?\\n", "<br />");
         postRecorder.createNewPost(title, content);
     }
 
