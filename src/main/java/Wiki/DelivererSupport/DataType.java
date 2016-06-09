@@ -14,5 +14,4 @@ public interface DataType {
     String[][] getAllPosts();
     String[] selectPostByID(int id);
     void deleteByID(int id);
-    void clearData();
 }

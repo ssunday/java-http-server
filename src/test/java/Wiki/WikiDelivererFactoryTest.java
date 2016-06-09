@@ -2,26 +2,23 @@ package Wiki;
 
 import Server.Deliverer.DelivererBase;
 import Server.Deliverer.LogDeliverer;
+import TestingSupport.MockDataType;
 import Wiki.Deliverer.*;
-import Wiki.DelivererSupport.Postgres;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
 public class WikiDelivererFactoryTest {
 
     private WikiDelivererFactory wikiDelivererFactory;
-    private Postgres postgres;
+    private MockDataType dataType;
     private final int TEST_PORT = 6000;
 
     @Before
     public void setUp(){
-        postgres = new Postgres("test");
-        wikiDelivererFactory = new WikiDelivererFactory("wiki-test-log", postgres, TEST_PORT);
+        dataType = new MockDataType();
+        wikiDelivererFactory = new WikiDelivererFactory("wiki-test-log", dataType, TEST_PORT);
     }
 
     @Test
@@ -50,7 +47,6 @@ public class WikiDelivererFactoryTest {
                 "title=something&content=anotherone";
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof CreatePostDeliverer);
-        postgres.clearData();
     }
 
     @Test
@@ -58,27 +54,21 @@ public class WikiDelivererFactoryTest {
         String request = "GET /post/ATitle-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        Map map = new HashMap();
-        map.put("title", "ATitle");
-        map.put("content", "Content");
-        postgres.addPost(map);
+        dataType.title = "ATitle";
+        dataType.content = "Content";
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof ViewPostDeliverer);
-        postgres.clearData();
     }
 
     @Test
     public void testGetDelivererReturnsEditPostDeliverOnEditRoute() throws Exception {
-        String request = "GET /edit/A-Title-1 HTTP/1.1\r\n" +
+        String request = "GET /edit/ATitle-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        Map map = new HashMap();
-        map.put("title", "ATitle");
-        map.put("content", "Content");
-        postgres.addPost(map);
+        dataType.title = "ATitle";
+        dataType.content = "Content";
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof EditPostDeliverer);
-        postgres.clearData();
     }
 
     @Test
@@ -87,13 +77,10 @@ public class WikiDelivererFactoryTest {
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n\r\n" +
                 "title=something&content=anotherone";
-        Map map = new HashMap();
-        map.put("title", "ATitle");
-        map.put("content", "Content");
-        postgres.addPost(map);
+        dataType.title = "ATitle";
+        dataType.content = "Content";
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof EditPostDeliverer);
-        postgres.clearData();
     }
 
     @Test
@@ -101,13 +88,10 @@ public class WikiDelivererFactoryTest {
         String request = "POST /delete/A_Title-1 HTTP/1.1\r\n" +
                 "Host: localhost\r\n" +
                 "Connection: Keep-Alive\r\n";
-        Map map = new HashMap();
-        map.put("title", "A_Title");
-        map.put("content", "Content");
-        postgres.addPost(map);
+        dataType.title = "ATitle";
+        dataType.content = "Content";
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof DeletePostDeliverer);
-        postgres.clearData();
     }
 
     @Test
@@ -127,6 +111,5 @@ public class WikiDelivererFactoryTest {
                 "content=anotherone";
         DelivererBase deliverer = wikiDelivererFactory.getDeliverer(request);
         assertTrue(deliverer instanceof TempPostDeliverer);
-        postgres.clearData();
     }
 }

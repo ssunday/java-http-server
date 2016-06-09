@@ -24,6 +24,12 @@ public class MockPostRecorder extends PostRecorder {
     }
 
     @Override
+    public void updateExistingPost(int id, String title, String content){
+        this.title = title;
+        this.content = content;
+    }
+
+    @Override
     public void deletePost(int id){
         isDeleted = true;
     }
