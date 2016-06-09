@@ -65,6 +65,7 @@ public class EditPostDeliverer extends DelivererBase {
     private void updatePost(Map params){
         title = params.get("title").toString();
         String content = params.get("content").toString();
+        content = content.replaceAll("\\r?\\n", "<br />");
         postRecorder.updateExistingPost(postID, title, content);
     }
 
