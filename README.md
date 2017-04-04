@@ -1,8 +1,8 @@
-#Java HTTP Server
+# Java HTTP Server
 
 HTTP Server written in Java.
 
-##Features
+## Features
 
 Cobspec:
 * Can view files in a particular directory
@@ -25,6 +25,6 @@ Wiki Mode:
 
 * Post name hyperlinking
 
-##Running
+## Running
 
 Run the respective mains of the folder systems.
